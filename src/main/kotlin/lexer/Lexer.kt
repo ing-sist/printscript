@@ -1,8 +1,8 @@
 package org.example.lexer
 
 import org.example.common.Location
-import org.example.common.Token
-import org.example.common.TokenType
+import org.example.common.token.Token
+import org.example.common.token.TokenType
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 

@@ -1,6 +1,6 @@
 package lexer
 
-import org.example.common.TokenType
+import org.example.common.token.TokenType
 import org.example.lexer.LexerGenerator
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
