@@ -31,8 +31,7 @@ class LexerTest {
         val first = tokens.first()
 
         assertTrue(first.type is TokenType.Identifier)
-
-        assertEquals("miVariable", (first.type as TokenType.Identifier).name)
+        assertEquals("miVariable", first.lexeme)
 
     }
 
@@ -58,7 +57,7 @@ class LexerTest {
 
         assertTrue(intTokens.first().type is TokenType.NumberLiteral)
 
-        assertEquals(42.0, (intTokens.first().type as TokenType.NumberLiteral).value)
+        assertEquals("42", intTokens.first().lexeme)
 
 
 
@@ -66,8 +65,7 @@ class LexerTest {
 
         assertTrue(decimalTokens.first().type is TokenType.NumberLiteral)
 
-        assertEquals(3.14, (decimalTokens.first().type as TokenType.NumberLiteral).value)
-
+        assertEquals("3.14", decimalTokens.first().lexeme)
     }
 
 
@@ -80,7 +78,7 @@ class LexerTest {
 
         assertTrue(doubleQuoteTokens.first().type is TokenType.StringLiteral)
 
-        assertEquals("Hola", (doubleQuoteTokens.first().type as TokenType.StringLiteral).value)
+        assertEquals("\"Hola\"", doubleQuoteTokens.first().lexeme)
 
 
 
@@ -88,7 +86,7 @@ class LexerTest {
 
         assertTrue(singleQuoteTokens.first().type is TokenType.StringLiteral)
 
-        assertEquals("Hola", (singleQuoteTokens.first().type as TokenType.StringLiteral).value)
+        assertEquals("\'Hola\'", singleQuoteTokens.first().lexeme)
 
     }
 
@@ -110,7 +108,7 @@ class LexerTest {
 
             assertTrue(token.type is TokenType.Operator)
 
-            assertEquals(op, (token.type as TokenType.Operator).value)
+            assertEquals(op, token.lexeme)
 
         }
 

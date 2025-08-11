@@ -1,0 +1,73 @@
+@startuml
+
+package common {
+
+    class Location {
+
+        - line: Int
+
+        - column: Int
+
+    }
+
+
+
+    class Token {
+
+        - type: TokenType
+
+        - lexeme: String
+
+        - location: Location
+
+    }
+
+
+
+    interface TokenType
+
+}
+
+
+
+package lexer {
+
+    class Lexer {
+
+        - keywordRules: Map<String, TokenType>
+
+        - generalRules: List<Pair<Pattern, (String) -> TokenType>>
+
+        + tokenize(source: String): List<Token>
+
+    }
+
+
+
+    class LexerGenerator {
+
+        + createLexer(version: String): RegexLexer
+
+        - getKeywords(): Map<String, TokenType>
+
+        - getRules(): List<Pair<Pattern, (String) -> TokenType>>
+
+    }
+
+}
+
+
+
+Token --> TokenType
+
+Token --> Location
+
+LexerGenerator --> Lexer
+
+Lexer --> Token
+
+Lexer --> TokenType
+
+Lexer --> Location
+
+@enduml

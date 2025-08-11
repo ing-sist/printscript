@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 
 class Lexer(
     private val keywordRules: Map<String, TokenType>,
-    private val generalRules: Map<Pattern, (String) -> TokenType>
+    private val generalRules: Map<Pattern, TokenType>
 
 ) {
     fun lex(source: String): List<Token> {
@@ -49,11 +49,10 @@ class Lexer(
             if (matchFound) continue
 
             // Paso 2: Reglas generales (Map de Pattern)
-            for ((pattern, tokenBuilder) in generalRules) {
+            for ((pattern, tokenType) in generalRules) {
                 val matcher: Matcher = pattern.matcher(remainingSource)
                 if (matcher.find() && matcher.start() == 0) {
                     val lexeme = matcher.group()
-                    val tokenType = tokenBuilder(lexeme)
                     tokens.add(Token(tokenType, lexeme, Location(currentLine, currentColumn)))
                     currentColumn += lexeme.length
                     remainingSource = remainingSource.substring(lexeme.length)

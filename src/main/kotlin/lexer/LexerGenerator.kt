@@ -21,36 +21,24 @@ object LexerGenerator {
         )
     }
 
-    private fun getRules(): Map<Pattern, (String) -> TokenType> {
+    private fun getRules(): Map<Pattern, TokenType> {
         return mapOf(
             // String Literals with "" or ''
-            Pattern.compile("^\"[^\"]*\"") to { lexeme: String ->
-                TokenType.StringLiteral(lexeme.removeSurrounding("\""))
-            },
-            Pattern.compile("^'[^']*'") to { lexeme: String ->
-                TokenType.StringLiteral(lexeme.removeSurrounding("'"))
-            },
-
+            Pattern.compile("^\"[^\"]*\"") to TokenType.StringLiteral,
+            Pattern.compile("^'[^']*'") to TokenType.StringLiteral,
             // Number Literals
-            Pattern.compile("^\\d+(\\.\\d+)?") to { lexeme: String ->
-                TokenType.NumberLiteral(lexeme.toDouble())
-            },
-
+            Pattern.compile("^\\d+(\\.\\d+)?") to TokenType.NumberLiteral,
             // Identifiers
-            Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_]*") to { lexeme: String ->
-                TokenType.Identifier(lexeme)
-            },
+            Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_]*") to TokenType.Identifier,
 
             // Symbols
-            Pattern.compile("^:") to { _: String -> TokenType.Colon },
-            Pattern.compile("^;") to { _: String -> TokenType.Semicolon },
-            Pattern.compile("^\\(") to { _: String -> TokenType.LeftParen },
-            Pattern.compile("^\\)") to { _: String -> TokenType.RightParen },
+            Pattern.compile("^:") to TokenType.Colon,
+            Pattern.compile("^;") to TokenType.Semicolon,
+            Pattern.compile("^\\(") to TokenType.LeftParen,
+            Pattern.compile("^\\)") to TokenType.RightParen,
 
             // Operators (multi-character first)
-            Pattern.compile("^(==|!=|<=|>=|[=+\\-*/])") to { lexeme: String ->
-                TokenType.Operator(lexeme)
-            }
+            Pattern.compile("^(==|!=|<=|>=|[=+\\-*/])") to TokenType.Operator
         )
     }
 }

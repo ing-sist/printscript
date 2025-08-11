@@ -16,13 +16,14 @@ sealed interface TokenType {
 
     // 3. Operators (los incluyo a todos)
 
-    data class Operator(val value: String) : TokenType
+    data object Operator : TokenType
 
     // 4. Variables
 
-    data class Identifier(val name: String) : TokenType
-    data class StringLiteral(val value: String) : TokenType
-    data class NumberLiteral(val value: Double) : TokenType
+    data object Identifier : TokenType
+    data object StringLiteral : TokenType
+    data object NumberLiteral : TokenType
+    //data class ListLiteral(val value: List<String>) : TokenType
 
     // 5. DataTypes
 
