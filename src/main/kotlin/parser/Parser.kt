@@ -1,6 +1,6 @@
 package org.example.parser
 
-import org.example.common.Token
+import org.example.common.token.Token
 
 class Parser(private val tokens: List<Token>) {
 
