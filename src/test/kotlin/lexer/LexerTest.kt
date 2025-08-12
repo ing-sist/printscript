@@ -1,18 +1,41 @@
 package lexer
 
+import org.example.common.token.Token
 import org.example.common.token.TokenType
+import org.example.lexer.Lexer
 import org.example.lexer.LexerGenerator
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.fail
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class LexerTest {
-    private val lexer = LexerGenerator.createLexer("1.0")
+    private lateinit var lexer: Lexer
+
+    @BeforeEach
+    fun setup() {
+        val lexerResult = LexerGenerator.createLexer("1.0")
+        lexerResult.fold(
+            { lexer ->
+                this.lexer = lexer },
+            { error ->
+                fail("Error creando lexer: $error") }
+        )
+    }
+
+    private fun getTokens(input: String): List<Token> {
+        val result = lexer.lex(input)
+        return result.fold(
+            { tokens -> tokens },
+            { error -> fail("Error al procesar '$input': $error") }
+        )
+    }
 
     @Test
     fun specialKeywordTest() {
-        val tokens = lexer.lex("let")
+        val tokens = getTokens("let")
 
         assertEquals(TokenType.Let, tokens.first().type)
 
@@ -26,7 +49,7 @@ class LexerTest {
 
     fun identifierTest() {
 
-        val tokens = lexer.lex("miVariable")
+        val tokens = getTokens("miVariable")
 
         val first = tokens.first()
 
@@ -41,7 +64,7 @@ class LexerTest {
 
     fun dataTypeStringTest() {
 
-        val tokens = lexer.lex("string")
+        val tokens = getTokens("string")
 
         assertEquals(TokenType.DataType.String, tokens.first().type)
 
@@ -53,7 +76,7 @@ class LexerTest {
 
     fun numberLiteralsTest() {
 
-        val intTokens = lexer.lex("42")
+        val intTokens = getTokens("42")
 
         assertTrue(intTokens.first().type is TokenType.NumberLiteral)
 
@@ -61,7 +84,7 @@ class LexerTest {
 
 
 
-        val decimalTokens = lexer.lex("3.14")
+        val decimalTokens = getTokens("3.14")
 
         assertTrue(decimalTokens.first().type is TokenType.NumberLiteral)
 
@@ -74,7 +97,7 @@ class LexerTest {
 
     fun stringLiteralsTest() {
 
-        val doubleQuoteTokens = lexer.lex("\"Hola\"")
+        val doubleQuoteTokens = getTokens("\"Hola\"")
 
         assertTrue(doubleQuoteTokens.first().type is TokenType.StringLiteral)
 
@@ -82,7 +105,7 @@ class LexerTest {
 
 
 
-        val singleQuoteTokens = lexer.lex("'Hola'")
+        val singleQuoteTokens = getTokens("'Hola'")
 
         assertTrue(singleQuoteTokens.first().type is TokenType.StringLiteral)
 
@@ -96,7 +119,7 @@ class LexerTest {
 
     fun operatorsTest() {
 
-        val tokens = lexer.lex("+ - * / =")
+        val tokens = getTokens("+ - * / =")
 
         val expectedOps = listOf("+", "-", "*", "/", "=")
 
@@ -120,7 +143,7 @@ class LexerTest {
 
     fun symbolsTest() {
 
-        val tokens = lexer.lex(": ; ( )")
+        val tokens = getTokens(": ; ( )")
 
         assertEquals(TokenType.Colon, tokens[0].type)
 
@@ -140,7 +163,7 @@ class LexerTest {
 
         val source = "let x: number = 42;"
 
-        val tokens = lexer.lex(source)
+        val tokens = getTokens(source)
 
 
 
@@ -162,13 +185,14 @@ class LexerTest {
 
 
     @Test
-
     fun unknownTokensTest() {
-
-        val ex = assertThrows(IllegalStateException::class.java) {
-            lexer.lex("@@@")
-        }
-        assertTrue(ex.message!!.contains("Token inesperado"))
+        // Trabajamos directamente con el Result en lugar de usar getTokens
+        val result = lexer.lex("@@@")
+        assertTrue(result.isFailure)
+        result.fold(
+            { fail("Debería haber fallado para tokens desconocidos") },
+            { error -> assertTrue(error.toString().contains("Token inesperado")) }
+        )
     }
 
 
@@ -180,7 +204,7 @@ class LexerTest {
         val source = "println(\"Hola\") let var1: string = 'Mundo'; \n let name : int = 780"
 
 
-        val tokens = lexer.lex(source)
+        val tokens = getTokens(source)
 
         assertEquals(TokenType.Println, tokens[0].type)
         assertEquals(TokenType.LeftParen, tokens[1].type)
