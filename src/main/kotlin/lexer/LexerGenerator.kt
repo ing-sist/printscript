@@ -1,14 +1,19 @@
 package org.example.lexer
 
+import org.example.common.result.LexError
+import org.example.common.result.Result
 import org.example.common.token.TokenType
 import java.util.regex.Pattern
 
 object LexerGenerator {
 
-    fun createLexer(version: String): Lexer {
+    fun createLexer(version: String): Result<Lexer, LexError> {
         return when (version) {
-            "1.0" -> Lexer(getKeywords(), getRules())
-            else -> throw IllegalArgumentException("Versión no soportada: $version")
+            "1.0" -> Result.Success(Lexer(getKeywords(), getRules()))
+            else -> Result.Failure(
+                LexError
+                    .InvalidVersion("Versión no soportada: $version")
+            )
         }
     }
 

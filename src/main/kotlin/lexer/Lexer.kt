@@ -1,6 +1,8 @@
 package org.example.lexer
 
 import org.example.common.Location
+import org.example.common.result.LexError
+import org.example.common.result.Result
 import org.example.common.token.Token
 import org.example.common.token.TokenType
 import java.util.regex.Matcher
@@ -11,7 +13,7 @@ class Lexer(
     private val generalRules: Map<Pattern, TokenType>
 
 ) {
-    fun lex(source: String): List<Token> {
+    fun lex(source: String): Result<List<Token>, LexError> {
 
         val tokens = mutableListOf<Token>()
         var remainingSource = source
@@ -61,12 +63,14 @@ class Lexer(
                 }
             }
             if (!matchFound) {
-                throw IllegalStateException(
-                    "Error de sintaxis: Token inesperado en línea $currentLine, columna $currentColumn cerca de '${remainingSource.take(10)}...'"
-                )
+                return Result.Failure(
+                    LexError
+                        .SyntaxError(
+                            "Error de syntax: Token inesperado en línea $currentLine, " +
+                                    "columna $currentColumn cerca de '${remainingSource.take(10)}...'"))
             }
         }
         tokens.add(Token(TokenType.EOF, "", Location(currentLine, currentColumn)))
-        return tokens
+        return Result.Success(tokens)
     }
 }
