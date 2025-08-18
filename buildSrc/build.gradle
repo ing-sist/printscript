@@ -1,0 +1,27 @@
+plugins {
+    id 'groovy-gradle-plugin'
+}
+
+group = 'org.printscript'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+}
+
+dependencies {
+    implementation 'org.apache.groovy:groovy:4.0.14'
+
+    // Agrega soporte para plugins de Kotlin
+    implementation 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
+
+    // Tests
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}

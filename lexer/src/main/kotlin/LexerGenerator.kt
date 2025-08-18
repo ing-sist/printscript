@@ -1,8 +1,3 @@
-package org.example.lexer
-
-import org.example.common.result.LexError
-import org.example.common.result.Result
-import org.example.common.token.TokenType
 import java.util.regex.Pattern
 
 object LexerGenerator {

@@ -2,3 +2,11 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 rootProject.name = 'printscript'
+include ('lexer',
+        'formatter',
+        'token',
+        'parser',
+        'interpreter',
+        'ast',
+        'cli',
+        'analyzer')

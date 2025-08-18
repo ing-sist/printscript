@@ -1,12 +1,6 @@
-package org.example.lexer
-
-import org.example.common.Location
-import org.example.common.result.LexError
-import org.example.common.result.Result
-import org.example.common.token.Token
-import org.example.common.token.TokenType
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import kotlin.collections.iterator
 
 class Lexer(
     private val keywordRules: Map<String, TokenType>,

@@ -1,0 +1,14 @@
+plugins {
+    id 'common-conventions'
+    id 'application'
+}
+
+tasks.withType(Jar) {
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Main-Class': project.hasProperty('mainClass') ? project.mainClass : ''
+        )
+    }
+}

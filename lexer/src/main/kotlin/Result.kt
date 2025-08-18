@@ -1,5 +1,3 @@
-package org.example.common.result
-
 // out permite extender de las implmentaciones de los hijos
 sealed interface Result<out T, out E> {
     val isSuccess: Boolean

@@ -1,5 +1,3 @@
-package org.example.common.token
-
 sealed interface TokenType {
 
     // 1. Keywords
