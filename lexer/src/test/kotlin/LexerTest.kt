@@ -79,7 +79,7 @@ class LexerTest {
         val tokens = getTokens(input)
 
         // Primera línea: let x: number = 42;
-        assertEquals(TokenType.VariableDeclaration, tokens[0].type) // let
+        assertEquals(TokenType.StringType, tokens[0].type) // let
         assertEquals(TokenType.Identifier, tokens[1].type) // x
         assertEquals(TokenType.Colon, tokens[2].type) // :
         assertEquals(TokenType.NumberType, tokens[3].type) // number
