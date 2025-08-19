@@ -1,7 +1,9 @@
 /**
  * Maneja la lectura y posición del código fuente.
  */
-class SourceReader(private val source: String) {
+class SourceReader(
+    private val source: String,
+) {
     private var position = 0
     private var line = 1
     private var column = 1
