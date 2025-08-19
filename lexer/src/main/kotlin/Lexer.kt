@@ -2,7 +2,9 @@
  * Lexical analyzer for PrintScript language.
  * Follows Single Responsibility Principle by focusing only on orchestrating the lexing process.
  */
-class Lexer(private val tokenRule: TokenRule) {
+class Lexer(
+    private val tokenRule: TokenRule,
+) {
     private val tokenMatcher = TokenMatcher(tokenRule)
 
     fun lex(source: String): Result<List<Token>, LexError> {
@@ -44,14 +46,17 @@ class Lexer(private val tokenRule: TokenRule) {
         return SourcePosition(remaining, currentLine, currentColumn)
     }
 
-    private fun processNextToken(source: SourcePosition): Result<TokenResult, LexError> {
-        return tokenMatcher.findNextToken(source.text, source.line, source.column)
-    }
+    private fun processNextToken(source: SourcePosition): Result<TokenResult, LexError> =
+        tokenMatcher.findNextToken(source.text, source.line, source.column)
 
-    private fun finalizeTokenList(tokens: List<Token>, source: SourcePosition): Result<List<Token>, LexError> {
-        val tokensWithEof = tokens.toMutableList().apply {
-            add(Token(TokenType.EOF, "", Location(source.line, source.column, source.column)))
-        }
+    private fun finalizeTokenList(
+        tokens: List<Token>,
+        source: SourcePosition,
+    ): Result<List<Token>, LexError> {
+        val tokensWithEof =
+            tokens.toMutableList().apply {
+                add(Token(TokenType.EOF, "", Location(source.line, source.column, source.column)))
+            }
         return Result.Success(tokensWithEof)
     }
 }

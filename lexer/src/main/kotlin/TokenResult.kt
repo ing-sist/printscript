@@ -1,1 +1,4 @@
-data class TokenResult(val token: Token, val position: SourcePosition)
+data class TokenResult(
+    val token: Token,
+    val position: SourcePosition,
+)

@@ -18,7 +18,9 @@ sealed interface Result<out T, out E> {
     ): R
 
     // data class genera automaticamente equals, hashCode, toString
-    data class Success<T>(val value: T) : Result<T, Nothing> {
+    data class Success<T>(
+        val value: T,
+    ) : Result<T, Nothing> {
         override val isSuccess: Boolean = true
 
         override fun getOrNull(): T = value
@@ -35,7 +37,9 @@ sealed interface Result<out T, out E> {
         ): R = onSuccess(value)
     }
 
-    data class Failure<E>(val error: E) : Result<Nothing, E> {
+    data class Failure<E>(
+        val error: E,
+    ) : Result<Nothing, E> {
         override val isSuccess: Boolean = false
 
         override fun getOrNull(): Nothing? = null

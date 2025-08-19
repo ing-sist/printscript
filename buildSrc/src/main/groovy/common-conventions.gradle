@@ -1,5 +1,8 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
+
+    // Agrego spotless plugin para formatear el codigo
+    id 'com.diffplug.spotless'
 }
 
 group = 'org.printscript'
@@ -24,5 +27,11 @@ tasks.withType(Test) {
     useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")
+    }
+}
+
+spotless {
+    kotlin {
+        ktlint()
     }
 }
