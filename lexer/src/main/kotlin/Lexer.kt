@@ -1,70 +1,57 @@
-import java.util.regex.Matcher
-import java.util.regex.Pattern
-import kotlin.collections.iterator
+/**
+ * Lexical analyzer for PrintScript language.
+ * Follows Single Responsibility Principle by focusing only on orchestrating the lexing process.
+ */
+class Lexer(private val tokenRule: TokenRule) {
+    private val tokenMatcher = TokenMatcher(tokenRule)
 
-class Lexer(
-    private val keywordRules: Map<String, TokenType>,
-    private val generalRules: Map<Pattern, TokenType>
-
-) {
     fun lex(source: String): Result<List<Token>, LexError> {
-
         val tokens = mutableListOf<Token>()
-        var remainingSource = source
-        var currentLine = 1
-        var currentColumn = 1
+        var currentSource = SourcePosition(source, 1, 1)
 
-        while (remainingSource.isNotEmpty()) {
-            val initialWhitespace = remainingSource.takeWhile { it.isWhitespace() }
-            if (initialWhitespace.isNotEmpty()) {
-                val newlines = initialWhitespace.count { it == '\n' }
-                if (newlines > 0) {
-                    currentLine += newlines
-                    currentColumn = initialWhitespace.length - initialWhitespace.lastIndexOf('\n')
-                } else {
-                    currentColumn += initialWhitespace.length
-                }
-                remainingSource = remainingSource.substring(initialWhitespace.length)
-                if (remainingSource.isEmpty()) break
-            }
-            var matchFound = false
+        while (currentSource.hasRemaining()) {
+            currentSource = skipWhitespace(currentSource)
 
-            // Paso 1: Keywords y data types
-            for ((kw, type) in keywordRules) {
-                val regex = Regex("^\\b$kw\\b")
-                val match = regex.find(remainingSource)
-                if (match != null) {
-                    val lexeme = match.value
-                    tokens.add(Token(type, lexeme, Location(currentLine, currentColumn)))
-                    currentColumn += lexeme.length
-                    remainingSource = remainingSource.substring(lexeme.length)
-                    matchFound = true
-                    break
-                }
-            }
-            if (matchFound) continue
+            if (!currentSource.hasRemaining()) break
 
-            // Paso 2: Reglas generales (Map de Pattern)
-            for ((pattern, tokenType) in generalRules) {
-                val matcher: Matcher = pattern.matcher(remainingSource)
-                if (matcher.find() && matcher.start() == 0) {
-                    val lexeme = matcher.group()
-                    tokens.add(Token(tokenType, lexeme, Location(currentLine, currentColumn)))
-                    currentColumn += lexeme.length
-                    remainingSource = remainingSource.substring(lexeme.length)
-                    matchFound = true
-                    break
+            when (val matchResult = processNextToken(currentSource)) {
+                is Result.Success -> {
+                    tokens.add(matchResult.value.token)
+                    currentSource = matchResult.value.position
                 }
-            }
-            if (!matchFound) {
-                return Result.Failure(
-                    LexError
-                        .SyntaxError(
-                            "Error de syntax: Token inesperado en línea $currentLine, " +
-                                    "columna $currentColumn cerca de '${remainingSource.take(10)}...'"))
+                is Result.Failure -> return Result.Failure(matchResult.error)
             }
         }
-        tokens.add(Token(TokenType.EOF, "", Location(currentLine, currentColumn)))
-        return Result.Success(tokens)
+
+        return finalizeTokenList(tokens, currentSource)
+    }
+
+    private fun skipWhitespace(source: SourcePosition): SourcePosition {
+        var remaining = source.text
+        var currentLine = source.line
+        var currentColumn = source.column
+
+        while (remaining.isNotEmpty() && remaining.first().isWhitespace()) {
+            if (remaining.first() == '\n') {
+                currentLine++
+                currentColumn = 1
+            } else {
+                currentColumn++
+            }
+            remaining = remaining.substring(1)
+        }
+
+        return SourcePosition(remaining, currentLine, currentColumn)
+    }
+
+    private fun processNextToken(source: SourcePosition): Result<TokenResult, LexError> {
+        return tokenMatcher.findNextToken(source.text, source.line, source.column)
+    }
+
+    private fun finalizeTokenList(tokens: List<Token>, source: SourcePosition): Result<List<Token>, LexError> {
+        val tokensWithEof = tokens.toMutableList().apply {
+            add(Token(TokenType.EOF, "", Location(source.line, source.column, source.column)))
+        }
+        return Result.Success(tokensWithEof)
     }
 }
