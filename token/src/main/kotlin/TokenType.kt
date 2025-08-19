@@ -1,37 +1,37 @@
 sealed interface TokenType {
 
     // 1. Keywords
-
-    data object Let : TokenType
-    data object Println : TokenType
+    data object VariableDeclaration : TokenType
+    data object FunctionCall : TokenType
 
     // 2. Symbols
-
     data object Colon : TokenType
     data object Semicolon : TokenType
     data object LeftParen : TokenType
     data object RightParen : TokenType
 
-    // 3. Operators (los incluyo a todos)
-
-    data object Operator : TokenType
+    // 3. Operators
+    data object Assignment : TokenType
+    data object Plus : TokenType
+    data object Minus : TokenType
+    data object Multiply : TokenType
+    data object Divide : TokenType
+    data object Equals : TokenType
+    data object NotEquals : TokenType
+    data object LessThan : TokenType
+    data object LessThanOrEqual : TokenType
+    data object GreaterThan : TokenType
+    data object GreaterThanOrEqual : TokenType
 
     // 4. Variables
-
     data object Identifier : TokenType
     data object StringLiteral : TokenType
     data object NumberLiteral : TokenType
-    //data class ListLiteral(val value: List<String>) : TokenType
 
     // 5. DataTypes
+    data object StringType: TokenType
+    data object NumberType : TokenType
 
-    sealed interface DataType : TokenType {
-
-        data object String: DataType
-        data object Number : DataType
-        //Extensible para futuros tipos de datos: maps, sets, list, etc
-    }
-
-    // 6. Señalar el fin del programa
+    // 6. End of file
     data object EOF : TokenType
 }

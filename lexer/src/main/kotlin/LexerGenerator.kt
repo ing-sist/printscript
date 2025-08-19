@@ -1,44 +1,63 @@
-import java.util.regex.Pattern
-
+/**
+ * Factory for creating Lexer instances with different configurations.
+ * Follows Factory pattern and Open/Closed principle for easy extension.
+ */
 object LexerGenerator {
 
-    fun createLexer(version: String): Result<Lexer, LexError> {
-        return when (version) {
-            "1.0" -> Result.Success(Lexer(getKeywords(), getRules()))
-            else -> Result.Failure(
-                LexError
-                    .InvalidVersion("Versión no soportada: $version")
-            )
-        }
+    fun createLexer(tokenRule: TokenRule): Lexer {
+        return Lexer(tokenRule)
     }
 
-    private fun getKeywords(): Map<String, TokenType> {
-        return mapOf(
-            "let" to TokenType.Let,
-            "println" to TokenType.Println,
-            "string" to TokenType.DataType.String,
-            "number" to TokenType.DataType.Number
-        )
+    fun createLexer(tokenRules: Map<String, TokenType>): Lexer {
+        val tokenRule = TokenRule.builder()
+            .addRules(tokenRules)
+            .build()
+        return Lexer(tokenRule)
     }
 
-    private fun getRules(): Map<Pattern, TokenType> {
-        return mapOf(
-            // String Literals with "" or ''
-            Pattern.compile("^\"[^\"]*\"") to TokenType.StringLiteral,
-            Pattern.compile("^'[^']*'") to TokenType.StringLiteral,
-            // Number Literals
-            Pattern.compile("^\\d+(\\.\\d+)?") to TokenType.NumberLiteral,
-            // Identifiers
-            Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_]*") to TokenType.Identifier,
+    fun createLexer(tokenRules: LinkedHashMap<String, TokenType>): Lexer {
+        return Lexer(TokenRule.fromMap(tokenRules))
+    }
+    fun createDefaultLexer(): Lexer {
+        val rules = linkedMapOf(
+            // Keywords (word boundaries for exact matches)
+            "\\blet\\b" to TokenType.VariableDeclaration,
+            "\\bprintln\\b" to TokenType.FunctionCall,
 
-            // Symbols
-            Pattern.compile("^:") to TokenType.Colon,
-            Pattern.compile("^;") to TokenType.Semicolon,
-            Pattern.compile("^\\(") to TokenType.LeftParen,
-            Pattern.compile("^\\)") to TokenType.RightParen,
+            // Data types
+            "\\bstring\\b" to TokenType.StringType,
+            "\\bnumber\\b" to TokenType.NumberType,
 
-            // Operators (multi-character first)
-            Pattern.compile("^(==|!=|<=|>=|[=+\\-*/])") to TokenType.Operator
+            // String Literals (both single and double quotes as per PrintScript spec)
+            "\"([^\"\\\\]|\\\\.)*\"" to TokenType.StringLiteral,
+            "'([^'\\\\]|\\\\.)*'" to TokenType.StringLiteral,
+
+            // Number Literals (integers and decimals as per PrintScript spec)
+            "\\d+\\.\\d+" to TokenType.NumberLiteral,  // Decimals first
+            "\\d+" to TokenType.NumberLiteral,        // Then integers
+
+            // Multi-character operators (must come before single character ones)
+            "==" to TokenType.Equals,
+            "!=" to TokenType.NotEquals,
+            "<=" to TokenType.LessThanOrEqual,
+            ">=" to TokenType.GreaterThanOrEqual,
+
+            // Single character operators and symbols
+            "=" to TokenType.Assignment,
+            "\\+" to TokenType.Plus,
+            "-" to TokenType.Minus,
+            "\\*" to TokenType.Multiply,
+            "/" to TokenType.Divide,
+            "<" to TokenType.LessThan,
+            ">" to TokenType.GreaterThan,
+            ":" to TokenType.Colon,
+            ";" to TokenType.Semicolon,
+            "\\(" to TokenType.LeftParen,
+            "\\)" to TokenType.RightParen,
+
+            // Identifiers (must come last to not conflict with keywords)
+            "[a-zA-Z_][a-zA-Z0-9_]*" to TokenType.Identifier
         )
+        return createLexer(rules)
     }
 }
