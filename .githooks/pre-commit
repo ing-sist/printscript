@@ -1,0 +1,37 @@
+#!/bin/sh
+set -e
+
+echo "Ejecutando pre-commit..."
+
+# 1) Formato siempre (simple)
+echo "Spotless: aplicando formato..."
+./gradlew spotlessApply
+echo "Actualizando archivos..."
+git add -A
+
+# 2) Lint con Detekt
+echo "Detekt: analizando..."
+if ! ./gradlew detekt; then
+  echo "Detekt: intentando autocorregir (detektApply)..."
+  ./gradlew detektApply || {
+    echo "detektApply falló. Corrigí los issues manualmente."
+    exit 1
+  }
+  echo "Detekt: verificando nuevamente..."
+  ./gradlew detekt || {
+    echo "Detekt sigue fallando. Revisá los reportes."
+    exit 1
+  }
+  echo "Actualizando staging (cambios de Detekt)..."
+  git add -A
+fi
+
+# 3) Build final (con tests)
+echo "Compilando (build)..."
+./gradlew build || {
+  echo "Falló el build. Corregí y volvé a intentar."
+  exit 1
+}
+
+echo "Todo OK. Podés commitear."
+exit 0
