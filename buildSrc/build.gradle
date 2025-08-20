@@ -1,5 +1,3 @@
-import groovy.cli.CliBuilderException
-
 plugins {
     id 'groovy-gradle-plugin'
 }
@@ -19,6 +17,8 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
     // Agraga soporte para plugins de Spotless
     implementation 'com.diffplug.spotless:spotless-plugin-gradle:7.2.1'
+    // Agrega soporte para plugins de Detekt
+    implementation 'io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.8'
 
     // Tests
     testImplementation platform('org.junit:junit-bom:5.10.0')

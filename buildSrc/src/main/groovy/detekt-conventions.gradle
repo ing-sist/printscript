@@ -1,0 +1,56 @@
+plugins {
+    id 'io.gitlab.arturbosch.detekt'
+}
+
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8"
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    // Configuracion personalizada
+    config = files("${rootProject.projectDir}/config/detekt/detekt.yml")
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        txt.enabled = true
+        sarif.enabled = true
+    }
+    // Falla si encuentra un problema
+    ignoreFailures = false
+}
+
+// Configura las tareas de Detekt para todos los módulos
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt).configureEach {
+    jvmTarget = "21" // Igual que en kotlin-conventions
+
+    // Analiza tanto el código principal como los tests
+    setSource(files(
+            layout.projectDirectory.dir("src/main/kotlin"),
+            layout.projectDirectory.dir("src/test/kotlin")
+    ))
+
+    // Excluye directorios que no deberían analizarse
+    exclude("**/build/**")
+    exclude("**/resources/**")
+}
+
+// Creo task que solucione siempre que sea posible
+tasks.register('detektApply', io.gitlab.arturbosch.detekt.Detekt) {
+    description = 'Corrige automáticamente problemas de detekt cuando sea posible'
+    jvmTarget = "21"
+    autoCorrect = true
+    config = files("${rootProject.projectDir}/config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+    // Analiza tanto el código principal como los tests
+    setSource(files(
+            layout.projectDirectory.dir("src/main/kotlin"),
+            layout.projectDirectory.dir("src/test/kotlin")
+    ))
+
+    // Excluye directorios que no deberían analizarse
+    exclude("**/build/**")
+    exclude("**/resources/**")
+}
