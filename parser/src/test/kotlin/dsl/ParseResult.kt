@@ -1,4 +1,5 @@
-package parser.dsl
+package dsl
+
 import Result
 import parser.ParseError
 

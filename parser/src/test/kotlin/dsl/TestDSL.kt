@@ -1,4 +1,4 @@
-package parser.dsl
+package dsl
 
 import Location
 import Token

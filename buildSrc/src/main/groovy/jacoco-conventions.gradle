@@ -1,0 +1,55 @@
+plugins {
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.10"
+}
+
+tasks.test {
+    finalizedBy jacocoTestReport
+}
+
+tasks.jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+
+    // Configuración para que el reporte HTML sea más legible
+    doLast {
+        println "Coverage report generated: ${reports.html.outputLocation}/index.html"
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.60 // 60% mínimo de cobertura
+            }
+        }
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.60
+            }
+        }
+        rule {
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.50 // 50% mínimo de cobertura de ramas
+            }
+        }
+    }
+}
+
+// Hacer que 'check' incluya la verificación de coverage
+tasks.check {
+    dependsOn jacocoTestCoverageVerification
+}

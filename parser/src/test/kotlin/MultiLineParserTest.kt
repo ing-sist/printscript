@@ -1,20 +1,12 @@
-package parser
-
-import AssignmentNode
-import BinaryOperationNode
-import DeclarationAssignmentNode
-import IdentifierNode
-import PrintlnNode
-import TokenType
+import dsl.testProgram
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import parser.dsl.testProgram
 
 /**
  * Tests de programas complejos usando DSL.
  * Muestra cómo el DSL hace que los tests de múltiples líneas sean muy legibles.
  */
-class ImprovedMultiLineParserTest {
+class MultiLineParserTest {
     @Test
     fun `should parse a complete program with declarations, assignments and println`() {
         // Un programa completo que es fácil de entender

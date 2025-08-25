@@ -9,6 +9,9 @@ plugins {
 
     // Agrego plugin de test
     id 'testing-conventions'
+
+    // Agrego jacoco plugin para coverage
+    id 'jacoco-conventions'
 }
 
 group = 'org.printscript'

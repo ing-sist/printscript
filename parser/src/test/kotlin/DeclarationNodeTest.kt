@@ -1,18 +1,14 @@
-package parser
-
-import DeclarationAssignmentNode
-import DeclarationNode
-import TokenType
+import dsl.testCode
+import dsl.testProgram
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import parser.dsl.testCode
-import parser.dsl.testProgram
+import parser.ParseError
 
 /**
  * Tests de declaraciones mejorados con DSL.
  * Cada test muestra claramente qué código está siendo parseado.
  */
-class ImprovedDeclarationNodeTest {
+class DeclarationNodeTest {
     @Test
     fun `should parse simple variable declaration`() {
         testCode("let x: number;")

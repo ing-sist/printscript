@@ -1,18 +1,12 @@
-package parser
-
-import AssignmentNode
-import BinaryOperationNode
-import LiteralNode
-import TokenType
+import dsl.testCode
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import parser.dsl.testCode
 
 /**
  * Tests mejorados usando DSL para mayor legibilidad.
  * Ahora es evidente qué código fuente está siendo testeado.
  */
-class ImprovedBinaryOperationNodeTest {
+class BinaryOperationNodeTest {
     @Test
     fun `should parse simple addition`() {
         val result =
