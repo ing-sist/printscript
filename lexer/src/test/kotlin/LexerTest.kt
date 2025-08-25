@@ -67,6 +67,17 @@ class LexerTest {
         assertEquals("miVariable", first.lexeme)
     }
 
+    @Test
+    fun numberLiteralTest() {
+        val tokens = getTokens("-3")
+        val first = tokens.first()
+        assertEquals(TokenType.Minus, first.type)
+        assertEquals("-", first.lexeme)
+        val second = tokens[1]
+        assertEquals(TokenType.NumberLiteral, second.type)
+        assertEquals("3", second.lexeme)
+    }
+
     // Test 1: Declaración de variable completa con tipo y asignación
     @Test
     fun completeVariableDeclarationTest() {
@@ -79,7 +90,7 @@ class LexerTest {
         val tokens = getTokens(input)
 
         // Primera línea: let x: number = 42;
-        assertEquals(TokenType.StringType, tokens[0].type) // let
+        assertEquals(TokenType.VariableDeclaration, tokens[0].type) // let
         assertEquals(TokenType.Identifier, tokens[1].type) // x
         assertEquals(TokenType.Colon, tokens[2].type) // :
         assertEquals(TokenType.NumberType, tokens[3].type) // number
