@@ -13,6 +13,12 @@ sealed interface TokenType {
 
     data object RightParen : TokenType
 
+    data object LeftBrace : TokenType
+
+    data object RightBrace : TokenType
+
+    data object Comma : TokenType
+
     // 3. Operators
     data object Assignment : TokenType
 
