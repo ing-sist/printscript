@@ -27,15 +27,6 @@ style:
     active: true
   MagicNumber:
     active: false
-    ignoreNumbers: [ '-1', '0', '1', '10' ]
-    ignoreHashCodeFunction: true
-    ignorePropertyDeclaration: true
-    ignoreConstantDeclaration: true
-    ignoreCompanionObjectPropertyDeclaration: true
-    ignoreAnnotation: true
-    ignoreNamedArgument: true
-    ignoreEnums: true
-
 
 formatting:
   active: true
