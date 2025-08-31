@@ -3,38 +3,46 @@ package events
 import Token
 import TokenType
 
-class FormattingEventFactory {
-    fun mapToken(t: Token): FormattingEvent {
-        val typeToEvent =
-            mapOf(
-                TokenType.Semicolon to Semicolon,
-                TokenType.Comma to Comma,
-                TokenType.LeftBrace to OpenBrace,
-                TokenType.RightBrace to CloseBrace,
-                TokenType.Colon to Operator(":"),
-                TokenType.LeftParen to OpenParen,
-                TokenType.RightParen to CloseParen,
-                TokenType.Assignment to Operator("="),
-                TokenType.Plus to Operator("+"),
-                TokenType.Minus to Operator("-"),
-                TokenType.Multiply to Operator("*"),
-                TokenType.Divide to Operator("/"),
-                TokenType.Equals to Operator("=="),
-                TokenType.NotEquals to Operator("!="),
-                TokenType.LessThan to Operator("<"),
-                TokenType.LessThanOrEqual to Operator("<="),
-                TokenType.GreaterThan to Operator(">"),
-                TokenType.GreaterThanOrEqual to Operator(">="),
-                TokenType.Identifier to Identifier(t.lexeme),
-                TokenType.StringLiteral to Literal(t.lexeme),
-                TokenType.NumberLiteral to Literal(t.lexeme),
-                TokenType.VariableDeclaration to Keyword("let"),
-                TokenType.StringType to Keyword("string"),
-                TokenType.NumberType to Keyword("number"),
-                TokenType.EOF to Eof,
-            )
-        return typeToEvent[t.type] ?: Keyword(t.lexeme) // Default to Keyword for unhandled types
-    }
-}
-// agregar caso de fallo donde no encuentra el tipo en el mapa, usar result
-//  TokenType.FunctionCall -> TODO()
+private val CONST_EVENTS: Map<TokenType, FormattingEvent> =
+    mapOf(
+        TokenType.Semicolon to Semicolon,
+        TokenType.Comma to Comma,
+        TokenType.LeftBrace to LeftBrace,
+        TokenType.RightBrace to RightBrace,
+        TokenType.Colon to Colon,
+        TokenType.LeftParen to LeftParen,
+        TokenType.RightParen to RightParen,
+        TokenType.Newline to BlankLine,
+        TokenType.Indent to Indent,
+        TokenType.Dedent to Dedent,
+        TokenType.Space to Space,
+    )
+
+private val OP_TEXT: Map<TokenType, String> =
+    mapOf(
+        TokenType.Assignment to "=",
+        TokenType.Plus to "+",
+        TokenType.Minus to "-",
+        TokenType.Multiply to "*",
+        TokenType.Divide to "/",
+        TokenType.Equals to "==",
+        TokenType.NotEquals to "!=",
+        TokenType.LessThan to "<",
+        TokenType.LessThanOrEqual to "<=",
+        TokenType.GreaterThan to ">",
+        TokenType.GreaterThanOrEqual to ">=",
+    )
+
+fun mapToken(token: Token): FormattingEvent =
+    CONST_EVENTS[token.type]
+        ?: OP_TEXT[token.type]?.let { Operator(it) }
+        ?: when (token.type) {
+            TokenType.Identifier -> Identifier(token.lexeme)
+            TokenType.StringLiteral -> Literal(token.lexeme)
+            TokenType.NumberLiteral -> Literal(token.lexeme)
+            TokenType.Comment -> Comment(token.lexeme)
+            TokenType.VariableDeclaration -> Keyword("let")
+            TokenType.StringType -> Keyword("string")
+            TokenType.NumberType -> Keyword("number")
+            else -> Keyword(token.lexeme)
+        }

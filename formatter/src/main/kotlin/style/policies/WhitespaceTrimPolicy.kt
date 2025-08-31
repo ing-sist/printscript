@@ -1,7 +1,6 @@
 package style.policies
 
-enum class WhitespaceTrimPolicy {
-    NONE,
-    TRAILING,
-    TRAILING_AND_FINAL_EOL,
+enum class WhitespaceTrimPolicy : Policy {
+    NONE, // deja espacios al final de cada linea
+    TRAILING, // borra los espacios de final de linea
 }

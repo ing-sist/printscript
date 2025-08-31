@@ -1,5 +1,7 @@
 package style.policies
 
-data class BlankLinePolicy(
-    val preserveBlankLinesUpTo: Int = 1,
-)
+enum class BlankLinePolicy : Policy {
+    NONE,
+    AT_MOST_ONE,
+    PRESERVE_ALL,
+}

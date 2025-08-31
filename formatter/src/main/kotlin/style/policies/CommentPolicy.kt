@@ -1,7 +1,11 @@
 package style.policies
 
 data class CommentPolicy(
-    val allowEndOfLine: Boolean = true,
-)
+    val type: CommentType = CommentType.EOL,
+    val maxLength: Int = 100,
+) : Policy
 
-// end of line es val x = 10 // comment, si es false el comment va en la linea siguiente
+enum class CommentType {
+    EOL, // End Of Line comments should stay at the end of the line
+    OWN_LINE, // Comments should be moved to their own line
+}

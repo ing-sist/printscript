@@ -1,13 +1,9 @@
 package style.policies
 
-sealed class LineWrapPolicy {
-    data object Off : LineWrapPolicy()
+data class LineWrapPolicy(
+    val mode: LineWrapMode = LineWrapMode.IF_TOO_LONG,
+    val maxLineLength: Int = 100,
+    val continuationIndent: Int = 2,
+) : Policy
 
-    data class Soft(
-        val limit: Int,
-    ) : LineWrapPolicy() // Soft wrapping at the specified character limit
-
-    data class Hard(
-        val limit: Int,
-    ) : LineWrapPolicy()
-}
+enum class LineWrapMode { NEVER, IF_TOO_LONG, ALWAYS }
