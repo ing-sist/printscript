@@ -8,6 +8,7 @@ import builders.AstBuilder
 import parser.ParseError
 
 class AssignmentValidator : AstValidators {
+    // pepe = 4;
     override fun validate(tokens: List<Token>): Result<AstBuilder, ParseError> {
         val isValid =
             tokens.size >= 4 &&
