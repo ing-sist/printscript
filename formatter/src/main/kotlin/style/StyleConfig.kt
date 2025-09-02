@@ -18,4 +18,7 @@ data class StyleConfig(
     val comments: CommentPolicy = CommentPolicy(),
     val indentation: IndentationPolicy = IndentationPolicy(),
     val whitespaceTrim: WhitespaceTrimPolicy = WhitespaceTrimPolicy.TRAILING,
+    val namingIdentifier: NamingIdentifiers = NamingIdentifiers.CAMMEL_CASE,
 )
+
+enum class NamingIdentifiers { CAMMEL_CASE, SNAKE_CASE }
