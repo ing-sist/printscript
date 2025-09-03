@@ -14,21 +14,22 @@ allprojects {
 subprojects {
     apply plugin: 'maven-publish'
 
-    afterEvaluate {
-        publishing {
-            publications {
-                maven(MavenPublication) {
+    // Aplicar configuración de publicación a todos los submódulos
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                afterEvaluate {
                     from components.java
                 }
             }
-            repositories {
-                maven {
-                    name = "GitHubPackages"
-                    url = uri("https://maven.pkg.github.com/ing-sist/printscript")
-                    credentials {
-                        username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR") ?: ""
-                        password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN") ?: ""
-                    }
+        }
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/ing-sist/printscript")
+                credentials {
+                    username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR") ?: ""
+                    password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN") ?: ""
                 }
             }
         }
