@@ -9,5 +9,5 @@ include ('lexer',
         'interpreter',
         'ast',
         'cli',
-        'analyzer',
-        'common',)
+        'common',
+        'analyzer')
