@@ -1,0 +1,19 @@
+{
+    "indentation": {
+        "spaces": 4,
+        "ifBlocks": true
+    },
+    "spacing": {
+        "beforeColon": false,
+        "afterColon": true,
+        "aroundAssignment": true
+    },
+    "lineBreaks": {
+        "afterSemicolon": true,
+        "maxLineLength": 120
+    },
+    "braces": {
+        "ifSameLine": true
+    }
+}
+
