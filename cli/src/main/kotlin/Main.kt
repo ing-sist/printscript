@@ -1,18 +1,26 @@
-private const val FIRST = 1
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.subcommands
+import commands.AnalyzeCommand
+import commands.ExecuteCommand
+import commands.FormatCommand
+import commands.ValidateCommand
 
-private const val LAST = 5
+fun main(args: Array<String>) {
+    PrintScriptCLI()
+        .subcommands(
+            ValidateCommand(),
+            ExecuteCommand(),
+            FormatCommand(),
+            AnalyzeCommand(),
+        ).main(args)
+}
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-fun main() {
-    val name = "Kotlin"
-
-    // TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
-
-    for (i in FIRST..LAST) {
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
+class PrintScriptCLI :
+    CliktCommand(
+        name = "printscript",
+        help = "PrintScript CLI - A command-line interface for PrintScript language operations",
+    ) {
+    override fun run() {
+        echo("Welcome to PrintScript CLI. Use --help to see available commands.")
     }
 }

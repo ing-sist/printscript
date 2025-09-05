@@ -32,6 +32,7 @@ sealed interface TokenType {
 
     data object Equals : TokenType
 
+    // Missing comparison operators
     data object NotEquals : TokenType
 
     data object LessThan : TokenType
