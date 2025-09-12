@@ -1,0 +1,11 @@
+{
+  "SpaceBeforeColon": false,
+  "SpaceAfterColon": false,
+  "lineBreakBeforePrintln": 2,
+  "lineBreakAfterSemicolon": false,
+  "spaceAroundAssignment": false,
+  "spaceBetweenTokens": false,
+  "spaceAroundOperators": false,
+  "ifStatementIndentation": 4,
+  "inlineIfBraceIfStatement": false
+}

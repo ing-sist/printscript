@@ -4,6 +4,8 @@ sealed interface TokenType {
 
     data object FunctionCall : TokenType
 
+    data object If : TokenType
+
     // 2. Symbols
     data object Colon : TokenType
 
@@ -55,16 +57,6 @@ sealed interface TokenType {
 
     data object NumberType : TokenType
 
-    data object Comment : TokenType
-
     // 6. End of file
     data object EOF : TokenType
-
-    data object Newline : TokenType
-
-    data object Indent : TokenType
-
-    data object Dedent : TokenType
-
-    data object Space : TokenType
 }
