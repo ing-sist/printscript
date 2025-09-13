@@ -1,40 +1,45 @@
-import config.StyleConfig
-import org.junit.jupiter.api.Assertions.assertEquals
+import config.FormatterStyleConfig
 import org.junit.jupiter.api.Test
+import rules.implementations.ColonSpacing
+import rules.implementations.CommaSpacing
+import rules.implementations.KeywordSpacing
+import rules.implementations.LineBreakAfterSemicolon
+import rules.implementations.LineBreakBeforePrintln
 import rules.implementations.RuleImplementation
+import rules.implementations.SpaceAroundAsignement
+import rules.implementations.SpaceAroundOperators
+import rules.implementations.VarDeclaration
 import java.io.File
+import kotlin.test.assertEquals
 
 class FormatterTest {
     private fun format(source: String): String {
-        // 1) cargar estilo desde JSON (tal cual tu setup)
         val cfgPath = File("src/test/kotlin/config1.json")
-        val style = StyleConfig.fromPath(cfgPath)
 
-        // 2) construir el lexer normal (factory real de tu proyecto)
+        val style = FormatterStyleConfig.fromPath(cfgPath)
+
         val lexer = LexerGenerator.createDefaultLexer()
 
-        // 3) lexear
         val tokens =
             when (val res = lexer.lex(source.trim())) {
                 is Result.Success -> res.value
                 is Result.Failure -> error("Lexing failed: ${res.error}")
             }
 
-        // 4) reglas del formatter (mismo orden)
         val rules: List<RuleImplementation> =
             listOf(
                 InlineBraceIfStatement,
-                IfStatementIndentation,
-                SpaceBeforeColon,
-                SpaceAfterColon,
-                SpaceAroundAsignement,
-                SpaceAroundOperators,
-                SpaceBetweenTokens,
                 LineBreakBeforePrintln,
                 LineBreakAfterSemicolon,
+                KeywordSpacing,
+                CommaSpacing,
+                ColonSpacing,
+                SpaceAroundAsignement,
+                SpaceAroundOperators,
+                VarDeclaration,
+                Indentation,
             )
 
-        // 5) formatear
         return Formatter(rules)
             .format(tokens, style, DocBuilder())
             .build()
@@ -46,7 +51,6 @@ class FormatterTest {
         val expected =
             """
             
-            
             println("a");
             x = 1;
             """.trimIndent()
@@ -56,7 +60,7 @@ class FormatterTest {
     @Test
     fun `declaracion tipada - espacios antes y despues de colon`() {
         val out = format("""let   x:number  ;""")
-        val expected = "let x: number;"
+        val expected = "let x : number;"
         assertEquals(expected, out.trimEnd())
     }
 
@@ -96,7 +100,7 @@ class FormatterTest {
     @Test
     fun `colapso de espacios multiples entre tokens`() {
         val out = format("""let    y    :    number     ;""")
-        val expected = "let y: number;"
+        val expected = "let y : number;"
         assertEquals(expected, out.trimEnd())
     }
 
@@ -115,9 +119,7 @@ class FormatterTest {
         val expected =
             """
             
-            
             println("a");
-            
             
             println("b");
             x = 1;
@@ -130,12 +132,117 @@ class FormatterTest {
         val out = format("""let   y: number ; println("ok");y=y+1;""")
         val expected =
             """
-            let y: number;
-            
+            let y : number;
             
             println("ok");
             y = y + 1;
             """.trimIndent()
+        assertEquals(expected, out.trimEnd())
+    }
+
+    @Test
+    fun `brace inline - mismo renglón que el if`() {
+        val out =
+            format(
+                """
+                if (x > 0){println("ok");}
+                """.trimIndent(),
+            )
+
+        val expected =
+            """
+            if (x > 0) {
+            
+                println("ok");
+            }
+            """.trimIndent()
+
+        assertEquals(expected, out.trimEnd())
+    }
+
+    @Test
+    fun `indentación simple dentro del if`() {
+        val out =
+            format(
+                """
+                if (x > 0) {x=1;}
+                """.trimIndent(),
+            )
+
+        val expected =
+            """
+            if (x > 0) {
+                x = 1;
+            }
+            """.trimIndent()
+
+        assertEquals(expected, out.trimEnd())
+    }
+
+    @Test
+    fun `indentación configurable - 4 espacios`() {
+        val out =
+            format(
+                """
+                if (x > 0) {println("a");}
+                """.trimIndent(),
+            )
+
+        val expected =
+            """
+            if (x > 0) {
+            
+                println("a");
+            }
+            """.trimIndent()
+
+        assertEquals(expected, out.trimEnd())
+    }
+
+    @Test
+    fun `if-else anidado respeta indentacion y alineacion de llaves`() {
+        val out =
+            format(
+                """
+                if (a){if(b){x=1;}else{y=2;}}
+                """.trimIndent(),
+            )
+
+        val expected =
+            """
+            if (a) {
+                if (b) {
+                    x = 1;
+                } else {
+                    y = 2;
+                }
+            }
+            """.trimIndent()
+        assertEquals(expected, out.trimEnd())
+    }
+
+    @Test
+    fun `if con muchas sentencias separadas por punto y coma`() {
+        val out =
+            format(
+                """
+                 if (x > 0) {
+                    a = 1;b = 2;c = 3;
+                    d = 4;
+                }
+                """.trimIndent(),
+            )
+
+        val expected =
+            """
+            if (x > 0) {
+                a = 1;
+                b = 2;
+                c = 3;
+                d = 4;
+            }
+            """.trimIndent()
+
         assertEquals(expected, out.trimEnd())
     }
 }

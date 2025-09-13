@@ -1,13 +1,27 @@
-class DocBuilder private constructor(
-    private val content: String,
+class DocBuilder(
+    private val content: String = "",
+    private val lineStart: Boolean = true,
 ) {
-    constructor() : this("")
+    fun write(s: String): DocBuilder = DocBuilder(content + s, lineStart = false)
 
-    fun write(s: String): DocBuilder = DocBuilder(content + s)
+    fun space(): DocBuilder =
+        if (lineStart) {
+            this
+        } else {
+            DocBuilder(content + " ", lineStart = false)
+        }
 
-    fun newline(): DocBuilder = DocBuilder(content + "\n")
+    fun newline(): DocBuilder = DocBuilder(content + "\n", lineStart = true)
 
-    fun space(): DocBuilder = DocBuilder(content + " ")
+    fun isAtLineStart(): Boolean = lineStart
 
     fun build(): String = content
+
+    fun indent(spaces: Int): DocBuilder {
+        var d = this
+        if (lineStart) {
+            repeat(spaces) { d = d.write(" ") }
+        }
+        return d
+    }
 }

@@ -13,7 +13,7 @@ class LexerTest {
             .shouldTokenizeSuccessfully()
             .withTokenCountExcludingEOF(5) // let, x, :, number, ;
             .withTokensExcludingEOF(
-                TokenType.VariableDeclaration,
+                TokenType.Keyword.VariableDeclaration,
                 TokenType.Identifier,
                 TokenType.Colon,
                 TokenType.NumberType,
@@ -28,7 +28,7 @@ class LexerTest {
             .shouldTokenizeSuccessfully()
             .withTokenCountExcludingEOF(7) // Corregido: let, name, :, string, =, "John", ;
             .withTokensExcludingEOF(
-                TokenType.VariableDeclaration, // let
+                TokenType.Keyword.VariableDeclaration, // let
                 TokenType.Identifier, // name
                 TokenType.Colon, // :
                 TokenType.StringType, // string
@@ -145,7 +145,7 @@ class LexerTest {
             "println(name);",
         ).shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.VariableDeclaration,
+                TokenType.Keyword.VariableDeclaration,
                 TokenType.StringType,
                 TokenType.NumberType,
                 TokenType.StringLiteral,

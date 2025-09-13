@@ -4,7 +4,7 @@ import DocBuilder
 import Token
 import config.FormatterStyleConfig
 
-object SpaceAroundAsignement : RuleImplementation {
+object ColonSpacing : RuleImplementation {
     override fun before(
         tokens: List<Token>,
         index: Int,
@@ -13,7 +13,7 @@ object SpaceAroundAsignement : RuleImplementation {
     ): DocBuilder {
         val token = tokens[index]
         var result = out
-        if (token.type is TokenType.Assignment && style.spaceAroundAssignment) {
+        if (token.type is TokenType.Colon && style.spaceBeforeColon) {
             result = result.space()
         }
         return result
@@ -27,7 +27,7 @@ object SpaceAroundAsignement : RuleImplementation {
     ): DocBuilder {
         val token = tokens[index]
         var result = out
-        if (token.type is TokenType.Assignment && style.spaceAroundAssignment) {
+        if (token.type is TokenType.Colon && style.spaceAfterColon) {
             result = result.space()
         }
         return result

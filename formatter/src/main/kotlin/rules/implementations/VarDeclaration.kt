@@ -2,10 +2,11 @@ package rules.implementations
 
 import DocBuilder
 import Token
+import TokenType
 import config.FormatterStyleConfig
 
-object LineBreakBeforePrintln : RuleImplementation {
-    override fun before(
+object VarDeclaration : RuleImplementation {
+    override fun after(
         tokens: List<Token>,
         index: Int,
         style: FormatterStyleConfig,
@@ -13,10 +14,8 @@ object LineBreakBeforePrintln : RuleImplementation {
     ): DocBuilder {
         val token = tokens[index]
         var result = out
-        if (token.lexeme.lowercase() == "println") {
-            repeat(style.lineBreakBeforePrintln) {
-                result = result.newline()
-            }
+        if (token.type is TokenType.Keyword.VariableDeclaration) {
+            result = result.space()
         }
         return result
     }

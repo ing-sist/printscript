@@ -1,17 +1,20 @@
-import config.StyleConfig
-import rules.implementations.RuleImplementation
+package rules.implementations
+
+import DocBuilder
+import Token
+import config.FormatterStyleConfig
 
 object LineBreakAfterSemicolon : RuleImplementation {
     override fun after(
         tokens: List<Token>,
         index: Int,
-        style: StyleConfig,
+        style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
         val token = tokens[index]
-        val result = out
+        var result = out
         if (token.type is TokenType.Semicolon && style.lineBreakAfterSemicolon) {
-            result.newline()
+            result = result.newline()
         }
         return result
     }

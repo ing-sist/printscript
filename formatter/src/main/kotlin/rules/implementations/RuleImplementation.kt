@@ -2,20 +2,20 @@ package rules.implementations
 
 import DocBuilder
 import Token
-import config.StyleConfig
+import config.FormatterStyleConfig
 
 interface RuleImplementation {
     fun before(
         tokens: List<Token>,
         index: Int,
-        style: StyleConfig,
+        style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder = out
 
     fun after(
         tokens: List<Token>,
         index: Int,
-        style: StyleConfig,
+        style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder = out
 }

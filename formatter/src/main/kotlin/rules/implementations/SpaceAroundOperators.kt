@@ -1,5 +1,9 @@
-import config.StyleConfig
-import rules.implementations.RuleImplementation
+package rules.implementations
+
+import DocBuilder
+import Token
+import TokenType
+import config.FormatterStyleConfig
 
 object SpaceAroundOperators : RuleImplementation {
     val operators =
@@ -20,13 +24,13 @@ object SpaceAroundOperators : RuleImplementation {
     override fun before(
         tokens: List<Token>,
         index: Int,
-        style: StyleConfig,
+        style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
         val token = tokens[index]
-        val result = out
+        var result = out
         if (token.type in operators && style.spaceAroundOperators) {
-            result.space()
+            result = result.space()
         }
         return result
     }
@@ -34,13 +38,13 @@ object SpaceAroundOperators : RuleImplementation {
     override fun after(
         tokens: List<Token>,
         index: Int,
-        style: StyleConfig,
+        style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
         val token = tokens[index]
-        val result = out
+        var result = out
         if (token.type in operators && style.spaceAroundOperators) {
-            result.space()
+            result = result.space()
         }
         return result
     }

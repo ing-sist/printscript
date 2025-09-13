@@ -11,7 +11,7 @@ class DeclarationAssignmentValidator : AstValidators {
     override fun validate(tokens: List<Token>): Result<AstBuilder, ParseError> {
         val isValid =
             tokens.size >= 7 &&
-                tokens[0].type is TokenType.VariableDeclaration &&
+                tokens[0].type is TokenType.Keyword.VariableDeclaration &&
                 tokens[1].type is TokenType.Identifier &&
                 tokens[2].type is TokenType.Colon &&
                 (tokens[3].type is TokenType.StringType || tokens[3].type is TokenType.NumberType) &&

@@ -1,10 +1,13 @@
 sealed interface TokenType {
-    // 1. Keywords
-    data object VariableDeclaration : TokenType
+    sealed interface Keyword : TokenType {
+        data object VariableDeclaration : Keyword
+
+        data object If : Keyword
+
+        data object Else : Keyword
+    }
 
     data object FunctionCall : TokenType
-
-    data object If : TokenType
 
     // 2. Symbols
     data object Colon : TokenType

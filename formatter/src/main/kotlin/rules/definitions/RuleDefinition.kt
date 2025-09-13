@@ -3,7 +3,7 @@ package rules.definitions
 import rules.RuleOwner
 
 object LineBreakBeforePrintlnDef : Rule<Int> {
-    override val id: String = "LineBreakBeforePrintln"
+    override val id: String = "rules.implementations.LineBreakBeforePrintln"
     override val default: Int = 1
     override val owner: RuleOwner = RuleOwner.USER
 
@@ -35,7 +35,7 @@ object SpaceAfterColonDef : Rule<Boolean> {
 }
 
 object SpaceAroundAsignementDef : Rule<Boolean> {
-    override val id: String = "SpaceAroundAsignement"
+    override val id: String = "rules.implementations.SpaceAroundAsignement"
     override val default: Boolean = true
     override val owner: RuleOwner = RuleOwner.USER
 
@@ -43,7 +43,7 @@ object SpaceAroundAsignementDef : Rule<Boolean> {
 }
 
 object SpaceBetweenTokensDef : Rule<Boolean> {
-    override val id: String = "SpaceAroundAsignement"
+    override val id: String = "rules.implementations.SpaceAroundAsignement"
     override val default: Boolean = true
     override val owner: RuleOwner = RuleOwner.ENGINE
 
@@ -58,8 +58,8 @@ object SpaceAroundOperatorsDef : Rule<Boolean> {
     override fun parse(raw: String): Boolean = raw.trim().lowercase() == "true"
 }
 
-object IfStatementIndentationDef : Rule<Int> {
-    override val id: String = "IfStatementIndentation"
+object IndentationDef : Rule<Int> {
+    override val id: String = "Indentation"
     override val default: Int = 4
     override val owner: RuleOwner = RuleOwner.USER
 
