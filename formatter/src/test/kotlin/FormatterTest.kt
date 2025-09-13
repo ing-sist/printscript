@@ -34,7 +34,7 @@ class FormatterTest {
             )
 
         return Formatter(rules)
-            .format(stream, style, DocBuilder())
+            .format(stream, style, DocBuilder.inMemory())
             .build()
     }
 
