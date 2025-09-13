@@ -14,17 +14,10 @@ import kotlin.test.assertEquals
 
 class FormatterTest {
     private fun format(source: String): String {
-        val cfgPath = File("src/test/kotlin/config1.json")
-
-        val style = FormatterStyleConfig.fromPath(cfgPath)
-
+        val style = FormatterStyleConfig.fromPath(File("src/test/kotlin/config1.json"))
         val lexer = LexerGenerator.createDefaultLexer()
 
-        val tokens =
-            when (val res = lexer.lex(source.trim())) {
-                is Result.Success -> res.value
-                is Result.Failure -> error("Lexing failed: ${res.error}")
-            }
+        val stream = streamFromSource(lexer, source)
 
         val rules: List<RuleImplementation> =
             listOf(
@@ -41,8 +34,20 @@ class FormatterTest {
             )
 
         return Formatter(rules)
-            .format(tokens, style, DocBuilder())
+            .format(stream, style, DocBuilder())
             .build()
+    }
+
+    private fun streamFromSource(
+        lexer: Lexer,
+        source: String,
+    ): TokenStream {
+        val tokens =
+            when (val res = lexer.lex(source.trim())) {
+                is Result.Success -> res.value
+                is Result.Failure -> error("Lexing failed: ${res.error}")
+            }
+        return TokenStream(tokens)
     }
 
     @Test

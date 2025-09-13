@@ -7,28 +7,28 @@ import config.FormatterStyleConfig
 
 object CommaSpacing : RuleImplementation {
     override fun before(
-        tokens: List<Token>,
-        index: Int,
+        prev: Token,
+        curr: Token,
+        next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        val token = tokens[index]
         var result = out
-        if (token.type is TokenType.Colon && style.spaceBeforeColon) {
+        if (curr.type is TokenType.Colon && style.spaceBeforeColon) {
             result = result.space()
         }
         return result
     }
 
     override fun after(
-        tokens: List<Token>,
-        index: Int,
+        prev: Token,
+        curr: Token,
+        next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        val token = tokens[index]
         var result = out
-        if (token.type is TokenType.Comma) {
+        if (curr.type is TokenType.Comma) {
             result = result.space()
         }
         return result

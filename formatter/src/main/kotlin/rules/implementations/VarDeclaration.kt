@@ -7,14 +7,14 @@ import config.FormatterStyleConfig
 
 object VarDeclaration : RuleImplementation {
     override fun after(
-        tokens: List<Token>,
-        index: Int,
+        prev: Token,
+        curr: Token,
+        next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        val token = tokens[index]
         var result = out
-        if (token.type is TokenType.Keyword.VariableDeclaration) {
+        if (curr.type is TokenType.Keyword.VariableDeclaration) {
             result = result.space()
         }
         return result

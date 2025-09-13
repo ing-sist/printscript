@@ -5,39 +5,85 @@ class Formatter(
     private val rules: List<RuleImplementation>,
 ) {
     fun format(
-        tokens: List<Token>,
+        tokenStream: TokenStream,
         style: FormatterStyleConfig,
         initial: DocBuilder,
     ): DocBuilder {
         var out = initial
+        var level = 0
 
-        for (i in tokens.indices) {
-            for (rule in rules) {
-                val newOut = rule.before(tokens, i, style, out)
+        var prev = Token(TokenType.EOF, "", Location(-1, -1, -1))
+        var curr = tokenStream.consume()
 
-                if (newOut != out) {
-                    out = newOut
-                    break
-                }
-            }
+        while (curr.type !is TokenType.EOF) {
+            val next: Token = tokenStream.peek(0)
 
-            if (tokens[i].type !is TokenType.EOF) {
-                if (out.isAtLineStart()) {
-                    val level = indentLevelUpTo(tokens, i)
-                    out = out.indent(level * style.indentation)
-                }
-                out = out.write(tokens[i].lexeme)
-            }
+            out = applyBeforeRules(prev, curr, next, style, out)
 
-            for (rule in rules) {
-                val newOut = rule.after(tokens, i, style, out)
+            out = indentIfAtLineStart(out, curr.type, level, style)
+            out = out.write(curr.lexeme)
 
-                if (newOut != out) {
-                    out = newOut
-                    break
-                }
-            }
+            out = applyAfterRules(prev, curr, next, style, out)
+
+            level = updatedLevelAfter(curr.type, level)
+
+            prev = curr
+            curr = tokenStream.consume()
         }
         return out
     }
+
+    // --- Helpers extraídos con Extract Method ---
+
+    private fun applyBeforeRules(
+        prev: Token,
+        curr: Token,
+        next: Token,
+        style: FormatterStyleConfig,
+        out: DocBuilder,
+    ): DocBuilder {
+        var acc = out
+        for (rule in rules) {
+            val n = rule.before(prev, curr, next, style, acc)
+            if (n !== acc) return n
+        }
+        return acc
+    }
+
+    private fun applyAfterRules(
+        prev: Token,
+        curr: Token,
+        next: Token,
+        style: FormatterStyleConfig,
+        out: DocBuilder,
+    ): DocBuilder {
+        var acc = out
+        for (rule in rules) {
+            val n = rule.after(prev, curr, next, style, acc)
+            if (n !== acc) return n
+        }
+        return acc
+    }
+
+    private fun indentIfAtLineStart(
+        out: DocBuilder,
+        currType: TokenType,
+        level: Int,
+        style: FormatterStyleConfig,
+    ): DocBuilder {
+        if (!out.isAtLineStart()) return out
+        val visibleLevel =
+            if (currType is TokenType.RightBrace) (level - 1).coerceAtLeast(0) else level
+        return out.indent(visibleLevel * style.indentation)
+    }
+
+    private fun updatedLevelAfter(
+        currType: TokenType,
+        level: Int,
+    ): Int =
+        when (currType) {
+            is TokenType.LeftBrace -> level + 1
+            is TokenType.RightBrace -> (level - 1).coerceAtLeast(0)
+            else -> level
+        }
 }

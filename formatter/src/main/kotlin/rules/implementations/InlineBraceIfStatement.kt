@@ -3,14 +3,14 @@ import rules.implementations.RuleImplementation
 
 object InlineBraceIfStatement : RuleImplementation {
     override fun before(
-        tokens: List<Token>,
-        index: Int,
+        prev: Token,
+        curr: Token,
+        next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        val token = tokens[index]
         var result = out
-        if (token.type is TokenType.LeftBrace) result = result.space()
+        if (curr.type is TokenType.LeftBrace) result = result.space()
         return result
     }
 }
