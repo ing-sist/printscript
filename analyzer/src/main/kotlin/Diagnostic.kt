@@ -4,3 +4,7 @@ data class Diagnostic(
     val location: Location,
     val type: Type,
 )
+
+interface DiagnosticSender {
+    fun emit(d: Diagnostic)
+}

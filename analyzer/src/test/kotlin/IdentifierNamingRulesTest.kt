@@ -17,7 +17,7 @@ class IdentifierNamingRulesTest {
     @Test
     fun `camelCase OK`() {
         val ast = id("userName") // camel válido
-        val report = Report()
+        val report = Report.inMemory()
         val finalReport: Report = Analyzer(listOf(rule(IdentifierCase.CAMEL_CASE))).analyze(ast, report)
         assertTrue(finalReport.isEmpty(), "No debería reportar para camelCase válido")
     }
@@ -25,7 +25,7 @@ class IdentifierNamingRulesTest {
     @Test
     fun `camelCase BAD when snake_case`() {
         val ast = id("user_name") // snake
-        val report = Report()
+        val report = Report.inMemory()
         val finalReport: Report = Analyzer(listOf(rule(IdentifierCase.CAMEL_CASE))).analyze(ast, report)
 
         assertEquals(1, finalReport.size())
@@ -49,7 +49,7 @@ class IdentifierNamingRulesTest {
 
     @Test
     fun `snake_case OK`() {
-        val report = Report()
+        val report = Report.inMemory()
         val ast = id("user_name")
         val finalReport: Report = Analyzer(listOf(rule(IdentifierCase.SNAKE_CASE))).analyze(ast, report)
         assertTrue(finalReport.isEmpty(), "No debería reportar para snake_case válido")
@@ -58,7 +58,7 @@ class IdentifierNamingRulesTest {
     @Test
     fun `snake_case BAD when camelCase`() {
         val ast = id("userName") // camel
-        val report = Report()
+        val report = Report.inMemory()
         val finalReport: Report = Analyzer(listOf(rule(IdentifierCase.SNAKE_CASE))).analyze(ast, report)
 
         assertEquals(1, finalReport.size())
