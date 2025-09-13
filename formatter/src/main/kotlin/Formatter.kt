@@ -1,47 +1,43 @@
-import events.DocBuilder
-import events.FormattingEvent
-import events.mapToken
-import style.StyleConfig
-import style.handlers.ArgsLayoutHandler
-import style.handlers.CommentHandler
-import style.handlers.LineBreakHandler
-import style.handlers.LineWrapHandler
-import style.handlers.SpacingHandler
-import style.handlers.WhiteSpaceTrimHandler
+import config.FormatterStyleConfig
+import rules.implementations.RuleImplementation
 
 class Formatter(
-    private val style: StyleConfig,
+    private val rules: List<RuleImplementation>,
 ) {
-    fun format(input: List<Token>): String {
-        val out = DocBuilder()
-        val events = mutableListOf<FormattingEvent>()
+    fun format(
+        tokens: List<Token>,
+        style: FormatterStyleConfig,
+        initial: DocBuilder,
+    ): DocBuilder {
+        var out = initial
 
-        // paso el input de token type a formatting event
-        for (token in input) {
-            val ev = mapToken(token)
-            events.add(ev)
+        for (i in tokens.indices) {
+            for (rule in rules) {
+                val newOut = rule.before(tokens, i, style, out)
+
+                if (newOut != out) {
+                    out = newOut
+                    break
+                }
+            }
+
+            if (tokens[i].type !is TokenType.EOF) {
+                if (out.isAtLineStart()) {
+                    val level = indentLevelUpTo(tokens, i)
+                    out = out.indent(level * style.indentation)
+                }
+                out = out.write(tokens[i].lexeme)
+            }
+
+            for (rule in rules) {
+                val newOut = rule.after(tokens, i, style, out)
+
+                if (newOut != out) {
+                    out = newOut
+                    break
+                }
+            }
         }
-
-        // paso la mut list a una var para reasignarla durante el pipeline
-        var evs: List<FormattingEvent> = events
-
-        evs = WhiteSpaceTrimHandler.handle(evs, style.whitespaceTrim)
-        evs = CommentHandler.handle(evs, style.comments)
-        evs = BlankLineHandler.handle(evs, style.blankLines)
-
-        evs = ArgsLayoutHandler.handle(evs, style.argsLayout)
-        evs = IndentationHandler.handle(evs, style.indentation)
-
-        evs = SpacingHandler.handle(evs, style.spacing)
-
-        evs = LineBreakHandler.handle(evs, style.lineBreak)
-        evs = LineWrapHandler.handle(evs, style.lineWrap)
-
-        // como cada handler sabe si tiene que cambiar esa list
-        for (e in evs) {
-            e.printer(out)
-            // ahora la imrpimo en el doc builder
-        }
-        return out.build() // la paso a str
+        return out
     }
 }

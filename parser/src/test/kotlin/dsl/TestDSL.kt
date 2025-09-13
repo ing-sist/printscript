@@ -142,10 +142,12 @@ class TestDSL {
 
     private fun getKeywordTokenType(word: String): TokenType? =
         when (word) {
-            "let" -> TokenType.VariableDeclaration
+            "let" -> TokenType.Keyword.VariableDeclaration
             "number" -> TokenType.NumberType
             "string" -> TokenType.StringType
             "println" -> TokenType.FunctionCall
+            "if" -> TokenType.Keyword.If
+            "else" -> TokenType.Keyword.Else
             else -> null
         }
 

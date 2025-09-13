@@ -20,8 +20,10 @@ object LexerGenerator {
         val rules =
             linkedMapOf(
                 // Keywords (word boundaries for exact matches)
-                "\\blet\\b" to TokenType.VariableDeclaration,
+                "\\blet\\b" to TokenType.Keyword.VariableDeclaration,
                 "\\bprintln\\b" to TokenType.FunctionCall,
+                "\\bif\\b" to TokenType.Keyword.If,
+                "\\belse\\b" to TokenType.Keyword.Else,
                 // Data types
                 "\\bstring\\b" to TokenType.StringType,
                 "\\bnumber\\b" to TokenType.NumberType,
@@ -46,8 +48,11 @@ object LexerGenerator {
                 ">" to TokenType.GreaterThan,
                 ":" to TokenType.Colon,
                 ";" to TokenType.Semicolon,
+                "," to TokenType.Comma,
                 "\\(" to TokenType.LeftParen,
                 "\\)" to TokenType.RightParen,
+                "\\}" to TokenType.RightBrace,
+                "\\{" to TokenType.LeftBrace,
                 // Identifiers (must come last to not conflict with keywords)
                 "[a-zA-Z_][a-zA-Z0-9_]*" to TokenType.Identifier,
             )

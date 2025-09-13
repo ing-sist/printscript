@@ -63,5 +63,3 @@ fun unary(
     operator = tok(opLex, line, col, col),
     operand = operand,
 )
-
-fun printlnOf(content: AstNode) = PrintlnNode(content)
