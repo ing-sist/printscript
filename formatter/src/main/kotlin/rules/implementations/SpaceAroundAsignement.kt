@@ -6,28 +6,28 @@ import config.FormatterStyleConfig
 
 object SpaceAroundAsignement : RuleImplementation {
     override fun before(
-        tokens: List<Token>,
-        index: Int,
+        prev: Token,
+        curr: Token,
+        next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        val token = tokens[index]
         var result = out
-        if (token.type is TokenType.Assignment && style.spaceAroundAssignment) {
+        if (curr.type is TokenType.Assignment && style.spaceAroundAssignment) {
             result = result.space()
         }
         return result
     }
 
     override fun after(
-        tokens: List<Token>,
-        index: Int,
+        prev: Token,
+        curr: Token,
+        next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        val token = tokens[index]
         var result = out
-        if (token.type is TokenType.Assignment && style.spaceAroundAssignment) {
+        if (curr.type is TokenType.Assignment && style.spaceAroundAssignment) {
             result = result.space()
         }
         return result

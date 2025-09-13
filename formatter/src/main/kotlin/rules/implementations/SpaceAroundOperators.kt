@@ -22,28 +22,28 @@ object SpaceAroundOperators : RuleImplementation {
         )
 
     override fun before(
-        tokens: List<Token>,
-        index: Int,
+        prev: Token,
+        curr: Token,
+        next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        val token = tokens[index]
         var result = out
-        if (token.type in operators && style.spaceAroundOperators) {
+        if (curr.type in operators && style.spaceAroundOperators) {
             result = result.space()
         }
         return result
     }
 
     override fun after(
-        tokens: List<Token>,
-        index: Int,
+        prev: Token,
+        curr: Token,
+        next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        val token = tokens[index]
         var result = out
-        if (token.type in operators && style.spaceAroundOperators) {
+        if (curr.type in operators && style.spaceAroundOperators) {
             result = result.space()
         }
         return result

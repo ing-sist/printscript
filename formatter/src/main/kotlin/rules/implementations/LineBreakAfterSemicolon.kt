@@ -6,14 +6,14 @@ import config.FormatterStyleConfig
 
 object LineBreakAfterSemicolon : RuleImplementation {
     override fun after(
-        tokens: List<Token>,
-        index: Int,
+        prev: Token,
+        curr: Token,
+        next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        val token = tokens[index]
         var result = out
-        if (token.type is TokenType.Semicolon && style.lineBreakAfterSemicolon) {
+        if (curr.type is TokenType.Semicolon && style.lineBreakAfterSemicolon) {
             result = result.newline()
         }
         return result
