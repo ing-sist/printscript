@@ -1,15 +1,11 @@
 sealed interface AstNode {
     fun children(): List<AstNode> // defino para cada tipo de nodo, que hijos tiene
-
-    fun getLocation(): Location
 }
 
 data class LiteralNode(
     val value: Token,
 ) : AstNode {
     override fun children(): List<AstNode> = emptyList()
-
-    override fun getLocation(): Location = value.location
 }
 
 data class IdentifierNode(
@@ -17,8 +13,6 @@ data class IdentifierNode(
     val name: String,
 ) : AstNode {
     override fun children(): List<AstNode> = emptyList()
-
-    override fun getLocation(): Location = value.location
 }
 
 data class BinaryOperationNode(
@@ -27,8 +21,6 @@ data class BinaryOperationNode(
     val right: AstNode,
 ) : AstNode {
     override fun children(): List<AstNode> = listOf(left, right)
-
-    override fun getLocation(): Location = operator.location
 }
 
 data class DeclarationNode(
@@ -37,18 +29,13 @@ data class DeclarationNode(
     val isMutable: Boolean = false,
 ) : AstNode {
     override fun children(): List<AstNode> = listOf(identifier)
-
-    override fun getLocation(): Location = identifier.value.location
 }
 
 data class DeclarationAssignmentNode(
-    val identifier: IdentifierNode,
-    val type: Token,
+    val declaration: DeclarationNode,
     val value: AstNode,
 ) : AstNode {
-    override fun children(): List<AstNode> = listOf(identifier, value)
-
-    override fun getLocation(): Location = identifier.value.location
+    override fun children(): List<AstNode> = listOf(declaration, value)
 }
 
 data class AssignmentNode(
@@ -56,18 +43,14 @@ data class AssignmentNode(
     val expression: AstNode,
 ) : AstNode {
     override fun children(): List<AstNode> = listOf(identifier, expression)
-
-    override fun getLocation(): Location = identifier.value.location
 }
 
 data class FunctionCallNode(
     val functionName: String,
     val content: AstNode,
-    val isVoid: Boolean,
+    val isVoid: Boolean = false,
 ) : AstNode {
     override fun children(): List<AstNode> = listOf(content)
-
-    override fun getLocation(): Location = content.getLocation()
 }
 
 data class UnaryOperationNode(
@@ -75,14 +58,16 @@ data class UnaryOperationNode(
     val operand: AstNode,
 ) : AstNode {
     override fun children(): List<AstNode> = listOf(operand)
-
-    override fun getLocation(): Location = operator.location
 }
 
-data class PrintlnNode(
-    val content: AstNode,
+// New nodes for PrintScript 1.1
+
+data class ConditionalNode(
+    val condition: AstNode,
+    val thenBody: List<AstNode>,
+    val elseBody: List<AstNode>? = null,
 ) : AstNode {
-    override fun children(): List<AstNode> = listOf(content)
-
-    override fun getLocation(): Location = content.getLocation()
+    override fun children(): List<AstNode> = listOf(condition) + thenBody + (elseBody ?: emptyList())
 }
+
+
