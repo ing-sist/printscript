@@ -27,39 +27,25 @@ class DefaultValidatorsProvider : ValidatorsProvider {
     }
 
     override fun findValidatorAndBuild(stream: TokenProvider): Result<AstNode, ParseError?> {
+        var result: Result<AstNode, ParseError?> = Result.Failure(ParseError.NoValidParser(listOf(stream.peek())))
+
         for (validator in validators) {
-            when (val result = validator.validateAndBuild(stream)) {
-                is Result.Success -> return result
+            when (val validatorResult = validator.validateAndBuild(stream)) {
+                is Result.Success -> {
+                    result = validatorResult
+                    break
+                }
                 is Result.Failure -> {
-                    if (result.error != null) {
+                    if (validatorResult.error != null) {
                         // This validator matched but found a syntax error
+                        result = validatorResult
                         return result
                     }
                     // This validator didn't match, try the next one
                 }
             }
         }
-        return Result.Failure(ParseError.NoValidParser(listOf(stream.peek())))
-    }
-}
 
-class ParserValidatorsFactory {
-    fun create(version : String): List<AstValidator> {
-        return when (version) {
-            "1.0" -> listOf(
-                DeclarationAssignmentValidator(),
-                DeclarationValidator(),
-                AssignmentValidator(),
-                FunctionCallValidator(),
-            )
-            "1.1" -> listOf(
-                IfValidator(DefaultValidatorsProvider()), // New for PrintScript 1.1 - must be before others to handle if statements
-                DeclarationAssignmentValidator(),
-                DeclarationValidator(),
-                AssignmentValidator(),
-                FunctionCallValidator(),
-            )
-            else -> throw IllegalArgumentException("Unsupported version: $version")
-        }
+        return result
     }
 }

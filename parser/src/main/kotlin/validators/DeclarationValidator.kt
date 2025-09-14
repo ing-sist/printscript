@@ -11,9 +11,14 @@ import validators.helpers.DeclarationHelper
 class DeclarationValidator : AstValidator {
     override fun validateAndBuild(stream: TokenProvider): Result<AstNode, ParseError?> {
         // 1. Peek para verificar el patrón básico de declaración
-        val tokens = listOf(
-            stream.peek(0), stream.peek(1), stream.peek(2), stream.peek(3), stream.peek(4)
-        )
+        val tokens =
+            listOf(
+                stream.peek(0),
+                stream.peek(1),
+                stream.peek(2),
+                stream.peek(3),
+                stream.peek(4),
+            )
         val afterSemicolon = stream.peek(5)
 
         if (DeclarationHelper.matchesDeclarationPattern(tokens) &&

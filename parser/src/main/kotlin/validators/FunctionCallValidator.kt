@@ -14,6 +14,8 @@ class FunctionCallValidator : AstValidator {
         val functionToken = stream.peek(0)
         val leftParen = stream.peek(1)
 
+        var result: Result<AstNode, ParseError?> = Result.Failure(null)
+
         if (validateFunction(functionToken) && leftParen.type is TokenType.LeftParen) {
             val consumedTokens = mutableListOf<Token>()
 
@@ -37,22 +39,21 @@ class FunctionCallValidator : AstValidator {
             // 4. Consume the final ';'
             if (stream.peek().type is TokenType.Semicolon) {
                 consumedTokens.add(stream.consume())
-            } else {
-                return Result.Failure(ParseError.UnexpectedToken(stream.peek(), "';'"))
-            }
 
-            // 5. Call the Builder
-            val node = FunctionCallBuilder().build(consumedTokens)
-            return Result.Success(node)
+                // 5. Call the Builder
+                val node = FunctionCallBuilder().build(consumedTokens)
+                result = Result.Success(node)
+            } else {
+                result = Result.Failure(ParseError.UnexpectedToken(stream.peek(), "';'"))
+            }
         }
 
-        return Result.Failure(null)
+        return result
     }
 
     private fun validateFunction(token: Token): Boolean =
         token.type is TokenType.FunctionCall &&
             validateFunctionName(token)
 
-    private fun validateFunctionName(token: Token): Boolean =
-        token.lexeme in listOf("println", "readEnv", "readInput")
+    private fun validateFunctionName(token: Token): Boolean = token.lexeme in listOf("println", "readEnv", "readInput")
 }
