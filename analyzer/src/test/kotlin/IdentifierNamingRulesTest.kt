@@ -1,77 +1,111 @@
-
+// IdentifierNamingRulesTest.kt
 import naming.IdentifierCase
-import naming.IdentifierNamingConfig
 import naming.IdentifierNamingRule
 import naming.IdentifierNamingRuleDef
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import shared.AnalyzerRuleDefinitions
+import utils.Type
 
 class IdentifierNamingRulesTest {
-    private fun rule(expected: IdentifierCase) =
-        IdentifierNamingRule(
-            IdentifierNamingConfig(namingType = expected),
-            IdentifierNamingRuleDef(),
-        )
+    private fun cfgFrom(json: String): AnalyzerConfig {
+        val tmp =
+            kotlin.io.path
+                .createTempFile("analyzer-", ".json")
+                .toFile()
+        tmp.writeText(json.trimIndent())
+        return AnalyzerConfig.fromPath(tmp.path, AnalyzerRuleDefinitions.RULES)
+    }
+
+    private fun analyzerWithNaming(jsonConfig: String) =
+        Analyzer(listOf(IdentifierNamingRule(IdentifierNamingRuleDef))) to
+            cfgFrom(jsonConfig)
 
     @Test
     fun `camelCase OK`() {
-        val ast = id("userName") // camel válido
+        val (analyzer, cfg) =
+            analyzerWithNaming(
+                """
+            { "identifierNamingStyle": "camel" }
+            """,
+            )
+        val ast = id("userName")
         val report = Report.inMemory()
-        val finalReport: Report = Analyzer(listOf(rule(IdentifierCase.CAMEL_CASE))).analyze(ast, report)
-        assertTrue(finalReport.isEmpty(), "No debería reportar para camelCase válido")
+
+        val out = analyzer.analyze(ast, report, cfg)
+        assertTrue(out.isEmpty(), "No debería reportar para camelCase válido")
     }
 
     @Test
     fun `camelCase BAD when snake_case`() {
+        val (analyzer, cfg) =
+            analyzerWithNaming(
+                """
+            { "identifierNamingStyle": "camel" }
+            """,
+            )
         val ast = id("user_name") // snake
         val report = Report.inMemory()
-        val finalReport: Report = Analyzer(listOf(rule(IdentifierCase.CAMEL_CASE))).analyze(ast, report)
 
-        assertEquals(1, finalReport.size())
-        val d = finalReport.first()
-        assertEquals("Naming.IdentifierStyle", d.ruleId)
+        val out = analyzer.analyze(ast, report, cfg)
+
+        assertEquals(1, out.size())
+        val d = out.first()
+        assertEquals(IdentifierNamingRuleDef.id, d.ruleId)
         assertEquals(Type.WARNING, d.type)
 
-        // Mensaje debe mencionar expectativa (camelCase) y el nombre observado:
         assertTrue(
             d.message.contains(IdentifierCase.CAMEL_CASE.description()),
-            "Identifiers are expected in CamelCase",
+            "El mensaje debe mencionar camelCase",
         )
         assertTrue(
             d.message.contains("user_name"),
-            "Identifiers must follow the configured naming style",
+            "El mensaje debe mencionar el identificador observado",
         )
 
-        // Ubicación: la del identificador
         assertEquals(ast.value.location.line, d.location.line)
     }
 
     @Test
     fun `snake_case OK`() {
-        val report = Report.inMemory()
+        val (analyzer, cfg) =
+            analyzerWithNaming(
+                """
+            { "identifierNamingType": "snake" }
+            """,
+            )
         val ast = id("user_name")
-        val finalReport: Report = Analyzer(listOf(rule(IdentifierCase.SNAKE_CASE))).analyze(ast, report)
-        assertTrue(finalReport.isEmpty(), "No debería reportar para snake_case válido")
+        val report = Report.inMemory()
+
+        val out = analyzer.analyze(ast, report, cfg)
+        assertTrue(out.isEmpty(), "No debería reportar para snake_case válido")
     }
 
     @Test
     fun `snake_case BAD when camelCase`() {
-        val ast = id("userName") // camel
+        val (analyzer, cfg) =
+            analyzerWithNaming(
+                """
+            { "identifierNamingType": "snake" }
+            """,
+            )
+        val ast = id("userName")
         val report = Report.inMemory()
-        val finalReport: Report = Analyzer(listOf(rule(IdentifierCase.SNAKE_CASE))).analyze(ast, report)
 
-        assertEquals(1, finalReport.size())
-        val d = finalReport.first()
-        assertEquals("Naming.IdentifierStyle", d.ruleId)
+        val out = analyzer.analyze(ast, report, cfg)
+
+        assertEquals(1, out.size())
+        val d = out.first()
+        assertEquals(IdentifierNamingRuleDef.id, d.ruleId)
         assertEquals(Type.WARNING, d.type)
         assertTrue(
             d.message.contains(IdentifierCase.SNAKE_CASE.description()),
-            "El mensaje debe mencionar la expectativa snake_case",
+            "El mensaje debe mencionar snake_case",
         )
         assertTrue(
             d.message.contains("userName"),
-            "Identifiers must follow the configured naming style",
+            "El mensaje debe mencionar el identificador observado",
         )
     }
 }
