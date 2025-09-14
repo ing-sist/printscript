@@ -15,14 +15,14 @@ class PrintScript11LexerDSLTest {
         lexCode11("const PI: number = 3.14;")
             .shouldTokenizeSuccessfully()
             .withTokensExcludingEOF(
-                TokenType.ConstDeclaration,
+                TokenType.Keyword.ConstDeclaration,
                 TokenType.Identifier,
                 TokenType.Colon,
                 TokenType.NumberType,
                 TokenType.Assignment,
                 TokenType.NumberLiteral,
                 TokenType.Semicolon,
-            ).withTokenAt(0, TokenType.ConstDeclaration, "const")
+            ).withTokenAt(0, TokenType.Keyword.ConstDeclaration, "const")
             .withLexemes("const", "PI", ":", "number", "=", "3.14", ";")
             .endsWithEOF()
     }
@@ -137,7 +137,7 @@ class PrintScript11LexerDSLTest {
             .shouldTokenizeSuccessfully()
             .containingTypes(
                 TokenType.Keyword.VariableDeclaration,
-                TokenType.ConstDeclaration,
+                TokenType.Keyword.ConstDeclaration,
                 TokenType.BooleanType,
                 TokenType.BooleanLiteral,
             ).withTokenCountExcludingEOF(21)
@@ -161,7 +161,7 @@ class PrintScript11LexerDSLTest {
                 TokenType.Keyword.If,
                 TokenType.Keyword.Else,
                 TokenType.Keyword.VariableDeclaration,
-                TokenType.ConstDeclaration,
+                TokenType.Keyword.ConstDeclaration,
                 TokenType.LeftBrace,
                 TokenType.RightBrace,
             ).endsWithEOF()
@@ -173,7 +173,7 @@ class PrintScript11LexerDSLTest {
         lexCode11("const if else boolean true false")
             .shouldTokenizeSuccessfully()
             .withTokensExcludingEOF(
-                TokenType.ConstDeclaration,
+                TokenType.Keyword.ConstDeclaration,
                 TokenType.Keyword.If,
                 TokenType.Keyword.Else,
                 TokenType.BooleanType,
