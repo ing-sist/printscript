@@ -9,9 +9,12 @@ import TokenType
 class AstNodeFactory {
     fun createFromToken(token: Token): AstNode =
         when (token.type) {
-            is TokenType.NumberLiteral -> LiteralNode(token)
-            is TokenType.StringLiteral -> LiteralNode(token)
-            is TokenType.Identifier -> IdentifierNode(token, token.lexeme)
-            else -> throw IllegalArgumentException("Cannot create AstNode from token type: ${token.type}")
+            TokenType.NumberLiteral -> LiteralNode(token)
+            TokenType.StringLiteral -> LiteralNode(token)
+            TokenType.BooleanLiteral -> LiteralNode(token) // Support for PrintScript 1.1 boolean literals
+            TokenType.Identifier -> IdentifierNode(token, token.lexeme)
+            else -> throw IllegalArgumentException(
+                "Cannot create AstNode from token type: ${token.type} with value: '${token.lexeme}'",
+            )
         }
 }

@@ -2,51 +2,25 @@ package parser
 
 import AstNode
 import Result
-import Token
-import validators.ValidatorsProvider
+import TokenProvider
+import TokenType
+import validators.provider.ValidatorsProvider
 
 class Parser(
     private val validatorsProvider: ValidatorsProvider,
 ) {
-    fun parse(tokens: List<Token>): Result<List<AstNode>, ParseError> {
-        val statements = mutableListOf<AstNode>()
-        val tokenGroups = groupTokensByStatements(tokens)
-
-        for (tokenGroup in tokenGroups) {
-            when (val validatorResult = validatorsProvider.getValidator(tokenGroup)) {
-                is Result.Success -> {
-                    val astNode = validatorResult.value.build(tokenGroup)
-                    statements.add(astNode)
-                }
+    fun parse(stream: TokenProvider): Result<AstNode, ParseError> {
+        // Process the stream and return the first valid AST node found
+        while (stream.peek().type !is TokenType.EOF) {
+            return when (val result = validatorsProvider.findValidatorAndBuild(stream)) {
+                is Result.Success -> result // Return immediately when we find a valid node
                 is Result.Failure -> {
-                    return Result.Failure(validatorResult.error)
+                    Result.Failure(result.error ?: ParseError.NoValidParser(listOf(stream.peek())))
                 }
             }
         }
-        return Result.Success(statements)
+
+        // If we reach here, the stream was empty
+        return Result.Failure(ParseError.NoValidParser(listOf(stream.peek())))
     }
-
-    private fun groupTokensByStatements(tokens: List<Token>): List<List<Token>> {
-        val statements = mutableListOf<List<Token>>()
-        val currentStatement = mutableListOf<Token>()
-
-        for (token in tokens) {
-            if (isEndOfFile(token)) {
-                break
-            }
-
-            currentStatement.add(token)
-
-            if (isStatementTerminator(token)) {
-                statements.add(currentStatement.toList())
-                currentStatement.clear()
-            }
-        }
-
-        return statements
-    }
-
-    private fun isEndOfFile(token: Token): Boolean = token.type is TokenType.EOF
-
-    private fun isStatementTerminator(token: Token): Boolean = token.type is TokenType.Semicolon
 }

@@ -1,62 +1,94 @@
-/**
- * Lexical analyzer for PrintScript language.
- * Follows Single Responsibility Principle by focusing only on orchestrating the lexing process.
- */
+import java.io.Reader
+
 class Lexer(
-    private val tokenRule: TokenRule,
+    private val reader: Reader,
+    tokenRule: TokenRule,
 ) {
     private val tokenMatcher = TokenMatcher(tokenRule)
+    private val buffer = StringBuilder()
+    private var currentLine = 1
+    private var currentColumn = 1
+    private var isEndOfFile = false
 
-    fun lex(source: String): Result<List<Token>, LexError> {
-        val tokens = mutableListOf<Token>()
-        var currentSource = SourcePosition(source, 1, 1)
+    // Buffer para leer el archivo en bloques y mejorar la eficiencia
+    private val readBuffer = CharArray(1024)
 
-        while (currentSource.hasRemaining()) {
-            currentSource = skipWhitespace(currentSource)
+    /**
+     * Devuelve el siguiente token significativo del stream, ignorando automáticamente
+     * los espacios en blanco. Devuelve un token EOF si se acaba el input.
+     * Esta función ahora tiene un único punto de salida, solucionando el error del linter.
+     */
+    fun nextToken(): Token {
+        while (true) {
+            val token = produceNextToken()
+            if (token.type !is TokenType.Space) {
+                return token
+            }
+        }
+    }
 
-            if (!currentSource.hasRemaining()) break
-
-            when (val matchResult = processNextToken(currentSource)) {
-                is Result.Success -> {
-                    tokens.add(matchResult.value.token)
-                    currentSource = matchResult.value.position
-                }
-                is Result.Failure -> return Result.Failure(matchResult.error)
+    /**
+     * Función auxiliar privada que extrae el siguiente token del buffer,
+     * sea del tipo que sea (incluyendo espacios en blanco).
+     */
+    private fun produceNextToken(): Token {
+        if (buffer.isEmpty()) {
+            fillBuffer()
+            // Si después de intentar llenar el buffer, este sigue vacío,
+            // significa que hemos llegado al final del archivo.
+            if (buffer.isEmpty()) {
+                return createToken("EOF", TokenType.EOF)
             }
         }
 
-        return finalizeTokenList(tokens, currentSource)
-    }
-
-    private fun skipWhitespace(source: SourcePosition): SourcePosition {
-        var remaining = source.text
-        var currentLine = source.line
-        var currentColumn = source.column
-
-        while (remaining.isNotEmpty() && remaining.first().isWhitespace()) {
-            if (remaining.first() == '\n') {
-                currentLine++
-                currentColumn = 1
-            } else {
-                currentColumn++
+        // Delegamos al TokenMatcher y manejamos el resultado.
+        // Usamos una expresión 'when' para devolver el valor directamente.
+        return when (val matchResult = tokenMatcher.findNextToken(buffer.toString(), currentLine, currentColumn)) {
+            is Result.Success -> {
+                val token = matchResult.value
+                consumeFromBuffer(token.lexeme)
+                token
             }
-            remaining = remaining.substring(1)
+            is Result.Failure -> {
+                // Si no se reconoce ningún token, consumimos un solo carácter como error
+                // para evitar bucles infinitos y poder seguir analizando.
+                val invalidChar = buffer.first()
+                consumeFromBuffer(invalidChar.toString())
+                createToken(matchResult.toString(), TokenType.ERROR)
+            }
         }
-
-        return SourcePosition(remaining, currentLine, currentColumn)
     }
 
-    private fun processNextToken(source: SourcePosition): Result<TokenResult, LexError> =
-        tokenMatcher.findNextToken(source.text, source.line, source.column)
-
-    private fun finalizeTokenList(
-        tokens: List<Token>,
-        source: SourcePosition,
-    ): Result<List<Token>, LexError> {
-        val tokensWithEof =
-            tokens.toMutableList().apply {
-                add(Token(TokenType.EOF, "", Location(source.line, source.column, source.column)))
-            }
-        return Result.Success(tokensWithEof)
+    private fun consumeFromBuffer(lexeme: String) {
+        val newlines = lexeme.count { it == '\n' }
+        if (newlines > 0) {
+            currentLine += newlines
+            currentColumn = lexeme.length - lexeme.lastIndexOf('\n')
+        } else {
+            currentColumn += lexeme.length
+        }
+        buffer.delete(0, lexeme.length)
     }
+
+    /**
+     * Llena el buffer interno leyendo un bloque de caracteres del Reader.
+     * Esto es mucho más eficiente que leer carácter por carácter.
+     */
+    private fun fillBuffer() {
+        if (isEndOfFile) return
+
+        val charsRead = reader.read(readBuffer)
+
+        if (charsRead != -1) {
+            buffer.append(readBuffer, 0, charsRead)
+        } else {
+            isEndOfFile = true
+            reader.close()
+        }
+    }
+
+    private fun createToken(
+        lexeme: String,
+        tokenType: TokenType,
+    ): Token = Token(tokenType, lexeme, Location(currentLine, currentColumn, currentColumn + lexeme.length - 1))
 }
