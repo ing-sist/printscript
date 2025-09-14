@@ -8,7 +8,7 @@ class TokenRuleVersion10 : TokenRule {
             // Espacios en blanco
             "\\s+" to TokenType.Space,
             // Keywords (word boundaries for exact matches)
-            "\\blet\\b" to TokenType.VariableDeclaration,
+            "\\blet\\b" to TokenType.Keyword.VariableDeclaration,
             "\\bprintln\\b" to TokenType.FunctionCall,
             // Data types
             "\\bstring\\b" to TokenType.StringType,

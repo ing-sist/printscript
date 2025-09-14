@@ -1,14 +1,15 @@
 sealed interface TokenType {
-    // 1. Keywords
-    data object VariableDeclaration : TokenType // let
+    sealed interface Keyword : TokenType {
+        data object VariableDeclaration : Keyword
 
-    data object ConstDeclaration : TokenType // const (new in 1.1)
+        data object If : Keyword
+
+        data object Else : Keyword
+    }
+
+    data object ConstDeclaration : TokenType
 
     data object FunctionCall : TokenType
-
-    data object IfKeyword : TokenType // if (new in 1.1)
-
-    data object ElseKeyword : TokenType // else (new in 1.1)
 
     // 2. Symbols
     data object Colon : TokenType
@@ -65,16 +66,8 @@ sealed interface TokenType {
 
     data object BooleanType : TokenType // boolean (new in 1.1)
 
-    data object Comment : TokenType
-
     // 6. End of file
     data object EOF : TokenType
-
-    data object Newline : TokenType
-
-    data object Indent : TokenType
-
-    data object Dedent : TokenType
 
     data object Space : TokenType
 
