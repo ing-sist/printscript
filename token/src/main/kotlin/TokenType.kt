@@ -60,6 +60,8 @@ sealed interface TokenType {
 
     data object NumberType : TokenType
 
+    data object BooleanType : TokenType
+
     // 6. End of file
     data object EOF : TokenType
 }
