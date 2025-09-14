@@ -42,13 +42,12 @@ data class DeclarationNode(
 }
 
 data class DeclarationAssignmentNode(
-    val identifier: IdentifierNode,
-    val type: Token,
+    val declaration: DeclarationNode,
     val value: AstNode,
 ) : AstNode {
-    override fun children(): List<AstNode> = listOf(identifier, value)
+    override fun children(): List<AstNode> = listOf(declaration, value)
 
-    override fun getLocation(): Location = identifier.value.location
+    override fun getLocation(): Location = declaration.getLocation()
 }
 
 data class AssignmentNode(
@@ -63,7 +62,7 @@ data class AssignmentNode(
 data class FunctionCallNode(
     val functionName: String,
     val content: AstNode,
-    val isVoid: Boolean,
+    val isVoid: Boolean = false,
 ) : AstNode {
     override fun children(): List<AstNode> = listOf(content)
 
@@ -79,10 +78,12 @@ data class UnaryOperationNode(
     override fun getLocation(): Location = operator.location
 }
 
-data class PrintlnNode(
-    val content: AstNode,
+data class ConditionalNode(
+    val condition: AstNode,
+    val thenBody: List<AstNode>,
+    val elseBody: List<AstNode>? = null,
 ) : AstNode {
-    override fun children(): List<AstNode> = listOf(content)
+    override fun children(): List<AstNode> = listOf(condition) + thenBody + (elseBody ?: emptyList())
 
-    override fun getLocation(): Location = content.getLocation()
+    override fun getLocation(): Location = condition.getLocation()
 }
