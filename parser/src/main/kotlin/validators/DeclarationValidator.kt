@@ -1,26 +1,36 @@
 package validators
 
+import AstNode
 import Result
-import Token
+import TokenProvider
 import TokenType
-import builders.AstBuilder
 import builders.DeclarationBuilder
 import parser.ParseError
+import validators.helpers.DeclarationHelper
 
-class DeclarationValidator : AstValidators {
-    override fun validate(tokens: List<Token>): Result<AstBuilder, ParseError> {
-        val isValid =
-            tokens.size == 5 &&
-                tokens[0].type is TokenType.Keyword.VariableDeclaration &&
-                tokens[1].type is TokenType.Identifier &&
-                tokens[2].type is TokenType.Colon &&
-                (tokens[3].type is TokenType.StringType || tokens[3].type is TokenType.NumberType) &&
-                tokens[4].type is TokenType.Semicolon
+class DeclarationValidator : AstValidator {
+    override fun validateAndBuild(stream: TokenProvider): Result<AstNode, ParseError?> {
+        // 1. Peek para verificar el patrón básico de declaración
+        val tokens =
+            listOf(
+                stream.peek(0),
+                stream.peek(1),
+                stream.peek(2),
+                stream.peek(3),
+                stream.peek(4),
+            )
+        val afterSemicolon = stream.peek(5)
 
-        return if (isValid) {
-            Result.Success(DeclarationBuilder())
-        } else {
-            Result.Failure(ParseError.InvalidSyntax(tokens, "Expected: let <identifier> : <type> ;"))
+        if (DeclarationHelper.matchesDeclarationPattern(tokens) &&
+            tokens[4].type is TokenType.Semicolon &&
+            afterSemicolon.type !is TokenType.Assignment
+        ) {
+            // 2. Si coincide, consumir y construir
+            val consumedTokens = tokens.take(5).map { stream.consume() }
+            val node = DeclarationBuilder().build(consumedTokens)
+            return Result.Success(node)
         }
+
+        return Result.Failure(null) // No coincide, intenta con el siguiente validador
     }
 }
