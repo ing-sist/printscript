@@ -1,7 +1,7 @@
 import config.FormatterStyleConfig
-import rules.implementations.RuleImplementation
+import rules.implementations.BeforeRule
 
-object InlineBraceIfStatement : RuleImplementation {
+object InlineBraceIfStatement : BeforeRule {
     override fun before(
         prev: Token,
         curr: Token,
@@ -9,6 +9,7 @@ object InlineBraceIfStatement : RuleImplementation {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
+        if (!style.inlineIfBraceIfStatement) return out
         var result = out
         if (curr.type is TokenType.LeftBrace) result = result.space()
         return result

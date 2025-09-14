@@ -5,10 +5,9 @@ import Token
 import TokenType
 import config.FormatterStyleConfig
 
-object SpaceAroundOperators : RuleImplementation {
+object SpaceAroundOperators : BeforeRule, AfterRule {
     val operators =
         listOf<TokenType>(
-            TokenType.Assignment,
             TokenType.Plus,
             TokenType.Minus,
             TokenType.Multiply,

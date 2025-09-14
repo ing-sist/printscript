@@ -1,6 +1,6 @@
 package rules.definitions
 
-import rules.RuleOwner
+import config.RuleOwner
 
 interface Rule<T : Any> {
     val id: String

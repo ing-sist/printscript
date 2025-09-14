@@ -31,7 +31,7 @@ class SimpleArgRuleTests {
     @Test
     fun `println with identifier is OK`() {
         val ast = call("println", id("name"))
-        val report = Report()
+        val report = Report.inMemory()
         val rule = printlnRule(enabled = true)
 
         val diags = Analyzer(listOf(rule)).analyze(ast, report)
@@ -41,7 +41,7 @@ class SimpleArgRuleTests {
     @Test
     fun `println with literal is OK`() {
         val ast = call("println", litString("hola"))
-        val report = Report()
+        val report = Report.inMemory()
         val rule = printlnRule(enabled = true)
 
         val diags = Analyzer(listOf(rule)).analyze(ast, report)
@@ -52,7 +52,7 @@ class SimpleArgRuleTests {
     fun `println with binary expression is NOT OK`() {
         val expr = bin(id("a"), "+", litNumber("1"))
         val ast = call("println", expr)
-        val report = Report()
+        val report = Report.inMemory()
         val rule = printlnRule(enabled = true)
 
         val diags = Analyzer(listOf(rule)).analyze(ast, report)
@@ -71,7 +71,7 @@ class SimpleArgRuleTests {
         val expr = unary("-", id("x"))
         val ast = call("println", expr)
         val rule = printlnRule(enabled = true)
-        val report = Report()
+        val report = Report.inMemory()
 
         val diags = Analyzer(listOf(rule)).analyze(ast, report)
         assertEquals(1, diags.size())
@@ -82,7 +82,7 @@ class SimpleArgRuleTests {
     fun `disabled println rule does nothing`() {
         val ast = call("println", bin(id("a"), "+", litNumber("1")))
         val rule = printlnRule(enabled = false)
-        val report = Report()
+        val report = Report.inMemory()
 
         val diags = Analyzer(listOf(rule)).analyze(ast, report)
         assertTrue(diags.isEmpty(), "Con la regla deshabilitada no debería reportar")
@@ -92,26 +92,15 @@ class SimpleArgRuleTests {
     fun `readinput with identifier is OK`() {
         val ast = call("readinput", id("target"))
         val rule = readInputRule()
-        val report = Report()
+        val report = Report.inMemory()
 
         val diags = Analyzer(listOf(rule)).analyze(ast, report)
         assertTrue(diags.isEmpty())
     }
 
-//    @Test
-//    fun `readinput with expression is NOT OK`() {
-//        val ast = call("readinput", bin(id("a"), "+", id("b")))
-//        val rule = readInputRule(enabled = true)
-//        val report = Report()
-//
-//        val diags = Analyzer(listOf(rule)).analyze(ast, report)
-//        assertEquals(1, diags.size())
-//        assertEquals(ReadInputSimpleArgDef.id, diags.first().ruleId)
-//    }
-
     @Test
     fun `disabled readinput rule does nothing`() {
-        val report = Report()
+        val report = Report.inMemory()
         val ast = call("readinput", unary("-", id("x")))
         val rule = readInputRule()
 

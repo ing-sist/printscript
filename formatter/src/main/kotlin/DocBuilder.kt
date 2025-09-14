@@ -1,27 +1,31 @@
-class DocBuilder(
-    private val content: String = "",
-    private val lineStart: Boolean = true,
+class DocBuilder private constructor(
+    private val out: Appendable,
+    private val lineStart: Boolean,
 ) {
-    fun write(s: String): DocBuilder = DocBuilder(content + s, lineStart = false)
+    companion object {
+        fun inMemory(): DocBuilder = DocBuilder(StringBuilder(), true)
 
-    fun space(): DocBuilder =
-        if (lineStart) {
-            this
-        } else {
-            DocBuilder(content + " ", lineStart = false)
-        }
-
-    fun newline(): DocBuilder = DocBuilder(content + "\n", lineStart = true)
+        fun to(target: Appendable): DocBuilder = DocBuilder(target, true)
+    }
 
     fun isAtLineStart(): Boolean = lineStart
 
-    fun build(): String = content
+    fun write(s: String): DocBuilder = DocBuilder(out.append(s), lineStart = false)
+
+    fun space(): DocBuilder = DocBuilder(out.append(' '), lineStart = false)
+
+    fun newline(): DocBuilder = DocBuilder(out.append('\n'), lineStart = true)
 
     fun indent(spaces: Int): DocBuilder {
-        var d = this
-        if (lineStart) {
-            repeat(spaces) { d = d.write(" ") }
-        }
-        return d
+        if (!lineStart || spaces <= 0) return this
+        repeat(spaces) { out.append(' ') }
+        return DocBuilder(out, lineStart = false)
+    }
+
+    fun build(): String {
+        val sb =
+            out as? StringBuilder
+                ?: error("DocBuilder not in memory")
+        return sb.toString()
     }
 }

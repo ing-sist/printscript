@@ -1,6 +1,5 @@
 package config
 
-import rules.RuleOwner
 import rules.definitions.Rule
 import java.io.File
 
@@ -36,8 +35,8 @@ fun loadFromFile(
         if (rule.owner == RuleOwner.ENGINE) { // si es del engine, pongo la que tiene la rule
             result[rule.id] = rule.default
         } else { // si no, pongo la del user
-            val valueRaw = raw[rule.id]
-            result[rule.id] = if (valueRaw != null) rule.parse(valueRaw) else rule.default
+            val inputValue = raw[rule.id]
+            result[rule.id] = if (inputValue != null) rule.parse(inputValue) else rule.default
         }
     }
 

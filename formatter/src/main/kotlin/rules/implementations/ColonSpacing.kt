@@ -4,7 +4,7 @@ import DocBuilder
 import Token
 import config.FormatterStyleConfig
 
-object ColonSpacing : RuleImplementation {
+object ColonSpacing : BeforeRule, AfterRule {
     override fun before(
         prev: Token,
         curr: Token,

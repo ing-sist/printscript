@@ -1,7 +1,7 @@
 {
   "SpaceBeforeColon": true,
   "SpaceAfterColon": true,
-  "lineBreakBeforePrintln": 2,
+  "lineBreakBeforePrintln": 1,
   "lineBreakAfterSemicolon": true,
   "spaceAroundAssignment": true,
   "spaceBetweenTokens": true,

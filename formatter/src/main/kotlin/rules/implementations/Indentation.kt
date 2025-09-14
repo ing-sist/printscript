@@ -1,7 +1,8 @@
 import config.FormatterStyleConfig
-import rules.implementations.RuleImplementation
+import rules.implementations.AfterRule
+import rules.implementations.BeforeRule
 
-object Indentation : RuleImplementation {
+object Indentation : BeforeRule, AfterRule {
     override fun before(
         prev: Token,
         curr: Token,
@@ -10,6 +11,7 @@ object Indentation : RuleImplementation {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
+        if (style.indentation == 0) return out
 
         if (curr.type is TokenType.RightBrace) {
             if (prev.type !is TokenType.Semicolon) {
@@ -26,6 +28,7 @@ object Indentation : RuleImplementation {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
+        if (style.indentation == 0) return out
         var result = out
         if (curr.type is TokenType.LeftBrace && !result.isAtLineStart()) {
             result = result.newline()
