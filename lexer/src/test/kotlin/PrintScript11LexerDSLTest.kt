@@ -1,15 +1,14 @@
 
 import dsl.lexCode11
 import dsl.lexProgramWithVersion
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
 /**
  * Comprehensive DSL tests for PrintScript 1.1 lexer functionality.
  * Updated to match actual lexer implementation.
  */
 class PrintScript11LexerDSLTest {
-
     @Test
     @DisplayName("Should tokenize const declaration")
     fun testConstDeclaration() {
@@ -22,9 +21,8 @@ class PrintScript11LexerDSLTest {
                 TokenType.NumberType,
                 TokenType.Assignment,
                 TokenType.NumberLiteral,
-                TokenType.Semicolon
-            )
-            .withTokenAt(0, TokenType.ConstDeclaration, "const")
+                TokenType.Semicolon,
+            ).withTokenAt(0, TokenType.ConstDeclaration, "const")
             .withLexemes("const", "PI", ":", "number", "=", "3.14", ";")
             .endsWithEOF()
     }
@@ -36,9 +34,8 @@ class PrintScript11LexerDSLTest {
             .shouldTokenizeSuccessfully()
             .containingTypes(
                 TokenType.BooleanType,
-                TokenType.BooleanLiteral
-            )
-            .withTokenAt(5, TokenType.BooleanLiteral, "true") // Fixed index
+                TokenType.BooleanLiteral,
+            ).withTokenAt(5, TokenType.BooleanLiteral, "true") // Fixed index
             .withTokenAt(12, TokenType.BooleanLiteral, "false") // Fixed index
             .endsWithEOF()
     }
@@ -49,7 +46,7 @@ class PrintScript11LexerDSLTest {
         lexCode11("if (true) { println(\"yes\"); }")
             .shouldTokenizeSuccessfully()
             .withTokensExcludingEOF(
-                TokenType.IfKeyword,
+                TokenType.Keyword.If,
                 TokenType.LeftParen,
                 TokenType.BooleanLiteral,
                 TokenType.RightParen,
@@ -59,9 +56,8 @@ class PrintScript11LexerDSLTest {
                 TokenType.StringLiteral,
                 TokenType.RightParen,
                 TokenType.Semicolon,
-                TokenType.RightBrace
-            )
-            .withLexemes("if", "(", "true", ")", "{", "println", "(", "\"yes\"", ")", ";", "}")
+                TokenType.RightBrace,
+            ).withLexemes("if", "(", "true", ")", "{", "println", "(", "\"yes\"", ")", ";", "}")
             .endsWithEOF()
     }
 
@@ -71,7 +67,7 @@ class PrintScript11LexerDSLTest {
         lexCode11("if (flag) { println(\"active\"); }")
             .shouldTokenizeSuccessfully()
             .withTokensExcludingEOF(
-                TokenType.IfKeyword,
+                TokenType.Keyword.If,
                 TokenType.LeftParen,
                 TokenType.Identifier,
                 TokenType.RightParen,
@@ -81,9 +77,8 @@ class PrintScript11LexerDSLTest {
                 TokenType.StringLiteral,
                 TokenType.RightParen,
                 TokenType.Semicolon,
-                TokenType.RightBrace
-            )
-            .endsWithEOF()
+                TokenType.RightBrace,
+            ).endsWithEOF()
     }
 
     @Test
@@ -92,13 +87,12 @@ class PrintScript11LexerDSLTest {
         lexCode11("if (isValid) { println(\"yes\"); } else { println(\"no\"); }")
             .shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.IfKeyword,
-                TokenType.ElseKeyword,
+                TokenType.Keyword.If,
+                TokenType.Keyword.Else,
                 TokenType.LeftBrace,
                 TokenType.RightBrace,
-                TokenType.Identifier
-            )
-            .withTokenCountExcludingEOF(19) // Fixed count
+                TokenType.Identifier,
+            ).withTokenCountExcludingEOF(19) // Fixed count
             .endsWithEOF()
     }
 
@@ -108,12 +102,11 @@ class PrintScript11LexerDSLTest {
         lexCode11("if (true) { if (false) { println(\"nested\"); } }")
             .shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.IfKeyword,
+                TokenType.Keyword.If,
                 TokenType.LeftBrace,
                 TokenType.RightBrace,
-                TokenType.BooleanLiteral
-            )
-            .endsWithEOF()
+                TokenType.BooleanLiteral,
+            ).endsWithEOF()
     }
 
     @Test
@@ -122,7 +115,7 @@ class PrintScript11LexerDSLTest {
         lexCode11("let name: string = \"John\"; println(name);")
             .shouldTokenizeSuccessfully()
             .withTokensExcludingEOF(
-                TokenType.VariableDeclaration,
+                TokenType.Keyword.VariableDeclaration,
                 TokenType.Identifier,
                 TokenType.Colon,
                 TokenType.StringType,
@@ -133,9 +126,8 @@ class PrintScript11LexerDSLTest {
                 TokenType.LeftParen,
                 TokenType.Identifier,
                 TokenType.RightParen,
-                TokenType.Semicolon
-            )
-            .endsWithEOF()
+                TokenType.Semicolon,
+            ).endsWithEOF()
     }
 
     @Test
@@ -144,36 +136,35 @@ class PrintScript11LexerDSLTest {
         lexCode11("let x: number = 10; const PI: number = 3.14; let flag: boolean = true;")
             .shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.VariableDeclaration,
+                TokenType.Keyword.VariableDeclaration,
                 TokenType.ConstDeclaration,
                 TokenType.BooleanType,
-                TokenType.BooleanLiteral
-            )
-            .withTokenCountExcludingEOF(21)
+                TokenType.BooleanLiteral,
+            ).withTokenCountExcludingEOF(21)
             .endsWithEOF()
     }
 
     @Test
     @DisplayName("Should handle multi-line if-else blocks")
     fun testMultiLineIfElse() {
-        lexProgramWithVersion("1.1",
+        lexProgramWithVersion(
+            "1.1",
             "if (condition) {",
             "    let x: number = 42;",
             "    println(x);",
             "} else {",
             "    const msg: string = \"default\";",
             "    println(msg);",
-            "}"
+            "}",
         ).shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.IfKeyword,
-                TokenType.ElseKeyword,
-                TokenType.VariableDeclaration,
+                TokenType.Keyword.If,
+                TokenType.Keyword.Else,
+                TokenType.Keyword.VariableDeclaration,
                 TokenType.ConstDeclaration,
                 TokenType.LeftBrace,
-                TokenType.RightBrace
-            )
-            .endsWithEOF()
+                TokenType.RightBrace,
+            ).endsWithEOF()
     }
 
     @Test
@@ -183,13 +174,12 @@ class PrintScript11LexerDSLTest {
             .shouldTokenizeSuccessfully()
             .withTokensExcludingEOF(
                 TokenType.ConstDeclaration,
-                TokenType.IfKeyword,
-                TokenType.ElseKeyword,
+                TokenType.Keyword.If,
+                TokenType.Keyword.Else,
                 TokenType.BooleanType,
                 TokenType.BooleanLiteral,
-                TokenType.BooleanLiteral
-            )
-            .withLexemes("const", "if", "else", "boolean", "true", "false")
+                TokenType.BooleanLiteral,
+            ).withLexemes("const", "if", "else", "boolean", "true", "false")
             .endsWithEOF()
     }
 
@@ -199,17 +189,16 @@ class PrintScript11LexerDSLTest {
         lexCode11("if (true) { } else { }")
             .shouldTokenizeSuccessfully()
             .withTokensExcludingEOF(
-                TokenType.IfKeyword,
+                TokenType.Keyword.If,
                 TokenType.LeftParen,
                 TokenType.BooleanLiteral,
                 TokenType.RightParen,
                 TokenType.LeftBrace,
                 TokenType.RightBrace,
-                TokenType.ElseKeyword,
+                TokenType.Keyword.Else,
                 TokenType.LeftBrace,
-                TokenType.RightBrace
-            )
-            .endsWithEOF()
+                TokenType.RightBrace,
+            ).endsWithEOF()
     }
 
     @Test
@@ -219,9 +208,8 @@ class PrintScript11LexerDSLTest {
             .shouldTokenizeSuccessfully()
             .containingTypes(
                 TokenType.BooleanLiteral,
-                TokenType.BooleanType
-            )
-            .withTokenAt(3, TokenType.BooleanType, "boolean")
+                TokenType.BooleanType,
+            ).withTokenAt(3, TokenType.BooleanType, "boolean")
             .withTokenAt(5, TokenType.BooleanLiteral, "true")
             .withTokenAt(10, TokenType.BooleanType, "boolean")
             .withTokenAt(12, TokenType.BooleanLiteral, "false")
@@ -234,12 +222,11 @@ class PrintScript11LexerDSLTest {
         lexCode11("let isReady: boolean = true; if (isReady) { println(\"ready\"); }")
             .shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.VariableDeclaration,
+                TokenType.Keyword.VariableDeclaration,
                 TokenType.BooleanType,
                 TokenType.BooleanLiteral,
-                TokenType.IfKeyword,
-                TokenType.Identifier
-            )
-            .endsWithEOF()
+                TokenType.Keyword.If,
+                TokenType.Identifier,
+            ).endsWithEOF()
     }
 }

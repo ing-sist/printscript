@@ -1,6 +1,9 @@
 class LexerException(
     val token: Token,
-) : RuntimeException("Error léxico en línea ${token.location.line}, columna ${token.location.startCol}: '${token.lexeme}'")
+) : RuntimeException(
+        "Error léxico en línea ${token.location.line}, " +
+            "columna ${token.location.startCol}: '${token.lexeme}'",
+    )
 
 /**
  * Implementación de TokenProvider que envuelve al Lexer para añadir
@@ -8,7 +11,9 @@ class LexerException(
  *
  * @param lexer La instancia del Lexer de streaming que generará los tokens.
  */
-class LexerTokenProvider(private val lexer: Lexer) : TokenProvider {
+class LexerTokenProvider(
+    private val lexer: Lexer,
+) : TokenProvider {
     private val lookahead = mutableListOf<Token>()
     private var eofReached = false
 

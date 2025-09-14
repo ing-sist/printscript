@@ -2,21 +2,20 @@
 import dsl.lexCode
 import dsl.lexCode10
 import dsl.lexCode11
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
 /**
  * DSL tests for error handling and edge cases in the lexer.
  * Updated to match actual lexer implementation behavior.
  */
 class LexerErrorHandlingDSLTest {
-
     @Test
     @DisplayName("Should handle invalid characters gracefully")
     fun testInvalidCharacters() {
         lexCode("let x @ 5;")
             .shouldTokenizeSuccessfully()
-            .containingTypes(TokenType.VariableDeclaration, TokenType.Identifier, TokenType.ERROR)
+            .containingTypes(TokenType.Keyword.VariableDeclaration, TokenType.Identifier, TokenType.ERROR)
     }
 
     @Test
@@ -25,7 +24,7 @@ class LexerErrorHandlingDSLTest {
         // Your lexer might handle this as an error token rather than throwing exception
         lexCode("let msg: string = \"unclosed;")
             .shouldTokenizeSuccessfully()
-            .containingTypes(TokenType.VariableDeclaration)
+            .containingTypes(TokenType.Keyword.VariableDeclaration)
     }
 
     @Test
@@ -122,9 +121,8 @@ class LexerErrorHandlingDSLTest {
                 TokenType.Plus,
                 TokenType.Minus,
                 TokenType.Multiply,
-                TokenType.Divide
-            )
-            .endsWithEOF()
+                TokenType.Divide,
+            ).endsWithEOF()
     }
 
     @Test
@@ -133,7 +131,7 @@ class LexerErrorHandlingDSLTest {
         lexCode11("if (isActive) { println(\"active\"); }")
             .shouldTokenizeSuccessfully()
             .withTokenAt(2, TokenType.Identifier, "isActive")
-            .containingTypes(TokenType.IfKeyword, TokenType.Identifier)
+            .containingTypes(TokenType.Keyword.If, TokenType.Identifier)
             .endsWithEOF()
     }
 
@@ -142,7 +140,7 @@ class LexerErrorHandlingDSLTest {
     fun testNestedIfStatements() {
         lexCode11("if (outer) { if (inner) { println(\"nested\"); } }")
             .shouldTokenizeSuccessfully()
-            .containingTypes(TokenType.IfKeyword, TokenType.Identifier)
+            .containingTypes(TokenType.Keyword.If, TokenType.Identifier)
             .endsWithEOF()
     }
 }

@@ -118,7 +118,8 @@ class TokenVerifier(
     fun withTokenCountExcludingEOF(expectedCount: Int): TokenVerifier {
         val nonEofTokens = tokens.filter { it.type != TokenType.EOF }
         require(nonEofTokens.size == expectedCount) {
-            "Se esperaban $expectedCount tokens (sin EOF) pero se obtuvieron ${nonEofTokens.size} para código: '$originalCode'"
+            "Se esperaban $expectedCount tokens (sin EOF) pero se obtuvieron " +
+                "${nonEofTokens.size} para código: '$originalCode'"
         }
         return this
     }
@@ -133,7 +134,8 @@ class TokenVerifier(
 
         expectedTypes.forEachIndexed { index, expectedType ->
             require(tokens[index].type == expectedType) {
-                "Token en posición $index: se esperaba $expectedType pero fue ${tokens[index].type} (lexema: '${tokens[index].lexeme}')"
+                "Token en posición $index: se esperaba $expectedType pero fue " +
+                    "${tokens[index].type} (lexema: '${tokens[index].lexeme}')"
             }
         }
         return this
@@ -150,7 +152,8 @@ class TokenVerifier(
 
         expectedTypes.forEachIndexed { index, expectedType ->
             require(nonEofTokens[index].type == expectedType) {
-                "Token en posición $index: se esperaba $expectedType pero fue ${nonEofTokens[index].type} (lexema: '${nonEofTokens[index].lexeme}')"
+                "Token en posición $index: se esperaba $expectedType pero fue " +
+                    "${nonEofTokens[index].type} (lexema: '${nonEofTokens[index].lexeme}')"
             }
         }
         return this

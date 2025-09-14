@@ -1,27 +1,25 @@
 
 import dsl.lexCode10
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
 /**
  * Comprehensive DSL tests for PrintScript 1.0 lexer functionality.
  * Updated to match the actual lexer implementation.
  */
 class PrintScript10LexerDSLTest {
-
     @Test
     @DisplayName("Should tokenize basic variable declaration")
     fun testBasicVariableDeclaration() {
         lexCode10("let x: number;")
             .shouldTokenizeSuccessfully()
             .withTokensExcludingEOF(
-                TokenType.VariableDeclaration,
+                TokenType.Keyword.VariableDeclaration,
                 TokenType.Identifier,
                 TokenType.Colon,
                 TokenType.NumberType,
-                TokenType.Semicolon
-            )
-            .withLexemes("let", "x", ":", "number", ";")
+                TokenType.Semicolon,
+            ).withLexemes("let", "x", ":", "number", ";")
             .endsWithEOF()
     }
 
@@ -31,7 +29,7 @@ class PrintScript10LexerDSLTest {
         lexCode10("let name: string = \"John\";")
             .shouldTokenizeSuccessfully()
             .withTokenCountExcludingEOF(7)
-            .withTokenAt(0, TokenType.VariableDeclaration, "let")
+            .withTokenAt(0, TokenType.Keyword.VariableDeclaration, "let")
             .withTokenAt(1, TokenType.Identifier, "name")
             .withTokenAt(2, TokenType.Colon, ":")
             .withTokenAt(3, TokenType.StringType, "string")
@@ -47,12 +45,11 @@ class PrintScript10LexerDSLTest {
         lexCode10("let result: number = 10 + 5 * 2;")
             .shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.VariableDeclaration,
+                TokenType.Keyword.VariableDeclaration,
                 TokenType.NumberLiteral,
                 TokenType.Plus,
-                TokenType.Multiply
-            )
-            .withTokenCountExcludingEOF(11)
+                TokenType.Multiply,
+            ).withTokenCountExcludingEOF(11)
             .endsWithEOF()
     }
 
@@ -66,9 +63,8 @@ class PrintScript10LexerDSLTest {
                 TokenType.LeftParen,
                 TokenType.StringLiteral,
                 TokenType.RightParen,
-                TokenType.Semicolon
-            )
-            .withLexemes("println", "(", "\"Hello World\"", ")", ";")
+                TokenType.Semicolon,
+            ).withLexemes("println", "(", "\"Hello World\"", ")", ";")
             .endsWithEOF()
     }
 
@@ -103,9 +99,8 @@ class PrintScript10LexerDSLTest {
                 TokenType.LeftParen,
                 TokenType.RightParen,
                 TokenType.Plus,
-                TokenType.Divide
-            )
-            .withTokenCountExcludingEOF(13)
+                TokenType.Divide,
+            ).withTokenCountExcludingEOF(13)
             .endsWithEOF()
     }
 
@@ -146,8 +141,7 @@ class PrintScript10LexerDSLTest {
                 TokenType.Plus,
                 TokenType.Minus,
                 TokenType.Multiply,
-                TokenType.Divide
-            )
-            .endsWithEOF()
+                TokenType.Divide,
+            ).endsWithEOF()
     }
 }

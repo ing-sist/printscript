@@ -69,5 +69,3 @@ data class ConditionalNode(
 ) : AstNode {
     override fun children(): List<AstNode> = listOf(condition) + thenBody + (elseBody ?: emptyList())
 }
-
-

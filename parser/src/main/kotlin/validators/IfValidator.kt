@@ -15,7 +15,7 @@ class IfValidator(
 ) : AstValidator {
     override fun validateAndBuild(stream: TokenProvider): Result<AstNode, ParseError?> {
         // Valida si el token actual es 'if'
-        if (stream.peek().type !is TokenType.IfKeyword) {
+        if (stream.peek().type !is TokenType.Keyword.If) {
             return Result.Failure(null) // No es un if, pasa al siguiente validador
         }
 
@@ -79,7 +79,7 @@ class IfValidator(
                 val thenBody = thenResult.value
                 // Parseo opcional del bloque 'else'
                 var elseBody: List<AstNode>? = null
-                if (stream.peek().type is TokenType.ElseKeyword) {
+                if (stream.peek().type is TokenType.Keyword.Else) {
                     stream.consume() // Consume 'else'
                     when (val elseResult = parseBlock(stream, validatorsProvider)) {
                         is Result.Success -> {

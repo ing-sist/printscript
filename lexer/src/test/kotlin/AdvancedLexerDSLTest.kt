@@ -4,15 +4,13 @@ import dsl.lexCode11
 import dsl.lexCodeWithVersion
 import dsl.lexProgram
 import dsl.lexProgramWithVersion
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.Test
 
 /**
  * Advanced DSL tests showcasing all lexer capabilities and DSL features.
  */
 class AdvancedLexerDSLTest {
-
     @Test
     @DisplayName("Should demonstrate complete DSL fluent interface")
     fun testCompleteFluentInterface() {
@@ -20,7 +18,7 @@ class AdvancedLexerDSLTest {
             .shouldTokenizeSuccessfully()
             .withTokenCountExcludingEOF(18) // Fixed count
             .withTokenCount(19) // Including EOF
-            .containingTypes(TokenType.ConstDeclaration, TokenType.BooleanLiteral, TokenType.IfKeyword)
+            .containingTypes(TokenType.ConstDeclaration, TokenType.BooleanLiteral, TokenType.Keyword.If)
             .withTokenAt(0, TokenType.ConstDeclaration, "const")
             .withTokenAt(5, TokenType.StringLiteral, "\"Hello\"")
             .withTokenAt(9, TokenType.BooleanLiteral, "true")
@@ -30,18 +28,18 @@ class AdvancedLexerDSLTest {
     @Test
     @DisplayName("Should handle real-world PrintScript 1.1 program")
     fun testRealWorldProgram() {
-        lexProgramWithVersion("1.1",
+        lexProgramWithVersion(
+            "1.1",
             "const PI: number = 3.14159;",
             "let radius: number = 5;",
-            "let area: number = PI * radius * radius;"
+            "let area: number = PI * radius * radius;",
         ).shouldTokenizeSuccessfully()
             .containingTypes(
                 TokenType.ConstDeclaration,
-                TokenType.VariableDeclaration,
+                TokenType.Keyword.VariableDeclaration,
                 TokenType.NumberLiteral,
-                TokenType.Multiply
-            )
-            .endsWithEOF()
+                TokenType.Multiply,
+            ).endsWithEOF()
     }
 
     @Test
@@ -120,7 +118,7 @@ class AdvancedLexerDSLTest {
         // Multi-line function
         lexProgram(
             "let x: number = 1;",
-            "let y: number = 2;"
+            "let y: number = 2;",
         ).shouldTokenizeSuccessfully()
             .withTokenCountExcludingEOF(14) // Fixed count: 7 + 7 tokens
             .endsWithEOF()
@@ -140,19 +138,21 @@ class AdvancedLexerDSLTest {
             .endsWithEOF()
 
         // Multi-line with version
-        lexProgramWithVersion("1.1",
+        lexProgramWithVersion(
+            "1.1",
             "if (true) {",
             "    println(\"test\");",
-            "}"
+            "}",
         ).shouldTokenizeSuccessfully()
-            .containingTypes(TokenType.IfKeyword, TokenType.LeftBrace, TokenType.RightBrace)
+            .containingTypes(TokenType.Keyword.If, TokenType.LeftBrace, TokenType.RightBrace)
             .endsWithEOF()
     }
 
     @Test
     @DisplayName("Should handle complex nested structures")
     fun testComplexNestedStructures() {
-        lexCode11("""
+        lexCode11(
+            """
             if (condition1) {
                 if (condition2) {
                     const result: boolean = true;
@@ -162,18 +162,17 @@ class AdvancedLexerDSLTest {
                     println(temp);
                 }
             }
-        """.trimIndent())
-            .shouldTokenizeSuccessfully()
+            """.trimIndent(),
+        ).shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.IfKeyword,
-                TokenType.ElseKeyword,
+                TokenType.Keyword.If,
+                TokenType.Keyword.Else,
                 TokenType.ConstDeclaration,
-                TokenType.VariableDeclaration,
+                TokenType.Keyword.VariableDeclaration,
                 TokenType.BooleanType,
                 TokenType.BooleanLiteral,
                 TokenType.LeftBrace,
-                TokenType.RightBrace
-            )
-            .endsWithEOF()
+                TokenType.RightBrace,
+            ).endsWithEOF()
     }
 }
