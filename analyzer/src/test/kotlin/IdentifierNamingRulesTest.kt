@@ -1,4 +1,3 @@
-// IdentifierNamingRulesTest.kt
 import naming.IdentifierCase
 import naming.IdentifierNamingRule
 import naming.IdentifierNamingRuleDef
