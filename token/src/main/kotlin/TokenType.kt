@@ -5,9 +5,9 @@ sealed interface TokenType {
         data object If : Keyword
 
         data object Else : Keyword
-    }
 
-    data object ConstDeclaration : TokenType
+        data object ConstDeclaration : Keyword
+    }
 
     data object FunctionCall : TokenType
 

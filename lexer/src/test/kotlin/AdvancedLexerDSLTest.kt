@@ -18,8 +18,8 @@ class AdvancedLexerDSLTest {
             .shouldTokenizeSuccessfully()
             .withTokenCountExcludingEOF(18) // Fixed count
             .withTokenCount(19) // Including EOF
-            .containingTypes(TokenType.ConstDeclaration, TokenType.BooleanLiteral, TokenType.Keyword.If)
-            .withTokenAt(0, TokenType.ConstDeclaration, "const")
+            .containingTypes(TokenType.Keyword.ConstDeclaration, TokenType.BooleanLiteral, TokenType.Keyword.If)
+            .withTokenAt(0, TokenType.Keyword.ConstDeclaration, "const")
             .withTokenAt(5, TokenType.StringLiteral, "\"Hello\"")
             .withTokenAt(9, TokenType.BooleanLiteral, "true")
             .endsWithEOF()
@@ -35,7 +35,7 @@ class AdvancedLexerDSLTest {
             "let area: number = PI * radius * radius;",
         ).shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.ConstDeclaration,
+                TokenType.Keyword.ConstDeclaration,
                 TokenType.Keyword.VariableDeclaration,
                 TokenType.NumberLiteral,
                 TokenType.Multiply,
@@ -61,7 +61,7 @@ class AdvancedLexerDSLTest {
 
         lexCode11("const x: number = 5;")
             .shouldTokenizeSuccessfully()
-            .withTokenAt(0, TokenType.ConstDeclaration, "const") // proper keyword in 1.1
+            .withTokenAt(0, TokenType.Keyword.ConstDeclaration, "const") // proper keyword in 1.1
     }
 
     @Test
@@ -91,7 +91,7 @@ class AdvancedLexerDSLTest {
     fun testPreciseTokenValidation() {
         lexCode11("const flag: boolean = true;")
             .shouldTokenizeSuccessfully()
-            .withTokenAt(0, TokenType.ConstDeclaration, "const")
+            .withTokenAt(0, TokenType.Keyword.ConstDeclaration, "const")
             .withTokenAt(1, TokenType.Identifier, "flag")
             .withTokenAt(2, TokenType.Colon, ":")
             .withTokenAt(3, TokenType.BooleanType, "boolean")
@@ -167,7 +167,7 @@ class AdvancedLexerDSLTest {
             .containingTypes(
                 TokenType.Keyword.If,
                 TokenType.Keyword.Else,
-                TokenType.ConstDeclaration,
+                TokenType.Keyword.ConstDeclaration,
                 TokenType.Keyword.VariableDeclaration,
                 TokenType.BooleanType,
                 TokenType.BooleanLiteral,
