@@ -3,31 +3,31 @@ import java.util.regex.Pattern
 
 /**
  * Handles token matching logic using the provided rules.
- * Follows Single Responsibility Principle by focusing only on token matching.
+ * Focuses only on finding the next token based on rules.
  */
 class TokenMatcher(
     private val tokenRule: TokenRule,
 ) {
     private val compiledPatterns = compilePatterns(tokenRule)
 
+    /**
+     * Busca el siguiente token al principio del 'source'.
+     * Devuelve el Token encontrado o un .LexError si no hay coincidencia.
+     */
     fun findNextToken(
         source: String,
         line: Int,
         startCol: Int,
-    ): Result<TokenResult, LexError> {
+    ): Result<Token, LexError> {
         for ((pattern, tokenType) in compiledPatterns) {
             val matcher: Matcher = pattern.matcher(source)
             if (matcher.find() && matcher.start() == 0) {
                 val lexeme = matcher.group()
                 val token = createToken(lexeme, tokenType, line, startCol)
-                val newPosition = calculateNewPosition(source, lexeme, line, startCol)
-
-                return Result.Success(
-                    TokenResult(token, newPosition),
-                )
+                // Simplemente devolvemos el token. El Lexer se encargará de la posición.
+                return Result.Success(token)
             }
         }
-
         return createErrorResult(source, line, startCol)
     }
 
@@ -50,25 +50,6 @@ class TokenMatcher(
         )
     }
 
-    private fun calculateNewPosition(
-        source: String,
-        lexeme: String,
-        line: Int,
-        startCol: Int,
-    ): SourcePosition {
-        val remainingSource = source.substring(lexeme.length)
-        val newlines = lexeme.count { it == '\n' }
-
-        val (newLine, newColumn) =
-            if (newlines > 0) {
-                line + newlines to lexeme.length - lexeme.lastIndexOf('\n')
-            } else {
-                line to startCol + lexeme.length
-            }
-
-        return SourcePosition(remainingSource, newLine, newColumn)
-    }
-
     private fun createErrorResult(
         source: String,
         line: Int,
@@ -83,4 +64,12 @@ class TokenMatcher(
             ),
         )
     }
+}
+
+sealed class LexError {
+    data class UnexpectedToken(
+        val line: Int,
+        val column: Int,
+        val preview: String,
+    ) : LexError()
 }

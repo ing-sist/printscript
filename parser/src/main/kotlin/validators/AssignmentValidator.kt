@@ -1,25 +1,32 @@
 package validators
 
+import AstNode
 import Result
 import Token
+import TokenProvider
 import TokenType
 import builders.AssignmentBuilder
-import builders.AstBuilder
 import parser.ParseError
+import validators.helpers.TokenConsumer
 
-class AssignmentValidator : AstValidators {
-    // pepe = 4;
-    override fun validate(tokens: List<Token>): Result<AstBuilder, ParseError> {
-        val isValid =
-            tokens.size >= 4 &&
-                tokens[0].type is TokenType.Identifier &&
-                tokens[1].type is TokenType.Assignment &&
-                tokens.last().type is TokenType.Semicolon
+class AssignmentValidator : AstValidator {
+    override fun validateAndBuild(stream: TokenProvider): Result<AstNode, ParseError?> {
+        // 1. Peek at the structure: <id> =
+        if (stream.peek(0).type is TokenType.Identifier && stream.peek(1).type is TokenType.Assignment) {
+            val consumedTokens = mutableListOf<Token>()
 
-        return if (isValid) {
-            Result.Success(AssignmentBuilder())
-        } else {
-            Result.Failure(ParseError.InvalidSyntax(tokens, "Expected: <identifier> = <expression> ;"))
+            // 2. Consume the identifier and assignment operator
+            consumedTokens.add(stream.consume())
+            consumedTokens.add(stream.consume())
+
+            // 3. Llama a la una funcion auxiliar para consumir la expresión y el ';'
+            consumedTokens.addAll(TokenConsumer.consumeExpressionAndSemicolon(stream))
+
+            // 4. Call the Builder
+            val node = AssignmentBuilder().build(consumedTokens)
+            return Result.Success(node)
         }
+
+        return Result.Failure(null)
     }
 }

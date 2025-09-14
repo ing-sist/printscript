@@ -7,6 +7,8 @@ sealed interface TokenType {
         data object Else : Keyword
     }
 
+    data object ConstDeclaration : TokenType
+
     data object FunctionCall : TokenType
 
     // 2. Symbols
@@ -55,11 +57,19 @@ sealed interface TokenType {
 
     data object NumberLiteral : TokenType
 
+    data object BooleanLiteral : TokenType // true/false (new in 1.1)
+
     // 5. DataTypes
     data object StringType : TokenType
 
     data object NumberType : TokenType
 
+    data object BooleanType : TokenType // boolean (new in 1.1)
+
     // 6. End of file
     data object EOF : TokenType
+
+    data object Space : TokenType
+
+    data object ERROR : TokenType
 }
