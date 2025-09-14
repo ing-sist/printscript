@@ -11,7 +11,7 @@ import rules.implementations.SpaceAroundAssignment
 import rules.implementations.SpaceAroundOperators
 import rules.implementations.VarDeclaration
 
-object RuleImplementations {
+object FormatterRuleImplementations {
     val IMPLEMENTATIONS =
         listOf(
             InlineBraceIfStatement,
