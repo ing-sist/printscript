@@ -4,7 +4,7 @@ import DocBuilder
 import Token
 import config.FormatterStyleConfig
 
-object LineBreakAfterSemicolon : RuleImplementation {
+object LineBreakAfterSemicolon : AfterRule {
     override fun after(
         prev: Token,
         curr: Token,

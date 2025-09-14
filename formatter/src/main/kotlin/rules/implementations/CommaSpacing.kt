@@ -5,7 +5,7 @@ import Token
 import TokenType
 import config.FormatterStyleConfig
 
-object CommaSpacing : RuleImplementation {
+object CommaSpacing : BeforeRule, AfterRule {
     override fun before(
         prev: Token,
         curr: Token,
@@ -14,7 +14,7 @@ object CommaSpacing : RuleImplementation {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
-        if (curr.type is TokenType.Colon && style.spaceBeforeColon) {
+        if (curr.type is TokenType.Colon) {
             result = result.space()
         }
         return result

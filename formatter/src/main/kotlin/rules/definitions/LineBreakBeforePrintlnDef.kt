@@ -1,0 +1,11 @@
+package rules.definitions
+
+import config.RuleOwner
+
+object LineBreakBeforePrintlnDef : Rule<Int> {
+    override val id: String = "lineBreakBeforePrintln"
+    override val default: Int = 1
+    override val owner: RuleOwner = RuleOwner.USER
+
+    override fun parse(raw: String): Int = raw.trim().toInt() // result if > 2
+}

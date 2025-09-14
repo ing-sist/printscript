@@ -4,7 +4,7 @@ import DocBuilder
 import Token
 import config.FormatterStyleConfig
 
-object SpaceAroundAsignement : RuleImplementation {
+object SpaceAroundAssignment : BeforeRule, AfterRule {
     override fun before(
         prev: Token,
         curr: Token,

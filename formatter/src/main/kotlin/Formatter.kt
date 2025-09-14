@@ -1,4 +1,6 @@
 import config.FormatterStyleConfig
+import rules.implementations.AfterRule
+import rules.implementations.BeforeRule
 import rules.implementations.RuleImplementation
 
 class Formatter(
@@ -33,8 +35,6 @@ class Formatter(
         return out
     }
 
-    // --- Helpers extraídos con Extract Method ---
-
     private fun applyBeforeRules(
         prev: Token,
         curr: Token,
@@ -42,10 +42,12 @@ class Formatter(
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        var acc = out
+        val acc = out
         for (rule in rules) {
-            val n = rule.before(prev, curr, next, style, acc)
-            if (n !== acc) return n
+            if (rule is BeforeRule) {
+                val n = rule.before(prev, curr, next, style, acc)
+                if (n != acc) return n
+            }
         }
         return acc
     }
@@ -57,10 +59,12 @@ class Formatter(
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        var acc = out
+        val acc = out
         for (rule in rules) {
-            val n = rule.after(prev, curr, next, style, acc)
-            if (n !== acc) return n
+            if (rule is AfterRule) {
+                val n = rule.after(prev, curr, next, style, acc)
+                if (n != acc) return n
+            }
         }
         return acc
     }

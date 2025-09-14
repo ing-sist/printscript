@@ -4,7 +4,7 @@ import DocBuilder
 import Token
 import config.FormatterStyleConfig
 
-object LineBreakBeforePrintln : RuleImplementation {
+object LineBreakBeforePrintln : BeforeRule {
     override fun before(
         prev: Token,
         curr: Token,
@@ -12,6 +12,7 @@ object LineBreakBeforePrintln : RuleImplementation {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
+        if (style.lineBreakBeforePrintln == 0) return out
         var result = out
         if (curr.lexeme.lowercase() == "println") {
             repeat(style.lineBreakBeforePrintln) {

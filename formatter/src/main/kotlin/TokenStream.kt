@@ -1,7 +1,5 @@
-// Centinela EOF
 private fun eof() = Token(TokenType.EOF, "EOF", Location(-1, -1, -1))
 
-// Implementación simple basada en lista
 class TokenStream(
     tokens: List<Token>,
 ) {

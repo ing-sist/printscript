@@ -5,7 +5,7 @@ import Token
 import TokenType
 import config.FormatterStyleConfig
 
-object VarDeclaration : RuleImplementation {
+object VarDeclaration : AfterRule {
     override fun after(
         prev: Token,
         curr: Token,

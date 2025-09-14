@@ -5,7 +5,7 @@ import Token
 import TokenType
 import config.FormatterStyleConfig
 
-object KeywordSpacing : RuleImplementation {
+object KeywordSpacing : BeforeRule, AfterRule {
     override fun before(
         prev: Token,
         curr: Token,

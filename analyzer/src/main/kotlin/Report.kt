@@ -40,8 +40,6 @@ class InMemoryReport : DiagnosticSender {
     fun size() = list.size
 
     fun first(): Diagnostic = list.first()
-
-    fun all(): List<Diagnostic> = list
 }
 
 class StreamingTextReport(

@@ -10,20 +10,11 @@ class DocBuilder private constructor(
 
     fun isAtLineStart(): Boolean = lineStart
 
-    fun write(s: String): DocBuilder {
-        out.append(s)
-        return DocBuilder(out, lineStart = false)
-    }
+    fun write(s: String): DocBuilder = DocBuilder(out.append(s), lineStart = false)
 
-    fun space(): DocBuilder {
-        out.append(' ')
-        return DocBuilder(out, lineStart = false)
-    }
+    fun space(): DocBuilder = DocBuilder(out.append(' '), lineStart = false)
 
-    fun newline(): DocBuilder {
-        out.append('\n')
-        return DocBuilder(out, lineStart = true)
-    }
+    fun newline(): DocBuilder = DocBuilder(out.append('\n'), lineStart = true)
 
     fun indent(spaces: Int): DocBuilder {
         if (!lineStart || spaces <= 0) return this
