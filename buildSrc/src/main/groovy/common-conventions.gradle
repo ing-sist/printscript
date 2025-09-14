@@ -14,9 +14,6 @@ plugins {
     id 'jacoco-conventions'
 }
 
-group = 'org.printscript'
-version = '1.0-SNAPSHOT'
-
 repositories {
     mavenCentral()
 }

@@ -15,10 +15,17 @@ jobs:
           java-version: "21"
           distribution: "corretto"
 
+      - name: Derive VERSION from release tag
+        run: |
+            TAG="${{ github.event.release.tag_name }}"
+            echo "VERSION=${TAG#v}" >> $GITHUB_ENV
+            echo "Publishing version: ${TAG#v}"
+
       - name: Build Gradle
         run: ./gradlew build
 
       - name: Publish package
-        run: ./gradlew publish
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            VERSION: ${{ env.VERSION }}
+        run: ./gradlew publish
