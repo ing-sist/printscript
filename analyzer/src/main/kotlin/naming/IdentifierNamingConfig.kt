@@ -1,10 +1,8 @@
 package naming
 
-import Type
 import shared.RuleConfig
 
 class IdentifierNamingConfig(
+    val namingType: IdentifierCase,
     override val enabled: Boolean = true,
-    override val type: Type = Type.WARNING,
-    val namingType: IdentifierCase = IdentifierCase.SNAKE_CASE,
 ) : RuleConfig

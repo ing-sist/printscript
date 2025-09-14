@@ -6,15 +6,15 @@ import IdentifierNode
 import LiteralNode
 import Report
 import shared.AnalyzerRule
-import walk
+import utils.walk
 
 class SimpleArgRule(
-    override val config: SimpleArgConfig,
     override val ruleDef: SimpleArgDef,
-) : AnalyzerRule {
+) : AnalyzerRule<SimpleArgConfig> {
     override fun check(
         ast: AstNode,
         report: Report,
+        config: SimpleArgConfig,
     ): Report {
         var newReport = report
         if (!config.enabled) return report // si no esta activado, no verifico
@@ -29,12 +29,12 @@ class SimpleArgRule(
                                 ruleDef.id,
                                 ruleDef.description,
                                 node.getLocation(),
-                                config.type,
+                                ruleDef.type,
                             )
                     }
                 }
             }
-            true // sigo recorriendo con walk
+            true // sigo recorriendo con utils.walk
         }
         walk(ast, enter)
         return newReport

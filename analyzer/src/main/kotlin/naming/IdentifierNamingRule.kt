@@ -4,15 +4,15 @@ import AstNode
 import IdentifierNode
 import Report
 import shared.AnalyzerRule
-import walk
+import utils.walk
 
 class IdentifierNamingRule(
-    override val config: IdentifierNamingConfig, // aca la rule config tiene que ser especifica
     override val ruleDef: IdentifierNamingRuleDef,
-) : AnalyzerRule {
+) : AnalyzerRule<IdentifierNamingConfig> {
     override fun check(
         ast: AstNode,
         report: Report,
+        config: IdentifierNamingConfig,
     ): Report {
         var newReport = report
         if (!config.enabled) return report
@@ -25,7 +25,7 @@ class IdentifierNamingRule(
                 if (!ok) { // si no esta ok, mando report
                     val expected = config.namingType.description()
                     val message = "Identifiers are expected to be in $expected and got '${node.name}'"
-                    newReport = newReport.addDiagnostic(ruleDef.id, message, node.getLocation(), config.type)
+                    newReport = newReport.addDiagnostic(ruleDef.id, message, node.getLocation(), ruleDef.type)
                 }
             }
             true // si no es identificador, es true

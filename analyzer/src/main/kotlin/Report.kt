@@ -1,3 +1,5 @@
+import utils.Type
+
 class Report private constructor(
     private val sink: DiagnosticSender,
     private val memory: InMemoryReport? = null,

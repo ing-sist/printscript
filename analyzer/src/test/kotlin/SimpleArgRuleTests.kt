@@ -1,29 +1,21 @@
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import simple.SimpleArgConfig
+import shared.AnalyzerRuleDefinitions
 import simple.SimpleArgRule
+import utils.Type
 import kotlin.test.assertTrue
 
 class SimpleArgRuleTests {
-    private fun printlnRule(enabled: Boolean = false) =
-        SimpleArgRule(
-            SimpleArgConfig(
-                enabled,
-                Type.WARNING,
-            ),
-            PrintlnSimpleArgDef,
-        )
+    private fun cfgFrom(json: String): AnalyzerConfig {
+        val tmp =
+            kotlin.io.path
+                .createTempFile("analyzer-", ".json")
+                .toFile()
+        tmp.writeText(json.trimIndent())
+        return AnalyzerConfig.fromPath(tmp.path, AnalyzerRuleDefinitions.RULES)
+    }
 
-    private fun readInputRule(enabled: Boolean = true) =
-        SimpleArgRule(
-            SimpleArgConfig(
-                enabled,
-                Type.WARNING,
-            ),
-            ReadInputSimpleArgDef,
-        )
-
-    fun call(
+    private fun call(
         name: String,
         arg: AstNode,
     ) = FunctionCallNode(name, arg, false)
@@ -32,9 +24,20 @@ class SimpleArgRuleTests {
     fun `println with identifier is OK`() {
         val ast = call("println", id("name"))
         val report = Report.inMemory()
-        val rule = printlnRule(enabled = true)
+        val rule = SimpleArgRule(PrintlnSimpleArgDef)
 
-        val diags = Analyzer(listOf(rule)).analyze(ast, report)
+        val cfg =
+            cfgFrom(
+                """
+            {
+              "printlnSimpleArg": true,
+              "readInputSimpleArg": true,
+              "namingType": "camel"
+            }
+            """,
+            )
+
+        val diags = Analyzer(listOf(rule)).analyze(ast, report, cfg)
         assertTrue(diags.isEmpty(), "No debería reportar cuando el arg es Identifier")
     }
 
@@ -42,69 +45,119 @@ class SimpleArgRuleTests {
     fun `println with literal is OK`() {
         val ast = call("println", litString("hola"))
         val report = Report.inMemory()
-        val rule = printlnRule(enabled = true)
+        val rule = SimpleArgRule(PrintlnSimpleArgDef)
 
-        val diags = Analyzer(listOf(rule)).analyze(ast, report)
+        val cfg =
+            cfgFrom(
+                """
+            {
+              "printlnSimpleArg": true
+            }
+            """,
+            )
+
+        val diags = Analyzer(listOf(rule)).analyze(ast, report, cfg)
         assertTrue(diags.isEmpty(), "No debería reportar cuando el arg es Literal")
     }
 
     @Test
     fun `println with binary expression is NOT OK`() {
-        val expr = bin(id("a"), "+", litNumber("1"))
-        val ast = call("println", expr)
+        val ast = call("println", bin(id("a"), "+", litNumber("1")))
         val report = Report.inMemory()
-        val rule = printlnRule(enabled = true)
+        val rule = SimpleArgRule(PrintlnSimpleArgDef)
 
-        val diags = Analyzer(listOf(rule)).analyze(ast, report)
+        val cfg =
+            cfgFrom(
+                """
+            {
+              "printlnSimpleArg": true
+            }
+            """,
+            )
 
-        assertEquals(1, diags.size())
+        val diags = Analyzer(listOf(rule)).analyze(ast, report, cfg)
+
+        assertEquals(1, diags.size(), "Debe reportar 1 diagnóstico")
         val d = diags.first()
-
-        // más robusto que hardcodear el string del id:
         assertEquals(PrintlnSimpleArgDef.id, d.ruleId)
-        assertEquals(Type.WARNING, d.type)
+        assertEquals(Type.ERROR, d.type)
         assertTrue(d.message.contains("println"), "El mensaje debería mencionar a println")
     }
 
     @Test
     fun `println with unary expression is NOT OK`() {
-        val expr = unary("-", id("x"))
-        val ast = call("println", expr)
-        val rule = printlnRule(enabled = true)
+        val ast = call("println", unary("-", id("x")))
         val report = Report.inMemory()
+        val rule = SimpleArgRule(PrintlnSimpleArgDef)
 
-        val diags = Analyzer(listOf(rule)).analyze(ast, report)
-        assertEquals(1, diags.size())
+        val cfg =
+            cfgFrom(
+                """
+            {
+              "printlnSimpleArg": true
+            }
+            """,
+            )
+
+        val diags = Analyzer(listOf(rule)).analyze(ast, report, cfg)
+        assertEquals(1, diags.size(), "Debe reportar 1 diagnóstico")
         assertEquals(PrintlnSimpleArgDef.id, diags.first().ruleId)
     }
 
     @Test
     fun `disabled println rule does nothing`() {
         val ast = call("println", bin(id("a"), "+", litNumber("1")))
-        val rule = printlnRule(enabled = false)
         val report = Report.inMemory()
+        val rule = SimpleArgRule(PrintlnSimpleArgDef)
 
-        val diags = Analyzer(listOf(rule)).analyze(ast, report)
-        assertTrue(diags.isEmpty(), "Con la regla deshabilitada no debería reportar")
+        val cfg =
+            cfgFrom(
+                """
+            {
+              "printlnSimpleArg": false
+            }
+            """,
+            )
+
+        val diags = Analyzer(listOf(rule)).analyze(ast, report, cfg)
+        assertTrue(diags.isEmpty())
     }
 
     @Test
     fun `readinput with identifier is OK`() {
         val ast = call("readinput", id("target"))
-        val rule = readInputRule()
         val report = Report.inMemory()
+        val rule = SimpleArgRule(ReadInputSimpleArgDef)
 
-        val diags = Analyzer(listOf(rule)).analyze(ast, report)
-        assertTrue(diags.isEmpty())
+        val cfg =
+            cfgFrom(
+                """
+            {
+              "readInputSimpleArg": true
+            }
+            """,
+            )
+
+        val diags = Analyzer(listOf(rule)).analyze(ast, report, cfg)
+        assertTrue(diags.isEmpty(), "No debería reportar para Identifier")
     }
 
     @Test
     fun `disabled readinput rule does nothing`() {
-        val report = Report.inMemory()
         val ast = call("readinput", unary("-", id("x")))
-        val rule = readInputRule()
+        val report = Report.inMemory()
+        val rule = SimpleArgRule(ReadInputSimpleArgDef)
 
-        val diags = Analyzer(listOf(rule)).analyze(ast, report)
-        assertTrue(diags.isEmpty())
+        val cfg =
+            cfgFrom(
+                """
+            {
+              "readInputSimpleArg": false
+            }
+            """,
+            )
+
+        val diags = Analyzer(listOf(rule)).analyze(ast, report, cfg)
+        assertTrue(diags.isEmpty(), "Con la regla deshabilitada no debería reportar")
     }
 }
