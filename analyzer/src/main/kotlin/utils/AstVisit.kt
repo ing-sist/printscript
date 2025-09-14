@@ -1,4 +1,8 @@
-// con walk es como que llamo recursivo, porque como ya se que cantidad de hijos tiene cada nodo
+package utils
+
+import AstNode
+
+// con utils.walk es como que llamo recursivo, porque como ya se que cantidad de hijos tiene cada nodo
 // los voy recorriendo
 fun walk(
     root: AstNode,

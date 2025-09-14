@@ -1,5 +1,5 @@
+import config.FormatterRuleImplementations
 import config.FormatterStyleConfig
-import config.RuleImplementations
 import org.junit.jupiter.api.Test
 import rules.implementations.RuleImplementation
 import kotlin.test.assertEquals
@@ -11,7 +11,7 @@ class FormatterTestAllTrue {
 
         val stream = streamFromSource(lexer, source)
 
-        val rules: List<RuleImplementation> = RuleImplementations.IMPLEMENTATIONS
+        val rules: List<RuleImplementation> = FormatterRuleImplementations.IMPLEMENTATIONS
 
         return Formatter(rules)
             .format(stream, style, DocBuilder.inMemory())
