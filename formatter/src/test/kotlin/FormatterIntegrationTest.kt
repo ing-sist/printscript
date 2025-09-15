@@ -34,7 +34,7 @@ class FormatterIntegrationTest {
                 createToken(TokenType.Semicolon, ";"),
             )
 
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
         val config = createDefaultConfig()
 
@@ -60,7 +60,7 @@ class FormatterIntegrationTest {
                 createToken(TokenType.RightBrace, "}"),
             )
 
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
         val config = createDefaultConfig()
 
@@ -85,7 +85,7 @@ class FormatterIntegrationTest {
                 createToken(TokenType.Semicolon, ";"),
             )
 
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
         val config = createDefaultConfig()
 
@@ -104,7 +104,7 @@ class FormatterIntegrationTest {
             )
 
         val config = createDefaultConfig().copy(spaceAroundOperators = false)
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())
@@ -122,7 +122,7 @@ class FormatterIntegrationTest {
             )
 
         val config = createDefaultConfig().copy(spaceAroundAssignment = false)
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())
@@ -144,7 +144,7 @@ class FormatterIntegrationTest {
             )
 
         val config = createDefaultConfig().copy(lineBreakAfterSemicolon = false)
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())
@@ -163,7 +163,7 @@ class FormatterIntegrationTest {
             )
 
         val config = createDefaultConfig().copy(indentation = 2)
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())
@@ -184,7 +184,7 @@ class FormatterIntegrationTest {
             )
 
         val config = createDefaultConfig().copy(lineBreakBeforePrintln = 3)
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())

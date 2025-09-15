@@ -65,7 +65,7 @@ class FormatterTest {
     @Test
     fun `format token unico`() {
         val tokens = listOf(createToken(TokenType.Identifier, "x"))
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(emptyList())
         val config = createConfig()
 
@@ -82,7 +82,7 @@ class FormatterTest {
                 createToken(TokenType.Identifier, "x"),
                 createToken(TokenType.RightBrace, "}"),
             )
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(emptyList())
         val config = createConfig(indentation = 2)
 
@@ -104,7 +104,7 @@ class FormatterTest {
                 createToken(TokenType.Assignment, "="),
                 createToken(TokenType.NumberLiteral, "5"),
             )
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(listOf(beforeRule))
         val config = createConfig()
 
@@ -126,7 +126,7 @@ class FormatterTest {
                 createToken(TokenType.Assignment, "="),
                 createToken(TokenType.NumberLiteral, "5"),
             )
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(listOf(afterRule))
         val config = createConfig()
 
@@ -145,7 +145,7 @@ class FormatterTest {
                 createToken(TokenType.RightBrace, "}"),
                 createToken(TokenType.RightBrace, "}"),
             )
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(emptyList())
         val config = createConfig(indentation = 2)
 
@@ -170,7 +170,7 @@ class FormatterTest {
                 createToken(TokenType.Identifier, "x"),
                 createToken(TokenType.Assignment, "="),
             )
-        val stream = TokenStream(tokens)
+        val stream = MockTokenStream(tokens)
         val formatter = Formatter(listOf(beforeRule1, beforeRule2))
         val config = createConfig()
 
