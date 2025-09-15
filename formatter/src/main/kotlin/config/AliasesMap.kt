@@ -18,8 +18,14 @@ private fun asBool(v: String) = v.trim().lowercase() == "true"
 object AliasesMap {
     val ALIASES: Map<String, Alias> =
         mapOf(
-            "enforce-spacing-after-colon-in-declaration" to Alias(SpaceBeforeColonDef.id),
-            "enforce-spacing-after-colon-in-declaration" to Alias(SpaceAfterColonDef.id),
+            "enforce-spacing-after-colon-in-declaration" to
+                Alias(SpaceBeforeColonDef.id) { v ->
+                    (!asBool(v)).toString()
+                },
+            "enforce-spacing-after-colon-in-declaration" to
+                Alias(SpaceAfterColonDef.id) { v ->
+                    (!asBool(v)).toString()
+                },
             "enforce-spacing-around-equals" to Alias(SpaceAroundAssignmentDef.id),
             "enforce-no-spacing-around-equals" to
                 Alias(SpaceAroundAssignmentDef.id) { v ->
