@@ -4,6 +4,7 @@ import AssignmentNode
 import BinaryOperationNode
 import ConditionalNode
 import DeclarationAssignmentNode
+import DeclarationNode
 import FunctionCallNode
 import IdentifierNode
 import LiteralNode
@@ -15,6 +16,7 @@ import ps.interpret.registry.HandlerRegistry
 import ps.interpret.stmt.AssignmentExecutor
 import ps.interpret.stmt.ConditionalExecutor
 import ps.interpret.stmt.DeclarationAssignmentExecutor
+import ps.interpret.stmt.DeclarationExecutor
 import ps.interpret.stmt.FunctionCallExecutor
 import ps.lang.types.DefaultTypeRules
 import ps.lang.types.TypeRules
@@ -89,6 +91,10 @@ class InterpreterRuntimeFactory {
             DeclarationAssignmentExecutor(runtime),
         )
 
+        statementRegistry.registerStatementExecutor(
+            DeclarationNode::class.java,
+            DeclarationExecutor(),
+        )
         statementRegistry.registerStatementExecutor(
             AssignmentNode::class.java,
             AssignmentExecutor(runtime),
