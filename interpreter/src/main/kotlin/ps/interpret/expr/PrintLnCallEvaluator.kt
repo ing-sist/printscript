@@ -16,8 +16,8 @@ class PrintLnCallEvaluator(
         node: FunctionCallNode,
         context: EvaluationContext,
     ): Result<PSValue, InterpreterException> {
-        if (node.functionName != "printLn") {
-            return Result.Failure(InterpreterException("This evaluator only handles printLn calls"))
+        if (node.functionName != "println") {
+            return Result.Failure(InterpreterException("This evaluator only handles println calls"))
         }
 
         return runtime.evaluateExpression(node.content, context).map { value ->

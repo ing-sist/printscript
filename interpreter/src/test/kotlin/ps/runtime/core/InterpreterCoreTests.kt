@@ -299,7 +299,7 @@ class InterpreterCoreTests {
     ): AssignmentNode = AssignmentNode(createIdentifier(name), value)
 
     private fun createPrintLnCall(variableName: String): FunctionCallNode =
-        FunctionCallNode("printLn", createVariableReference(variableName), true)
+        FunctionCallNode("println", createVariableReference(variableName), true)
 
     private fun createReadInputCall(prompt: String): FunctionCallNode =
         FunctionCallNode(
