@@ -42,3 +42,34 @@ fun loadFromFile(
 
     return result
 }
+
+fun loadFromString(
+    json: String,
+    rules: List<Rule<*>>,
+): Map<String, Any> {
+    val text = json.trim()
+
+    val inner = text.removePrefix("{").removeSuffix("}").trim()
+    if (inner.isBlank()) return rules.associate { it.id to it.default }
+
+    val entries = inner.split(",")
+    val raw = mutableMapOf<String, String>()
+    for (e in entries) {
+        val parts = e.split(":")
+        require(parts.size == 2) { "Entrada inválida: $e" }
+        val key = parts[0].trim().removeSurrounding("\"")
+        val value = parts[1].trim()
+        raw[key] = value
+    }
+
+    val result = mutableMapOf<String, Any>()
+    for (rule in rules) {
+        if (rule.owner == RuleOwner.ENGINE) {
+            result[rule.id] = rule.default
+        } else {
+            val inputValue = raw[rule.id]
+            result[rule.id] = if (inputValue != null) rule.parse(inputValue) else rule.default
+        }
+    }
+    return result
+}

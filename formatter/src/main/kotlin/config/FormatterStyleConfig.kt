@@ -34,6 +34,20 @@ data class FormatterStyleConfig(
                 inlineIfBraceIfStatement = style[InlineIfBraceIfStatementDef.id] as Boolean,
             )
 
+        fun default(): FormatterStyleConfig =
+            FormatterStyleConfig(
+                lineBreakBeforePrintln = 0,
+                lineBreakAfterSemicolon = true,
+                spaceBeforeColon = false,
+                spaceAfterColon = true,
+                spaceAroundAssignment = true,
+                spaceAroundOperators = true,
+                indentation = 4,
+                inlineIfBraceIfStatement = false,
+            )
+
+        fun fromJson(json: String): FormatterStyleConfig = fromMap(loadFromString(json, RuleDefinitions.RULES))
+
         fun fromPath(path: String): FormatterStyleConfig = fromMap(loadFromFile(File(path), RULES))
     }
 }
