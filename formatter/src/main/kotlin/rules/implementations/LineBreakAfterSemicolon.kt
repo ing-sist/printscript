@@ -2,6 +2,7 @@ package rules.implementations
 
 import DocBuilder
 import Token
+import TokenType
 import config.FormatterStyleConfig
 
 object LineBreakAfterSemicolon : AfterRule {
@@ -14,8 +15,10 @@ object LineBreakAfterSemicolon : AfterRule {
     ): DocBuilder {
         var result = out
         if (curr.type is TokenType.Semicolon && style.lineBreakAfterSemicolon) {
+            if (next.type is TokenType.EOF) return result
             result = result.newline()
         }
+
         return result
     }
 }
