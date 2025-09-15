@@ -14,11 +14,17 @@ class Formatter(
         var out = initial
         var level = 0
 
+
         var prev = Token(TokenType.EOF, "", Location(-1, -1, -1))
         var curr = tokenStream.consume()
 
         while (curr.type !is TokenType.EOF) {
             val next: Token = tokenStream.peek(0)
+
+
+
+
+
 
             out = applyBeforeRules(prev, curr, next, style, out)
 
