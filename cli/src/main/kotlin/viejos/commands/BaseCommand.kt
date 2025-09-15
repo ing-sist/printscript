@@ -1,10 +1,10 @@
-package commands
+package viejos.commands
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
-import progress.ConsoleProgressReporter
-import progress.ProgressReporter
+import viejos.progress.ConsoleProgressReporter
+import viejos.progress.ProgressReporter
 import java.io.File
 
 /**

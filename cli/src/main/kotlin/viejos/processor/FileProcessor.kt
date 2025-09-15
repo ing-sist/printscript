@@ -1,9 +1,9 @@
-package processor
+package viejos.processor
 
-import CommandError
+import viejos.CommandError
 import Result
 import Token
-import progress.ProgressReporter
+import viejos.progress.ProgressReporter
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException

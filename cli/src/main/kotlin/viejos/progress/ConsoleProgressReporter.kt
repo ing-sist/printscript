@@ -1,4 +1,4 @@
-package progress
+package viejos.progress
 
 /**
  * Console implementation of ProgressReporter that outputs to stdout/stderr.

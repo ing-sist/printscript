@@ -1,4 +1,4 @@
-package progress
+package viejos.progress
 
 /**
  * Interface for reporting progress during long-running operations.

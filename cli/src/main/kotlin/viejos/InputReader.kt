@@ -1,0 +1,5 @@
+package viejos
+
+class InputReader {
+
+}

@@ -1,10 +1,10 @@
-package commands
+package viejos.commands
 
 import Result
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.path
-import processor.FileProcessor
+import viejos.processor.FileProcessor
 
 /**
  * Command for executing PrintScript files.
