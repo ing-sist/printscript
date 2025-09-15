@@ -21,6 +21,11 @@ class Formatter(
         while (curr.type !is TokenType.EOF) {
             val next: Token = tokenStream.peek(0)
 
+
+
+
+
+
             out = applyBeforeRules(prev, curr, next, style, out)
 
             out = indentIfAtLineStart(out, curr.type, level, style)
