@@ -14,6 +14,7 @@ class Formatter(
         var out = initial
         var level = 0
 
+
         var prev = Token(TokenType.EOF, "", Location(-1, -1, -1))
         var curr = tokenStream.consume()
 
