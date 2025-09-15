@@ -22,6 +22,10 @@ jobs:
             echo "Publishing version: ${TAG#v}"
 
       - name: Build Gradle
+        env:
+          VERSION: ${{ env.VERSION }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew build
 
       - name: Publish package
