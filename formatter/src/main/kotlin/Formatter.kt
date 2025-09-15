@@ -28,7 +28,6 @@ class Formatter(
             out = applyAfterRules(prev, curr, next, style, out)
 
             level = updatedLevelAfter(curr.type, level)
-
             prev = curr
             curr = tokenStream.consume()
         }
