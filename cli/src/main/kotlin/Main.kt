@@ -2,10 +2,6 @@ import etapa1.command.AnalyzingCommand
 import etapa1.command.ExecutionCommand
 import etapa1.command.FormattingCommand
 import etapa1.command.ValidationCommand
-import etapa2.handlers.AnalyzingHandler
-import etapa2.handlers.ExecutionHandler
-import etapa2.handlers.FormattingHandler
-import etapa2.handlers.ValidationHandler
 
 fun main(args: Array<String>) {
     val validationHandler = ValidationHandler(/* deps */)

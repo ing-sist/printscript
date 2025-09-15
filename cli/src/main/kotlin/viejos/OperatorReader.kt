@@ -5,14 +5,6 @@ import etapa1.ProgressSink
 import etapa1.ReportSink
 
 
-data class AppContext(
-    val version: String,
-    val progress: Boolean,
-    val reportSink: ReportSink,
-    val progressSink: ProgressSink
-)
-
-
 
 
 

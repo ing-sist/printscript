@@ -1,36 +1,74 @@
-import etapa2.OperationHandler
-import etapa2.OperationResult
-import viejos.OperationRequest
+package etapa2.shared
 
-class ValidationHandler(
-    private val lexerFactory: (String) -> Lexer,
-    private val parserFactory: () -> Parser,
-    private val analyzerFactory: () -> Analyzer
-) : OperationHandler {
-    override fun run(req: OperationRequest): OperationResult {
-        var errors = 0
+import java.io.File
+import java.io.FileReader
 
-        // Read
-        val text = File(req.sourceFile).readText()
+import Lexer
+import LexerTokenProvider
+import RuleGenerator
 
-        // Lex
-        val lexer = lexerFactory(req.specVersion)
-        val tokens = lexer.tokenize(text)
+import Diagnostic
+import Location
+import etapa1.ProgressSink
+import etapa1.ReportSink
+import utils.Type
 
-        // Parse
-        val parser = parserFactory()
-        val ast = parser.parse(tokens) { diag ->
-            errors++; req.report.emit(diag)
+data class TokenStream(
+    val content: String,
+    val provider: LexerTokenProvider
+)
+
+object TokenStreamBuilder {
+    fun build(
+        sourceFile: String,
+        specVersion: String,
+        report: ReportSink,
+        progress: ProgressSink // o tu interfaz ProgressSink
+    ): TokenStream? {
+        // READ
+        progress.stageStart("read", null)
+        val file = File(sourceFile)
+        if (!file.exists() || !file.isFile) {
+            report.emit(
+                Diagnostic(
+                    ruleId = "CLI.FileNotFound",
+                    message = "No se pudo leer el archivo '$sourceFile'.",
+                    location = Location(sourceFile, 1, 1, 1, 1),
+                    type = Type.ERROR
+                )
+            )
+            progress.stageEnd("read")
+            return null
         }
 
-        // Semantics
-        val analyzer = analyzerFactory()
-        analyzer.check(ast) { diag ->
-            if (diag.severity == Severity.ERROR) errors++
-            req.report.emit(diag)
+        val content = try {
+            file.readText()
+        } catch (e: Exception) {
+            report.emit(
+                Diagnostic(
+                    ruleId = "CLI.FileReadError",
+                    message = "Error al leer '$sourceFile': ${e.message}",
+                    location = Location(sourceFile, 1, 1, 1, 1),
+                    type = Type.ERROR
+                )
+            )
+            progress.stageEnd("read")
+            return null
         }
+        progress.stageAdvance("read", content.length.toLong())
+        progress.stageEnd("read")
 
-        req.report.end(Summary("Validation", req.specVersion, 1, errors, 0, 0))
-        return OperationResult(errors, 0)
+        // LEX (configurado por versión)
+        progress.stageStart("lex", null)
+        val tokenRule = RuleGenerator.createTokenRule(specVersion)
+        val reader = FileReader(file) // si tu Lexer necesita Reader
+        val lexer = Lexer(reader, tokenRule)
+        val tokenProvider = LexerTokenProvider(lexer)
+        progress.stageEnd("lex")
+
+        return TokenStream(
+            content = content,
+            provider = tokenProvider
+        )
     }
 }

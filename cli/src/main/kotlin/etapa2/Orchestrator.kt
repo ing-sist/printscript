@@ -10,12 +10,6 @@ class Orchestrator(
     private val analyzingHandler: OperationHandler
 ) {
 
-    fun validate(req: OperationRequest) = run(req.copy(operation = Operation.Validation))
-    fun execute(req: OperationRequest)  = run(req.copy(operation = Operation.Execution))
-    fun format(req: OperationRequest)   = run(req.copy(operation = Operation.Formatting))
-    fun analyze(req: OperationRequest)  = run(req.copy(operation = Operation.Analyzing))
-
-
     fun run(req: OperationRequest): OperationResult {
         val t0 = System.nanoTime()
         val result = when (req.operation) {
