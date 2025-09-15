@@ -44,14 +44,14 @@ class LexerErrorHandlingDSLTest {
         // Should work in 1.1
         lexCode11(code)
             .shouldTokenizeSuccessfully()
-            .containingTypes(TokenType.ConstDeclaration, TokenType.BooleanType, TokenType.BooleanLiteral)
+            .containingTypes(TokenType.Keyword.ConstDeclaration, TokenType.BooleanType, TokenType.BooleanLiteral)
             .endsWithEOF()
 
         // Should treat const as identifier in 1.0
         lexCode10("const x = 5;")
             .shouldTokenizeSuccessfully()
             .withTokenAt(0, TokenType.Identifier, "const")
-            .notContaining(TokenType.ConstDeclaration)
+            .notContaining(TokenType.Keyword.ConstDeclaration)
     }
 
     @Test

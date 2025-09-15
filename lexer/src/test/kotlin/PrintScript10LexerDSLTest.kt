@@ -111,7 +111,7 @@ class PrintScript10LexerDSLTest {
         lexCode10("const x = 5;")
             .shouldTokenizeSuccessfully()
             .withTokenAt(0, TokenType.Identifier, "const")
-            .notContaining(TokenType.ConstDeclaration)
+            .notContaining(TokenType.Keyword.ConstDeclaration)
     }
 
     @Test

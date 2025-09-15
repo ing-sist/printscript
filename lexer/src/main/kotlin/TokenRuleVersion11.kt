@@ -9,7 +9,7 @@ class TokenRuleVersion11 : TokenRule {
             "\\s+" to TokenType.Space,
             // Keywords (word boundaries for exact matches) - 1.0 + 1.1 extensions
             "\\blet\\b" to TokenType.Keyword.VariableDeclaration,
-            "\\bconst\\b" to TokenType.ConstDeclaration, // New in 1.1
+            "\\bconst\\b" to TokenType.Keyword.ConstDeclaration, // New in 1.1
             "\\bif\\b" to TokenType.Keyword.If, // New in 1.1
             "\\belse\\b" to TokenType.Keyword.Else, // New in 1.1
             "\\bprintln\\b" to TokenType.FunctionCall,
