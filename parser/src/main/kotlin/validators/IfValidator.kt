@@ -4,7 +4,7 @@ import AstNode
 import ConditionalNode
 import Result
 import Token
-import TokenProvider
+import TokenStream
 import TokenType
 import builders.ExpressionBuilder
 import parser.ParseError
@@ -13,7 +13,7 @@ import validators.provider.ValidatorsProvider
 class IfValidator(
     private val validatorsProvider: ValidatorsProvider,
 ) : AstValidator {
-    override fun validateAndBuild(stream: TokenProvider): Result<AstNode, ParseError?> {
+    override fun validateAndBuild(stream: TokenStream): Result<AstNode, ParseError?> {
         // Valida si el token actual es 'if'
         if (stream.peek().type !is TokenType.Keyword.If) {
             return Result.Failure(null) // No es un if, pasa al siguiente validador
@@ -26,7 +26,7 @@ class IfValidator(
         }
     }
 
-    private fun parseIfStatement(stream: TokenProvider): Result<AstNode, ParseError?> {
+    private fun parseIfStatement(stream: TokenStream): Result<AstNode, ParseError?> {
         stream.consume() // Consume 'if'
 
         var result: Result<AstNode, ParseError?>
@@ -41,7 +41,7 @@ class IfValidator(
         return result
     }
 
-    private fun parseConditionAndBlocks(stream: TokenProvider): Result<AstNode, ParseError?> {
+    private fun parseConditionAndBlocks(stream: TokenStream): Result<AstNode, ParseError?> {
         val conditionTokens = mutableListOf<Token>()
         while (stream.peek().type !is TokenType.RightParen) {
             conditionTokens.add(stream.consume())
@@ -68,7 +68,7 @@ class IfValidator(
     }
 
     private fun parseBlocks(
-        stream: TokenProvider,
+        stream: TokenStream,
         conditionNode: AstNode,
     ): Result<AstNode, ParseError?> {
         var result: Result<AstNode, ParseError?>
@@ -122,7 +122,7 @@ class IfValidator(
      * Función auxiliar que parsea un bloque de código entre llaves.
      */
     private fun parseBlock(
-        stream: TokenProvider,
+        stream: TokenStream,
         validatorsProvider: ValidatorsProvider,
     ): Result<List<AstNode>, ParseError?> {
         if (stream.peek().type !is TokenType.LeftBrace) {
@@ -133,7 +133,7 @@ class IfValidator(
     }
 
     private fun parseBlockContent(
-        stream: TokenProvider,
+        stream: TokenStream,
         validatorsProvider: ValidatorsProvider,
     ): Result<List<AstNode>, ParseError?> {
         stream.consume() // Consume '{'
@@ -156,7 +156,7 @@ class IfValidator(
     }
 
     private fun validateBlockClosure(
-        stream: TokenProvider,
+        stream: TokenStream,
         statements: List<AstNode>,
     ): Result<List<AstNode>, ParseError?> {
         // Validar si el bloque termina con la llave de cierre

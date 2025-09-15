@@ -1,7 +1,7 @@
 package validators.helpers
 
 import Token
-import TokenProvider
+import TokenStream
 import parser.ParseError
 
 /**
@@ -10,7 +10,7 @@ import parser.ParseError
  */
 
 object TokenConsumer {
-    fun consumeExpressionAndSemicolon(stream: TokenProvider): List<Token> {
+    fun consumeExpressionAndSemicolon(stream: TokenStream): List<Token> {
         val tokens = mutableListOf<Token>()
         var parenDepth = 0
 

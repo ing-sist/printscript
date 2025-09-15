@@ -2,14 +2,14 @@ package parser
 
 import AstNode
 import Result
-import TokenProvider
+import TokenStream
 import TokenType
 import validators.provider.ValidatorsProvider
 
 class Parser(
     private val validatorsProvider: ValidatorsProvider,
 ) {
-    fun parse(stream: TokenProvider): Result<AstNode, ParseError> {
+    fun parse(stream: TokenStream): Result<AstNode, ParseError> {
         // Process the stream and return the first valid AST node found
         while (stream.peek().type !is TokenType.EOF) {
             return when (val result = validatorsProvider.findValidatorAndBuild(stream)) {

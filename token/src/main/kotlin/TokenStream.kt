@@ -3,7 +3,7 @@
  * el consumo y la pre-visualización (lookahead) sin acoplarse
  * a la implementación de un lexer.
  */
-interface TokenProvider {
+interface TokenStream {
     /**
      * Espía el token en la posición k (0 es el actual, 1 es el siguiente, etc.).
      * No consume los tokens, solo los mira.

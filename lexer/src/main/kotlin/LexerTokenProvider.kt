@@ -6,14 +6,14 @@ class LexerException(
     )
 
 /**
- * Implementación de TokenProvider que envuelve al Lexer para añadir
+ * Implementación de TokenStream que envuelve al Lexer para añadir
  * un buffer de lookahead (la capacidad de espiar).
  *
  * @param lexer La instancia del Lexer de streaming que generará los tokens.
  */
 class LexerTokenProvider(
     private val lexer: Lexer,
-) : TokenProvider {
+) : TokenStream {
     private val lookahead = mutableListOf<Token>()
     private var eofReached = false
 

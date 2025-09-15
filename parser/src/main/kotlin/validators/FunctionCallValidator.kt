@@ -3,13 +3,13 @@ package validators
 import AstNode
 import Result
 import Token
-import TokenProvider
+import TokenStream
 import TokenType
 import builders.FunctionCallBuilder
 import parser.ParseError
 
 class FunctionCallValidator : AstValidator {
-    override fun validateAndBuild(stream: TokenProvider): Result<AstNode, ParseError?> {
+    override fun validateAndBuild(stream: TokenStream): Result<AstNode, ParseError?> {
         // 1. Peek at the structure: function ( ... ) ;
         val functionToken = stream.peek(0)
         val leftParen = stream.peek(1)

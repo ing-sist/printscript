@@ -3,7 +3,7 @@ package validators
 import AstNode
 import Result
 import Token
-import TokenProvider
+import TokenStream
 import TokenType
 import builders.DeclarationAssignmentBuilder
 import parser.ParseError
@@ -11,7 +11,7 @@ import validators.helpers.DeclarationHelper
 import validators.helpers.TokenConsumer
 
 class DeclarationAssignmentValidator : AstValidator {
-    override fun validateAndBuild(stream: TokenProvider): Result<AstNode, ParseError?> {
+    override fun validateAndBuild(stream: TokenStream): Result<AstNode, ParseError?> {
         // 1. Peek para verificar el patrón de declaración y asignación
         val tokens =
             listOf(

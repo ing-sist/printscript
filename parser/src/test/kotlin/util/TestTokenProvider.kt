@@ -2,16 +2,16 @@ package util
 
 import Location
 import Token
-import TokenProvider
+import TokenStream
 import TokenType
 
 /**
- * Simple TokenProvider for tests that supports lookahead and a single-step lookbehind (k = -1).
+ * Simple TokenStream for tests that supports lookahead and a single-step lookbehind (k = -1).
  * It does not depend on the lexer module, keeping parser tests decoupled.
  */
 class TestTokenProvider(
     tokens: List<Token>,
-) : TokenProvider {
+) : TokenStream {
     private val tokens: MutableList<Token> = tokens.toMutableList()
     private val history: MutableList<Token> = mutableListOf()
     private var index: Int = 0

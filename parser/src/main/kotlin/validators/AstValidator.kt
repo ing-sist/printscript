@@ -2,7 +2,7 @@ package validators
 
 import AstNode
 import Result
-import TokenProvider
+import TokenStream
 import parser.ParseError
 
 interface AstValidator {
@@ -14,5 +14,5 @@ interface AstValidator {
      * Un Result.Failure con null si la regla no coincide.
      * Un Result.Failure con un ParseError si la regla coincide pero hay un error de sintaxis.
      */
-    fun validateAndBuild(stream: TokenProvider): Result<AstNode, ParseError?>
+    fun validateAndBuild(stream: TokenStream): Result<AstNode, ParseError?>
 }

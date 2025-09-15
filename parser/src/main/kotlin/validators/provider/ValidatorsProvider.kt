@@ -2,7 +2,7 @@ package validators.provider
 
 import AstNode
 import Result
-import TokenProvider
+import TokenStream
 import parser.ParseError
 import validators.AssignmentValidator
 import validators.AstValidator
@@ -12,7 +12,7 @@ import validators.FunctionCallValidator
 import validators.IfValidator
 
 interface ValidatorsProvider {
-    fun findValidatorAndBuild(stream: TokenProvider): Result<AstNode, ParseError?>
+    fun findValidatorAndBuild(stream: TokenStream): Result<AstNode, ParseError?>
 }
 
 class DefaultValidatorsProvider : ValidatorsProvider {
@@ -26,7 +26,7 @@ class DefaultValidatorsProvider : ValidatorsProvider {
         )
     }
 
-    override fun findValidatorAndBuild(stream: TokenProvider): Result<AstNode, ParseError?> {
+    override fun findValidatorAndBuild(stream: TokenStream): Result<AstNode, ParseError?> {
         var result: Result<AstNode, ParseError?> = Result.Failure(ParseError.NoValidParser(listOf(stream.peek())))
 
         for (validator in validators) {

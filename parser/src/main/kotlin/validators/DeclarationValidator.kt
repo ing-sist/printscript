@@ -2,14 +2,14 @@ package validators
 
 import AstNode
 import Result
-import TokenProvider
+import TokenStream
 import TokenType
 import builders.DeclarationBuilder
 import parser.ParseError
 import validators.helpers.DeclarationHelper
 
 class DeclarationValidator : AstValidator {
-    override fun validateAndBuild(stream: TokenProvider): Result<AstNode, ParseError?> {
+    override fun validateAndBuild(stream: TokenStream): Result<AstNode, ParseError?> {
         // 1. Peek para verificar el patrón básico de declaración
         val tokens =
             listOf(
