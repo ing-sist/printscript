@@ -1,6 +1,5 @@
 import config.FormatterStyleConfig
 import config.RuleDefinitions
-import config.loadFromFile
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

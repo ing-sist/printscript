@@ -1,5 +1,4 @@
 import config.RuleDefinitions.RULES
-import config.loadFromString
 import org.junit.jupiter.api.Test
 import rules.definitions.SpaceAfterColonDef
 import rules.definitions.SpaceBeforeColonDef

@@ -1,6 +1,8 @@
 package config
 
 import config.RuleDefinitions.RULES
+import loadFromFile
+import loadFromString
 import rules.definitions.IndentationDef
 import rules.definitions.InlineIfBraceIfStatementDef
 import rules.definitions.LineBreakAfterSemiColonDef
