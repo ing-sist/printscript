@@ -36,7 +36,7 @@ class LexerTokenProvider(
     override fun consume(): Token {
         // Asegurarse de que el buffer tenga al menos un token para consumir
         if (lookahead.isEmpty()) {
-            peek()
+            peek(0)
         }
         return lookahead.removeAt(0)
     }

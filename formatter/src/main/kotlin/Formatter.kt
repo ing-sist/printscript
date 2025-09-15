@@ -7,7 +7,7 @@ class Formatter(
     private val rules: List<RuleImplementation>,
 ) {
     fun format(
-        tokenStream: TokenStream,
+        tokenStream: LexerTokenProvider,
         style: FormatterStyleConfig,
         initial: DocBuilder,
     ): DocBuilder {
