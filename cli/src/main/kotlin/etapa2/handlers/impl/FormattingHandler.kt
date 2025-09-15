@@ -28,12 +28,6 @@ import rules.implementations.RuleImplementation
 // import tu.DocBuilder  // el que usa tu Formatter
 
 // ADAPTER: usamos el provider como TokenStream del formatter
-class ProviderAsTokenStream(
-    private val provider: LexerTokenProvider
-) : TokenStream {
-    override fun peek(k: Int): Token = provider.peek(k)
-    override fun consume(): Token = provider.consume()
-}
 
 class FormattingHandler(
     private val rules: List<RuleImplementation>,            // inyectá tus reglas de formato

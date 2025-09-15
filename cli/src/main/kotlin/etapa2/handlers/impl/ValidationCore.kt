@@ -1,20 +1,36 @@
 package etapa2.handlers.impl
 
+import java.io.StringReader
+import AstNode
 import Lexer
 import LexerException
 import LexerTokenProvider
-import etapa2.handlers.FileInputReader
+import RuleGenerator
 import parser.Parser
 import validators.provider.DefaultValidatorsProvider
+import etapa2.handlers.FileInputReader
+import Result
+import etapa1.CliFileError
+import parser.ParseError
 
-object ValidationCore {
-    data class Outcome(
-        val ast: Any?,       // reemplazá Any por tu tipo de AST (p.ej., AstNode)
+sealed class ValidationOutcome {
+    data class Success(
+        val ast: AstNode,
         val errors: Int,
         val warnings: Int
-    )
+    ) : ValidationOutcome()
 
-    fun run(sourceFile: String, specVersion: String): Outcome {
+    data class Failure(
+        val errors: Int,
+        val warnings: Int,
+        val cause: Exception
+    ) : ValidationOutcome()
+}
+
+
+object ValidationCore {
+
+    fun run(sourceFile: String, specVersion: String): ValidationOutcome {
         var errors = 0
         var warnings = 0
 
@@ -24,31 +40,42 @@ object ValidationCore {
             is Result.Failure -> {
                 errors++
                 println("Error: no se pudo leer el archivo '$sourceFile'.")
-                return Outcome(null, errors, warnings)
+                return ValidationOutcome.Failure(errors, warnings, CliFileError(sourceFile))
             }
         }
 
         // LEX (init)
         val tokenRule = RuleGenerator.createTokenRule(specVersion)
-        val lexer = Lexer(java.io.StringReader(content), tokenRule)
+        val lexer = Lexer(StringReader(content), tokenRule)
         val provider = LexerTokenProvider(lexer)
 
         // PARSE
-        val parser = Parser(DefaultValidatorsProvider()) // si tu Parser hoy lo requiere
+        val parser = Parser(DefaultValidatorsProvider())
         val ast = try {
-            parser.parse(provider) // tipá a tu AST real si es necesario
+            when (val pr = parser.parse(provider)) {
+                is Result.Success -> pr.value
+                is Result.Failure -> {
+                    errors++
+                    println(renderParseError(pr.error))
+                    return ValidationOutcome.Failure(errors, warnings, pr.error)
+                }
+            }
         } catch (e: LexerException) {
             errors++
             val tok = e.token
             println("Error léxico en línea ${tok.location.line}, col ${tok.location.startCol}: '${tok.lexeme}'")
-            return Outcome(null, errors, warnings)
+            return ValidationOutcome.Failure(errors, warnings, ParseError.InvalidSyntax(listOf(tok), "Lexer error"))
         }
 
-        // SEMÁNTICA (opcional, “mínimo” sin sinks)
-        // Si ya tenés una función que devuelve conteos:
-        // val (semE, semW) = SemanticsLite.check(ast, specVersion)
-        // errors += semE; warnings += semW
+        return ValidationOutcome.Success(ast, errors, warnings)
+    }
 
-        return Outcome(ast, errors, warnings)
+    private fun renderParseError(err: ParseError): String = when (err) {
+        is ParseError.InvalidSyntax ->
+            "Invalid syntax: ${err.reason} for tokens: ${err.tokenGroup.joinToString(" ") { it.lexeme }}"
+        is ParseError.NoValidParser ->
+            "No valid parser found for tokens: ${err.tokenGroup.joinToString(" ") { it.lexeme }}"
+        is ParseError.UnexpectedToken ->
+            "Unexpected token '${err.token.lexeme}' at ${err.token.location}. Expected: ${err.expected}"
     }
 }

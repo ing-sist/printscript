@@ -1,3 +1,9 @@
+import etapa2.OperationHandler
+import etapa2.OperationResult
+import etapa2.handlers.impl.ValidationCore
+import etapa2.handlers.impl.ValidationOutcome
+import viejos.OperationRequest
+
 //package etapa2.handlers.impl
 //
 //import Diagnostic
@@ -132,32 +138,29 @@
 class ExecutionHandler(
     private val interpreter: ps.runtime.core.InterpreterRuntime
 ) : OperationHandler {
+
     override fun run(req: OperationRequest): OperationResult {
-        var errors = 0
-        var warnings = 0
+        return when (val out = ValidationCore.run(req.sourceFile, req.specVersion)) {
 
-        // 1) Validación completa (reuso)
-        val out = ValidationCore.run(req.sourceFile, req.specVersion)
-        errors += out.errors
-        warnings += out.warnings
+            is ValidationOutcome.Failure -> {
+                // no hay AST
+                OperationResult(out.errors, out.warnings)
+            }
 
-        // 2) Si hubo errores, no ejecuto
-        if (errors > 0 || out.ast == null) {
-            return OperationResult(errors, warnings)
-        }
+            is ValidationOutcome.Success -> {
+                var errors = out.errors
+                var warnings = out.warnings
 
-        // 3) Ejecución
-        when (val exec = interpreter.execute(out.ast)) {
-            is Result.Success -> { /* OK: la salida del programa ocurre en el intérprete */ }
-            is Result.Failure -> {
-                errors++
-                val ex = exec.error
-                // Mostrá ubicación si tu excepción la trae; si no, mensaje simple
-                // println("Error de ejecución en línea ${ex.loc.line}, col ${ex.loc.startCol}: ${ex.message}")
-                println("Error de ejecución: ${ex.message}")
+                when (val exec = interpreter.execute(out.ast)) {
+                    is Result.Success -> { }
+                    is Result.Failure -> {
+                        errors++
+                        val ex = exec.error
+                        println("Error de ejecución: ${ex.message}")
+                    }
+                }
+                OperationResult(errors, warnings)
             }
         }
-
-        return OperationResult(errors, warnings)
     }
 }

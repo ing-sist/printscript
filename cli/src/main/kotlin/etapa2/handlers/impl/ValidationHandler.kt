@@ -1,6 +1,7 @@
 import etapa2.OperationHandler
 import etapa2.OperationResult
 import etapa2.handlers.impl.ValidationCore
+import etapa2.handlers.impl.ValidationOutcome
 import viejos.OperationRequest
 
 //package etapa2.handlers.impl
@@ -99,7 +100,10 @@ import viejos.OperationRequest
 class ValidationHandler : OperationHandler {
     override fun run(req: OperationRequest): OperationResult {
         val out = ValidationCore.run(req.sourceFile, req.specVersion)
+        return when (out) {
+            is ValidationOutcome.Success -> OperationResult(out.errors, out.warnings)
+            is ValidationOutcome.Failure -> OperationResult(out.errors, out.warnings)
+        }
         // Podrías agregar semántica aquí si querés que validación incluya sí o sí esa etapa
-        return OperationResult(errors = out.errors, warnings = out.warnings)
     }
 }
