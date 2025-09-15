@@ -18,6 +18,6 @@ class Orchestrator(
             Operation.Formatting -> formattingHandler.run(req)
             Operation.Analyzing  -> analyzingHandler.run(req)
         }
-        return result.copy(timeMs = (System.nanoTime() - t0) / 1_000_000)
+        return result.copy(,)
     }
 }
