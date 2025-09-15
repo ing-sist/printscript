@@ -20,7 +20,7 @@ class FunctionCallDispatcher(
         context: EvaluationContext,
     ): Result<PSValue, InterpreterException> =
         when (node.functionName) {
-            "printLn" -> printLnEvaluator.evaluateExpression(node, context)
+            "println" -> printLnEvaluator.evaluateExpression(node, context)
             "readInput" -> readInputEvaluator.evaluateExpression(node, context)
             "readEnv" -> readEnvEvaluator.evaluateExpression(node, context)
             else -> Result.Failure(InterpreterException("Unknown function: ${node.functionName}"))

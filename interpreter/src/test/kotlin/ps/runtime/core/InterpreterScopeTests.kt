@@ -235,7 +235,7 @@ class InterpreterScopeTests {
     ): AssignmentNode = AssignmentNode(createIdentifier(name), value)
 
     private fun createPrintLnCall(variableName: String): FunctionCallNode =
-        FunctionCallNode("printLn", createVariableReference(variableName), true)
+        FunctionCallNode("println", createVariableReference(variableName), true)
 
     private fun createIdentifier(name: String): IdentifierNode =
         IdentifierNode(

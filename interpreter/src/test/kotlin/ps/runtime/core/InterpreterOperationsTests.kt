@@ -323,10 +323,10 @@ class InterpreterOperationsTests {
     }
 
     private fun createPrintLnCall(variableName: String): FunctionCallNode =
-        FunctionCallNode("printLn", createVariableReference(variableName), true)
+        FunctionCallNode("println", createVariableReference(variableName), true)
 
     private fun createPrintLnCallWithLiteral(message: String): FunctionCallNode =
-        FunctionCallNode("printLn", createStringLiteral(message), true)
+        FunctionCallNode("println", createStringLiteral(message), true)
 
     private fun createIdentifier(name: String): IdentifierNode =
         IdentifierNode(

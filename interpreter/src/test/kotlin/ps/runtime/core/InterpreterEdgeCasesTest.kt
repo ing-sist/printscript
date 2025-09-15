@@ -41,7 +41,7 @@ class InterpreterEdgeCasesTest {
         // println("Hello World");
         val printCall =
             FunctionCallNode(
-                "printLn",
+                "println",
                 LiteralNode(Token(TokenType.StringLiteral, "\"Hello World\"", Location(0, 0, 0))),
                 isVoid = true,
             )
@@ -131,7 +131,7 @@ class InterpreterEdgeCasesTest {
         val thenBranch =
             listOf(
                 FunctionCallNode(
-                    "printLn",
+                    "println",
                     LiteralNode(Token(TokenType.StringLiteral, "\"true branch\"", Location(0, 0, 0))),
                 ),
             )
