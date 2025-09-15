@@ -73,23 +73,9 @@ class Lexer(
     /**
      * Llena el buffer interno leyendo un bloque de caracteres del Reader.
      * Esto es mucho más eficiente que leer carácter por carácter.
-     * Optimizado para evitar acumulación excesiva de memoria.
      */
     private fun fillBuffer() {
         if (isEndOfFile) return
-
-        // Si el buffer ya es muy grande, solo mantenemos una porción pequeña
-        if (buffer.length > 2048) {
-            // Mantener solo los últimos 512 caracteres para tokens que puedan estar incompletos
-            val keepSize = minOf(512, buffer.length)
-            val toKeep = buffer.substring(buffer.length - keepSize)
-            buffer.clear()
-            buffer.append(toKeep)
-
-            // Ajustar posición si es necesario
-            // Nota: esto es una simplificación, en casos complejos necesitarías
-            // un manejo más sofisticado de la posición
-        }
 
         val charsRead = reader.read(readBuffer)
 
