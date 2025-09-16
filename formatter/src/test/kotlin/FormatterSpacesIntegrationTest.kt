@@ -37,7 +37,7 @@ class FormatterSpacesIntegrationTest {
         val style = defaultStyle().copy(spaceBeforeColon = false, spaceAfterColon = true)
 
         val out = fmt.format(stream, style, DocBuilder.inMemory())
-        assertEquals("x : string", out.build())
+        assertEquals("x: string", out.build())
     }
 
     // 4) No duplica espacio si el input trae espacio y además las reglas lo agregan alrededor de '='
@@ -75,7 +75,7 @@ class FormatterSpacesIntegrationTest {
         val style = defaultStyle().copy(spaceAroundAssignment = false)
 
         val out = fmt.format(stream, style, DocBuilder.inMemory())
-        assertEquals("x = 5", out.build())
+        assertEquals("x=5", out.build())
     }
 
     // 6) Operadores: colapsa a uno si el estilo lo requiere
@@ -117,6 +117,6 @@ class FormatterSpacesIntegrationTest {
         val style = defaultStyle().copy(spaceAroundOperators = false)
 
         val out = fmt.format(stream, style, DocBuilder.inMemory())
-        assertEquals("a + b", out.build())
+        assertEquals("a+b", out.build())
     }
 }

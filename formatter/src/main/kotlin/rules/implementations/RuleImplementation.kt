@@ -13,6 +13,7 @@ interface BeforeRule : RuleImplementation {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
+        spaceForbid: SpaceForbid,
     ): DocBuilder
 }
 
@@ -23,5 +24,6 @@ interface AfterRule : RuleImplementation {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
+        spaceForbid: SpaceForbid,
     ): DocBuilder
 }

@@ -11,10 +11,16 @@ object ColonSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
+        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var result = out
         if (curr.type is TokenType.Colon && style.spaceBeforeColon && prev.type !is TokenType.Space) {
             result = result.space()
+            spaceForbid.forbidBefore()
+        }
+
+        if (curr.type is TokenType.Colon && !style.spaceBeforeColon) {
+            spaceForbid.forbidBefore()
         }
         return result
     }
@@ -25,11 +31,17 @@ object ColonSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
+        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var result = out
         if (curr.type is TokenType.Colon && style.spaceAfterColon && next.type !is TokenType.Space) {
             result = result.space()
+            spaceForbid.forbidAfter()
         }
+        if (curr.type is TokenType.Colon && !style.spaceBeforeColon) {
+            spaceForbid.forbidAfter()
+        }
+
         return result
     }
 }

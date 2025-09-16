@@ -1,6 +1,7 @@
 import config.FormatterStyleConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import rules.implementations.SpaceForbid
 
 class IndentationTest {
     private fun createToken(
@@ -28,8 +29,9 @@ class IndentationTest {
         val next = createToken(TokenType.EOF, "")
         val config = createConfig(indentation = 4)
         val doc = DocBuilder.inMemory().write("x")
+        val spaceForbid = SpaceForbid()
 
-        val result = Indentation.before(prev, curr, next, config, doc)
+        val result = Indentation.before(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("x\n", result.build())
     }
@@ -41,8 +43,9 @@ class IndentationTest {
         val next = createToken(TokenType.EOF, "")
         val config = createConfig(indentation = 4)
         val doc = DocBuilder.inMemory().write("x;")
+        val spaceForbid = SpaceForbid()
 
-        val result = Indentation.before(prev, curr, next, config, doc)
+        val result = Indentation.before(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("x;", result.build())
     }
@@ -54,8 +57,9 @@ class IndentationTest {
         val next = createToken(TokenType.EOF, "")
         val config = createConfig(indentation = 0)
         val doc = DocBuilder.inMemory().write("x")
+        val spaceForbid = SpaceForbid()
 
-        val result = Indentation.before(prev, curr, next, config, doc)
+        val result = Indentation.before(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("x", result.build())
     }
@@ -67,8 +71,9 @@ class IndentationTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(indentation = 4)
         val doc = DocBuilder.inMemory().write("x")
+        val spaceForbid = SpaceForbid()
 
-        val result = Indentation.before(prev, curr, next, config, doc)
+        val result = Indentation.before(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("x", result.build())
     }
@@ -80,8 +85,9 @@ class IndentationTest {
         val next = createToken(TokenType.Identifier, "x")
         val config = createConfig(indentation = 4)
         val doc = DocBuilder.inMemory().write("if {")
+        val spaceForbid = SpaceForbid()
 
-        val result = Indentation.after(prev, curr, next, config, doc)
+        val result = Indentation.after(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("if {\n", result.build())
     }
@@ -93,8 +99,9 @@ class IndentationTest {
         val next = createToken(TokenType.Identifier, "x")
         val config = createConfig(indentation = 0)
         val doc = DocBuilder.inMemory().write("if {")
+        val spaceForbid = SpaceForbid()
 
-        val result = Indentation.after(prev, curr, next, config, doc)
+        val result = Indentation.after(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("if {", result.build())
     }
@@ -106,8 +113,9 @@ class IndentationTest {
         val next = createToken(TokenType.Identifier, "x")
         val config = createConfig(indentation = 4)
         val doc = DocBuilder.inMemory().write("if (")
+        val spaceForbid = SpaceForbid()
 
-        val result = Indentation.after(prev, curr, next, config, doc)
+        val result = Indentation.after(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("if (", result.build())
     }
