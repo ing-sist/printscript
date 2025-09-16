@@ -30,7 +30,7 @@ class FormatterSpacesIntegrationTest {
                 t(TokenType.Identifier, "x"),
                 t(TokenType.Space, " "),
                 t(TokenType.Colon, ":"),
-                t(TokenType.StringType, "string"),
+                t(TokenType.Keyword.StringType, "string"),
             )
         val stream = MockTokenStream(tokens)
         val fmt = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)

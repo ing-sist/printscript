@@ -29,7 +29,7 @@ class FormatterIntegrationTest {
                 createToken(TokenType.Keyword.VariableDeclaration, "let"),
                 createToken(TokenType.Identifier, "x"),
                 createToken(TokenType.Colon, ":"),
-                createToken(TokenType.StringType, "string"),
+                createToken(TokenType.Keyword.StringType, "string"),
                 createToken(TokenType.Assignment, "="),
                 createToken(TokenType.StringLiteral, "\"hello\""),
                 createToken(TokenType.Semicolon, ";"),

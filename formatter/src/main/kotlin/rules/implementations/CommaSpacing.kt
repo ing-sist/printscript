@@ -16,6 +16,7 @@ object CommaSpacing : BeforeRule, AfterRule {
     ): DocBuilder {
         var result = out
         if (curr.type is TokenType.Comma) {
+            if (spaceForbid.beforeNext == SpaceIntent.FORBID) return out
             result = result.space()
         }
         return result

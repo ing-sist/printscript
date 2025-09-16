@@ -37,7 +37,6 @@ class Formatter(
             if (curr.type is TokenType.Space) {
                 val look = peekNextNonSpace(tokenStream)
                 val intentOnly = SpaceForbid()
-                val acc = out
                 lookAheadBeforeRules(prev, look, style, intentOnly)
 
                 val noSpace = isForbidden(intentOnly, spaceForbid)

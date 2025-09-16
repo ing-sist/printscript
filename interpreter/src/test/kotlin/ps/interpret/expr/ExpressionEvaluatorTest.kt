@@ -97,7 +97,7 @@ class ExpressionEvaluatorTest {
     ) = DeclarationAssignmentNode(
         DeclarationNode(
             IdentifierNode(Token(TokenType.Identifier, name, Location(0, 0, 0)), name),
-            Token(TokenType.StringType, "string", Location(0, 0, 0)),
+            Token(TokenType.Keyword.StringType, "string", Location(0, 0, 0)),
             isMutable,
         ),
         LiteralNode(Token(TokenType.StringLiteral, "\"$value\"", Location(0, 0, 0))),
@@ -110,7 +110,7 @@ class ExpressionEvaluatorTest {
     ) = DeclarationAssignmentNode(
         DeclarationNode(
             IdentifierNode(Token(TokenType.Identifier, name, Location(0, 0, 0)), name),
-            Token(TokenType.NumberType, "number", Location(0, 0, 0)),
+            Token(TokenType.Keyword.NumberType, "number", Location(0, 0, 0)),
             isMutable,
         ),
         LiteralNode(Token(TokenType.NumberLiteral, value.toString(), Location(0, 0, 0))),
@@ -123,7 +123,7 @@ class ExpressionEvaluatorTest {
     ) = DeclarationAssignmentNode(
         DeclarationNode(
             IdentifierNode(Token(TokenType.Identifier, name, Location(0, 0, 0)), name),
-            Token(TokenType.BooleanType, "boolean", Location(0, 0, 0)),
+            Token(TokenType.Keyword.BooleanType, "boolean", Location(0, 0, 0)),
             isMutable,
         ),
         LiteralNode(Token(TokenType.BooleanLiteral, value.toString(), Location(0, 0, 0))),
