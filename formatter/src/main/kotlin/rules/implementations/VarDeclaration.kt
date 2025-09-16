@@ -14,7 +14,7 @@ object VarDeclaration : AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
-        if (curr.type is TokenType.Keyword.VariableDeclaration && prev.type !is TokenType.Semicolon) {
+        if (curr.type is TokenType.Keyword.VariableDeclaration && next.type !is TokenType.Semicolon) {
             result = result.space()
         }
         return result
