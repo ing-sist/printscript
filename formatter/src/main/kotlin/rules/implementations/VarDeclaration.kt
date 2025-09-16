@@ -16,7 +16,7 @@ object VarDeclaration : AfterRule {
     ): DocBuilder {
         var result = out
 
-        if (curr.type is TokenType.Keyword.VariableDeclaration && next.type !is TokenType.Space) {
+        if (curr.type is TokenType.Keyword.VariableDeclaration) {
             spaceForbid.forbidAfter()
             return result
         }
