@@ -27,18 +27,9 @@ object KeywordSpacing : BeforeRule, AfterRule {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        var out = out
-        if (curr.type !is TokenType.Keyword) return out
+        val out = out
+        if (curr.type !is TokenType.Keyword || next.type is TokenType.Space) return out
 
-        val needSpaceAfter =
-            when (curr.type) {
-                is TokenType.Keyword.If -> next.type is TokenType.LeftParen
-                is TokenType.Keyword.VariableDeclaration -> next.type is TokenType.Identifier
-                else -> false
-            }
-        if (needSpaceAfter) {
-            out = out.space()
-        }
-        return out
+        return out.space()
     }
 }
