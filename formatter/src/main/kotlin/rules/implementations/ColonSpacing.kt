@@ -13,16 +13,17 @@ object ColonSpacing : BeforeRule, AfterRule {
         out: DocBuilder,
         spaceForbid: SpaceForbid,
     ): DocBuilder {
-        var result = out
-        if (curr.type is TokenType.Colon && style.spaceBeforeColon && prev.type !is TokenType.Space) {
-            result = result.space()
-            spaceForbid.forbidBefore()
+        if (curr.type is TokenType.Colon) {
+            return if (!style.spaceBeforeColon) {
+                spaceForbid.forbidBefore()
+                out
+            } else {
+                val r = if (!out.isAtLineStart()) out.space() else out
+                spaceForbid.forbidBefore()
+                r
+            }
         }
-
-        if (curr.type is TokenType.Colon && !style.spaceBeforeColon) {
-            spaceForbid.forbidBefore()
-        }
-        return result
+        return out
     }
 
     override fun after(

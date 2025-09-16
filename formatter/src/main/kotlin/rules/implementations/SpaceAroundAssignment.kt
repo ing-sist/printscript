@@ -18,7 +18,9 @@ object SpaceAroundAssignment : BeforeRule, AfterRule {
         if (curr.type is TokenType.Assignment) {
             if (style.spaceAroundAssignment) {
                 // EXACTAMENTE un espacio antes de '='
-                if (!result.isAtLineStart()) result = result.space()
+                if (!result.isAtLineStart()) {
+                    result = result.space()
+                }
                 // Bloquea el hueco prev..curr para que el branch de Space no agregue otro
                 spaceForbid.forbidBefore()
             } else {

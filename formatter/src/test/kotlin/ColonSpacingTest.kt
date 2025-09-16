@@ -29,7 +29,7 @@ class ColonSpacingTest {
     fun `before agrega espacio antes de colon cuando esta habilitado`() {
         val prev = createToken(TokenType.Identifier, "x")
         val curr = createToken(TokenType.Colon, ":")
-        val next = createToken(TokenType.StringType, "string")
+        val next = createToken(TokenType.Keyword.StringType, "string")
         val config = createConfig(spaceBeforeColon = true, spaceAfterColon = false)
         val doc = DocBuilder.inMemory().write("x")
         val spaceForbid = SpaceForbid()
@@ -43,7 +43,7 @@ class ColonSpacingTest {
     fun `before no agrega espacio cuando esta deshabilitado`() {
         val prev = createToken(TokenType.Identifier, "x")
         val curr = createToken(TokenType.Colon, ":")
-        val next = createToken(TokenType.StringType, "string")
+        val next = createToken(TokenType.Keyword.StringType, "string")
         val config = createConfig(spaceBeforeColon = false, spaceAfterColon = false)
         val doc = DocBuilder.inMemory().write("x")
         val spaceForbid = SpaceForbid()
@@ -57,7 +57,7 @@ class ColonSpacingTest {
     fun `after agrega espacio despues de colon cuando esta habilitado`() {
         val prev = createToken(TokenType.Identifier, "x")
         val curr = createToken(TokenType.Colon, ":")
-        val next = createToken(TokenType.StringType, "string")
+        val next = createToken(TokenType.Keyword.StringType, "string")
         val config = createConfig(spaceBeforeColon = false, spaceAfterColon = true)
         val doc = DocBuilder.inMemory().write("x:")
         val spaceForbid = SpaceForbid()
@@ -71,7 +71,7 @@ class ColonSpacingTest {
     fun `after no agrega espacio cuando esta deshabilitado`() {
         val prev = createToken(TokenType.Identifier, "x")
         val curr = createToken(TokenType.Colon, ":")
-        val next = createToken(TokenType.StringType, "string")
+        val next = createToken(TokenType.Keyword.StringType, "string")
         val config = createConfig(spaceBeforeColon = false, spaceAfterColon = false)
         val doc = DocBuilder.inMemory().write("x:")
         val spaceForbid = SpaceForbid()
@@ -85,7 +85,7 @@ class ColonSpacingTest {
     fun `ambos habilitados agregan espacios antes y despues`() {
         val prev = createToken(TokenType.Identifier, "x")
         val curr = createToken(TokenType.Colon, ":")
-        val next = createToken(TokenType.StringType, "string")
+        val next = createToken(TokenType.Keyword.StringType, "string")
         val config = createConfig(spaceBeforeColon = true, spaceAfterColon = true)
         val spaceForbid = SpaceForbid()
 
