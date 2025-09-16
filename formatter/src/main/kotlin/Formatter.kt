@@ -31,7 +31,7 @@ class Formatter(
                 out = out.write(curr.lexeme)
             }
 
-            if (out == prevOut) {
+            if (out == prevOut && !out.isAtLineStart()) {
                 out = out.write(curr.lexeme)
             }
 
