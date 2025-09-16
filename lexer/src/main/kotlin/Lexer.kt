@@ -10,11 +10,11 @@ class Lexer(
     private var currentColumn = 1
     private var isEndOfFile = false
 
-    // Fixed-size read chunk; reused, not the source of OOM
+    // Reusable read chunk
     private val readBuffer = CharArray(1024)
 
     /**
-     * Returns next token. If readSpace == false, whitespace tokens are skipped.
+     * Returns next token. If readSpace == false or readNewline == false, those tokens are skipped.
      */
     fun nextToken(
         readSpace: Boolean,
@@ -25,56 +25,43 @@ class Lexer(
             val skip =
                 (token.type is TokenType.Space && !readSpace) ||
                     (token.type is TokenType.Newline && !readNewline)
-
             if (!skip) return token
         }
     }
 
     /**
-     * Produces the next token (including spaces). On a match failure, attempts
-     * to read more input to complete a partial token before emitting an error.
-     * Refactored to have a single return to satisfy Detekt ReturnCount.
+     * Boundary-safe producer with a single return and no continue/break in the loop body.
+     * Maximal munch across buffer edges:
+     * - If a match ends at buffer end and not EOF, try to read more and retry.
+     * - On failure, try to read more; if no progress or EOF, emit single-char error.
      */
     private fun produceNextToken(): Token {
         var emitted: Token? = null
 
         while (emitted == null) {
-            if (buffer.isEmpty()) {
-                fillBuffer()
-                if (buffer.isEmpty()) {
-                    emitted = createToken("EOF", TokenType.EOF)
-                    return emitted
-                }
-            }
+            if (!ensureBufferNotEmpty()) {
+                emitted = eofToken()
+            } else {
+                val startLine = currentLine
+                val startCol = currentColumn
+                val source = buffer.toString()
+                val match = tokenMatcher.findNextToken(source, startLine, startCol)
 
-            when (
-                val matchResult =
-                    tokenMatcher.findNextToken(
-                        buffer.toString(),
-                        currentLine,
-                        currentColumn,
-                    )
-            ) {
-                is Result.Success -> {
-                    val token = matchResult.value
-                    consumeFromBuffer(token.lexeme)
-                    emitted = token
-                }
-
-                is Result.Failure -> {
-                    // Try to append more data to resolve a partial token
-                    if (!isEndOfFile) {
-                        val before = buffer.length
-                        fillBuffer()
-                        if (buffer.length > before) {
-                            // Got more input; retry matching with the larger buffer
-                            continue
-                        }
+                if (match is Result.Success) {
+                    val token = match.value
+                    val needMore = shouldReadMoreFor(token) && tryReadMore()
+                    if (!needMore) {
+                        consumeFromBuffer(token.lexeme)
+                        emitted = token
                     }
-                    // No more input (or no progress): consume one char and report error
-                    val invalidChar = buffer.first()
-                    consumeFromBuffer(invalidChar.toString())
-                    emitted = createToken(matchResult.toString(), TokenType.ERROR)
+                } else {
+                    val readMore = tryReadMore()
+                    if (!readMore) {
+                        val badLexeme = buffer.substring(0, 1)
+                        val error = createErrorToken(badLexeme, startLine, startCol)
+                        consumeFromBuffer(badLexeme)
+                        emitted = error
+                    }
                 }
             }
         }
@@ -82,39 +69,55 @@ class Lexer(
         return emitted
     }
 
+    // --- Helpers ---
+
+    private fun ensureBufferNotEmpty(): Boolean {
+        if (buffer.isNotEmpty()) return true
+        fillBuffer()
+        return buffer.isNotEmpty()
+    }
+
+    private fun eofToken(): Token = Token(TokenType.EOF, "EOF", Location(currentLine, currentColumn, currentColumn))
+
+    private fun shouldReadMoreFor(token: Token): Boolean = token.lexeme.length == buffer.length && !isEndOfFile
+
+    private fun tryReadMore(): Boolean {
+        val before = buffer.length
+        fillBuffer()
+        return buffer.length > before
+    }
+
+    private fun createErrorToken(
+        lexeme: String,
+        line: Int,
+        col: Int,
+    ): Token = Token(TokenType.ERROR, lexeme, Location(line, col, col + lexeme.length - 1))
+
     private fun consumeFromBuffer(lexeme: String) {
         val newlines = lexeme.count { it == '\n' }
         if (newlines > 0) {
             currentLine += newlines
-            currentColumn = lexeme.length - lexeme.lastIndexOf('\n')
+            val lastNl = lexeme.lastIndexOf('\n')
+            val charsAfterLastNl = lexeme.length - lastNl
+            currentColumn = charsAfterLastNl
         } else {
             currentColumn += lexeme.length
         }
         buffer.delete(0, lexeme.length)
     }
 
-    /**
-     * Reads more characters from the Reader and appends them to the buffer.
-     */
     private fun fillBuffer() {
         if (isEndOfFile) return
-
-        val charsRead = reader.read(readBuffer)
-        if (charsRead != -1) {
-            buffer.append(readBuffer, 0, charsRead)
+        val read = reader.read(readBuffer)
+        if (read > 0) {
+            buffer.append(readBuffer, 0, read)
         } else {
             isEndOfFile = true
-            reader.close()
+            try {
+                reader.close()
+            } catch (_: Exception) {
+                // Ignore close errors
+            }
         }
     }
-
-    private fun createToken(
-        lexeme: String,
-        tokenType: TokenType,
-    ): Token =
-        Token(
-            tokenType,
-            lexeme,
-            Location(currentLine, currentColumn, currentColumn + lexeme.length - 1),
-        )
 }
