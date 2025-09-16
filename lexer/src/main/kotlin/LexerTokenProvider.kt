@@ -13,13 +13,14 @@ class LexerException(
  */
 class LexerTokenProvider(
     private val lexer: Lexer,
+    private val readSpace: Boolean,
 ) : TokenStream {
     private val lookahead = mutableListOf<Token>()
     private var eofReached = false
 
     override fun peek(k: Int): Token {
         while (lookahead.size <= k && !eofReached) {
-            val next = lexer.nextToken()
+            val next = lexer.nextToken(readSpace)
 
             if (next.type is TokenType.ERROR) {
                 throw LexerException(next)

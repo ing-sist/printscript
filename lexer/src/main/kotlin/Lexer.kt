@@ -18,12 +18,15 @@ class Lexer(
      * los espacios en blanco. Devuelve un token EOF si se acaba el input.
      * Esta función ahora tiene un único punto de salida, solucionando el error del linter.
      */
-    fun nextToken(): Token {
+    fun nextToken(readSpace: Boolean): Token {
         while (true) {
             val token = produceNextToken()
-            if (token.type !is TokenType.Space) {
-                return token
+            if (!readSpace) {
+                if (token.type is TokenType.Space) {
+                    continue
+                }
             }
+            return token
         }
     }
 
