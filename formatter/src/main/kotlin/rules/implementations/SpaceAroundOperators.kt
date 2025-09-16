@@ -28,7 +28,7 @@ object SpaceAroundOperators : BeforeRule, AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
-        if (curr.type in operators && style.spaceAroundOperators) {
+        if (curr.type in operators && style.spaceAroundOperators && prev.type !is TokenType.Space) {
             result = result.space()
         }
         return result
@@ -42,7 +42,7 @@ object SpaceAroundOperators : BeforeRule, AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
-        if (curr.type in operators && style.spaceAroundOperators) {
+        if (curr.type in operators && style.spaceAroundOperators && prev.type !is TokenType.Space) {
             result = result.space()
         }
         return result

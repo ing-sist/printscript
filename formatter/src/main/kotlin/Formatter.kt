@@ -24,9 +24,7 @@ class Formatter(
 
             out = indentIfAtLineStart(out, curr.type, level, style)
 
-            if (curr.type !is TokenType.Space) {
-                out = out.write(curr.lexeme)
-            }
+            out = out.write(curr.lexeme)
 
             out = applyAfterRules(prev, curr, next, style, out)
 

@@ -5,8 +5,8 @@ import loadFromFile
 import loadFromString
 import rules.definitions.IndentationDef
 import rules.definitions.InlineIfBraceIfStatementDef
+import rules.definitions.LineBreakAfterPrintlnDef
 import rules.definitions.LineBreakAfterSemiColonDef
-import rules.definitions.LineBreakBeforePrintlnDef
 import rules.definitions.SpaceAfterColonDef
 import rules.definitions.SpaceAroundAssignmentDef
 import rules.definitions.SpaceAroundOperatorsDef
@@ -26,7 +26,7 @@ data class FormatterStyleConfig(
     companion object {
         fun fromMap(style: Map<String, Any>): FormatterStyleConfig =
             FormatterStyleConfig(
-                lineBreakBeforePrintln = style[LineBreakBeforePrintlnDef.id] as Int,
+                lineBreakBeforePrintln = style[LineBreakAfterPrintlnDef.id] as Int,
                 lineBreakAfterSemicolon = style[LineBreakAfterSemiColonDef.id] as Boolean,
                 spaceBeforeColon = style[SpaceBeforeColonDef.id] as Boolean,
                 spaceAfterColon = style[SpaceAfterColonDef.id] as Boolean,
