@@ -1,4 +1,5 @@
 package config
+
 import rules.definitions.IndentationDef
 import rules.definitions.InlineIfBraceIfStatementDef
 import rules.definitions.LineBreakAfterSemiColonDef
@@ -18,13 +19,13 @@ private fun asBool(v: String) = v.trim().lowercase() == "true"
 object AliasesMap {
     val ALIASES: Map<String, Alias> =
         mapOf(
-            "enforce-spacing-after-colon-in-declaration" to
+            "enforce-spacing-before-colon-in-declaration" to
                 Alias(SpaceBeforeColonDef.id) { v ->
-                    (!asBool(v)).toString()
+                    (asBool(v)).toString()
                 },
             "enforce-spacing-after-colon-in-declaration" to
                 Alias(SpaceAfterColonDef.id) { v ->
-                    (!asBool(v)).toString()
+                    (asBool(v)).toString()
                 },
             "enforce-spacing-around-equals" to Alias(SpaceAroundAssignmentDef.id),
             "enforce-no-spacing-around-equals" to
@@ -43,4 +44,21 @@ object AliasesMap {
                 },
             "mandatory-single-space-separation" to Alias(SpaceAroundAssignmentDef.id),
         )
+
+//    val ALIASES =
+//        mapOf(
+//            "enforce-spacing-around-equals" to "spaceAroundAssignment",
+//            "enforce-no-spacing-around-equals" to "noSpaceAroundAssignment",
+//            "enforce-spacing-after-colon-in-declaration" to "spaceAfterColonInDecl",
+//            "enforce-spacing-before-colon-in-declaration" to "spaceBeforeColonInDecl",
+//            "indent_size" to "indentSpaces",
+//            "indent-spaces" to "indentSpaces",
+//            "indent-inside-if" to "indentSpaces",
+//            "tabsize" to "indentSpaces",
+//            "line-breaks-after-println" to "blankLinesAfterPrintln",
+//            "line_breaks_after_println" to "blankLinesAfterPrintln",
+//            "mandatory-single-space-separation" to "mandatorySingleSpaceSeparation",
+//            "if-brace-below-line" to "ifBraceBelowLine",
+//            "if-brace-same-line" to "ifBraceSameLine",
+//        )
 }
