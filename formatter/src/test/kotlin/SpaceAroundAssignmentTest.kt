@@ -11,7 +11,7 @@ class SpaceAroundAssignmentTest {
 
     private fun createConfig(spaceAroundAssignment: Boolean) =
         FormatterStyleConfig(
-            lineBreakBeforePrintln = 1,
+            lineBreakAfterPrintln = 1,
             lineBreakAfterSemicolon = true,
             spaceBeforeColon = true,
             spaceAfterColon = true,
