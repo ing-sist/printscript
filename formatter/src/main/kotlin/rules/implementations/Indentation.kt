@@ -1,7 +1,6 @@
 import config.FormatterStyleConfig
 import rules.implementations.AfterRule
 import rules.implementations.BeforeRule
-import rules.implementations.SpaceForbid
 
 object Indentation : BeforeRule, AfterRule {
     override fun before(
@@ -10,7 +9,6 @@ object Indentation : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var result = out
         if (style.indentation == 0) return out
@@ -29,7 +27,6 @@ object Indentation : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
         if (style.indentation == 0) return out
         var result = out

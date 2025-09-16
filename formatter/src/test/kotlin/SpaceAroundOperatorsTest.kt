@@ -2,7 +2,6 @@ import config.FormatterStyleConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import rules.implementations.SpaceAroundOperators
-import rules.implementations.SpaceForbid
 
 class SpaceAroundOperatorsTest {
     private fun createToken(
@@ -30,9 +29,8 @@ class SpaceAroundOperatorsTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceAroundOperators = true)
         val doc = DocBuilder.inMemory().write("x")
-        val spaceForbid = SpaceForbid()
 
-        val result = SpaceAroundOperators.before(prev, curr, next, config, doc, spaceForbid)
+        val result = SpaceAroundOperators.before(prev, curr, next, config, doc)
 
         assertEquals("x ", result.build())
     }
@@ -44,9 +42,8 @@ class SpaceAroundOperatorsTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceAroundOperators = true)
         val doc = DocBuilder.inMemory().write("x +")
-        val spaceForbid = SpaceForbid()
 
-        val result = SpaceAroundOperators.after(prev, curr, next, config, doc, spaceForbid)
+        val result = SpaceAroundOperators.after(prev, curr, next, config, doc)
 
         assertEquals("x + ", result.build())
     }
@@ -58,10 +55,9 @@ class SpaceAroundOperatorsTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceAroundOperators = false)
         val doc = DocBuilder.inMemory().write("x")
-        val spaceForbid = SpaceForbid()
 
-        val beforeResult = SpaceAroundOperators.before(prev, curr, next, config, doc, spaceForbid)
-        val afterResult = SpaceAroundOperators.after(prev, curr, next, config, doc, spaceForbid)
+        val beforeResult = SpaceAroundOperators.before(prev, curr, next, config, doc)
+        val afterResult = SpaceAroundOperators.after(prev, curr, next, config, doc)
 
         assertEquals("x", beforeResult.build())
         assertEquals("x", afterResult.build())
@@ -83,9 +79,8 @@ class SpaceAroundOperatorsTest {
             val curr = createToken(type, lexeme)
             val next = createToken(TokenType.NumberLiteral, "5")
             val doc = DocBuilder.inMemory().write("x")
-            val spaceForbid = SpaceForbid()
 
-            val result = SpaceAroundOperators.before(prev, curr, next, config, doc, spaceForbid)
+            val result = SpaceAroundOperators.before(prev, curr, next, config, doc)
             assertEquals("x ", result.build(), "Failed for operator: $lexeme")
         }
     }
@@ -108,9 +103,8 @@ class SpaceAroundOperatorsTest {
             val curr = createToken(type, lexeme)
             val next = createToken(TokenType.NumberLiteral, "5")
             val doc = DocBuilder.inMemory().write("x")
-            val spaceForbid = SpaceForbid()
 
-            val result = SpaceAroundOperators.before(prev, curr, next, config, doc, spaceForbid)
+            val result = SpaceAroundOperators.before(prev, curr, next, config, doc)
             assertEquals("x ", result.build(), "Failed for operator: $lexeme")
         }
     }
@@ -122,10 +116,9 @@ class SpaceAroundOperatorsTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceAroundOperators = true)
         val doc = DocBuilder.inMemory().write("x")
-        val spaceForbid = SpaceForbid()
 
-        val beforeResult = SpaceAroundOperators.before(prev, curr, next, config, doc, spaceForbid)
-        val afterResult = SpaceAroundOperators.after(prev, curr, next, config, doc, spaceForbid)
+        val beforeResult = SpaceAroundOperators.before(prev, curr, next, config, doc)
+        val afterResult = SpaceAroundOperators.after(prev, curr, next, config, doc)
 
         assertEquals("x", beforeResult.build())
         assertEquals("x", afterResult.build())

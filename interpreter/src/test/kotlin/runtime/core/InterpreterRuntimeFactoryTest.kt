@@ -56,7 +56,7 @@ class InterpreterRuntimeFactoryTest {
             DeclarationAssignmentNode(
                 DeclarationNode(
                     IdentifierNode(Token(TokenType.Identifier, "x", Location(0, 0, 0)), "x"),
-                    Token(TokenType.Keyword.NumberType, "number", Location(0, 0, 0)),
+                    Token(TokenType.NumberType, "number", Location(0, 0, 0)),
                     true,
                 ),
                 createNumberLiteral(42.0), // Esta expresión será evaluada internamente
@@ -100,7 +100,7 @@ class InterpreterRuntimeFactoryTest {
     ) = DeclarationAssignmentNode(
         DeclarationNode(
             IdentifierNode(Token(TokenType.Identifier, name, Location(0, 0, 0)), name),
-            Token(TokenType.Keyword.StringType, "string", Location(0, 0, 0)),
+            Token(TokenType.StringType, "string", Location(0, 0, 0)),
             isMutable,
         ),
         LiteralNode(Token(TokenType.StringLiteral, "\"$value\"", Location(0, 0, 0))),

@@ -3,7 +3,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import rules.implementations.AfterRule
 import rules.implementations.BeforeRule
-import rules.implementations.SpaceForbid
 
 class FormatterTest {
     private fun createToken(
@@ -43,7 +42,6 @@ class FormatterTest {
             next: Token,
             style: FormatterStyleConfig,
             out: DocBuilder,
-            spaceForbid: SpaceForbid,
         ): DocBuilder = action(prev, curr, next, style, out)
     }
 
@@ -62,7 +60,6 @@ class FormatterTest {
             next: Token,
             style: FormatterStyleConfig,
             out: DocBuilder,
-            spaceForbid: SpaceForbid,
         ): DocBuilder = action(prev, curr, next, style, out)
     }
 

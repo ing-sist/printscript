@@ -20,7 +20,7 @@ class DeclarationValidatorTest {
                 tok(TokenType.Keyword.VariableDeclaration, "let"),
                 tok(TokenType.Identifier, "x"),
                 tok(TokenType.Colon, ":"),
-                tok(TokenType.Keyword.NumberType, "number"),
+                tok(TokenType.NumberType, "number"),
                 tok(TokenType.Semicolon, ";"),
                 tok(TokenType.EOF, "EOF"),
             )
@@ -30,7 +30,7 @@ class DeclarationValidatorTest {
         val node = (result as Result.Success).value
         val decl = assertInstanceOf(DeclarationNode::class.java, node) as DeclarationNode
         assertEquals("x", decl.identifier.name)
-        assertEquals(TokenType.Keyword.NumberType, decl.type.type)
+        assertEquals(TokenType.NumberType, decl.type.type)
         assertTrue(decl.isMutable)
     }
 

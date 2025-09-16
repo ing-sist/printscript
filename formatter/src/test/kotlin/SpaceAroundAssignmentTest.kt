@@ -2,7 +2,6 @@ import config.FormatterStyleConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import rules.implementations.SpaceAroundAssignment
-import rules.implementations.SpaceForbid
 
 class SpaceAroundAssignmentTest {
     private fun createToken(
@@ -30,9 +29,8 @@ class SpaceAroundAssignmentTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceAroundAssignment = true)
         val doc = DocBuilder.inMemory().write("x")
-        val spaceForbid = SpaceForbid()
 
-        val result = SpaceAroundAssignment.before(prev, curr, next, config, doc, spaceForbid)
+        val result = SpaceAroundAssignment.before(prev, curr, next, config, doc)
 
         assertEquals("x ", result.build())
     }
@@ -44,9 +42,8 @@ class SpaceAroundAssignmentTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceAroundAssignment = false)
         val doc = DocBuilder.inMemory().write("x")
-        val spaceForbid = SpaceForbid()
 
-        val result = SpaceAroundAssignment.before(prev, curr, next, config, doc, spaceForbid)
+        val result = SpaceAroundAssignment.before(prev, curr, next, config, doc)
 
         assertEquals("x", result.build())
     }
@@ -58,9 +55,8 @@ class SpaceAroundAssignmentTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceAroundAssignment = true)
         val doc = DocBuilder.inMemory().write("x")
-        val spaceForbid = SpaceForbid()
 
-        val result = SpaceAroundAssignment.before(prev, curr, next, config, doc, spaceForbid)
+        val result = SpaceAroundAssignment.before(prev, curr, next, config, doc)
 
         assertEquals("x", result.build())
     }
@@ -72,9 +68,8 @@ class SpaceAroundAssignmentTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceAroundAssignment = true)
         val doc = DocBuilder.inMemory().write("x=")
-        val spaceForbid = SpaceForbid()
 
-        val result = SpaceAroundAssignment.after(prev, curr, next, config, doc, spaceForbid)
+        val result = SpaceAroundAssignment.after(prev, curr, next, config, doc)
 
         assertEquals("x= ", result.build())
     }
@@ -86,9 +81,8 @@ class SpaceAroundAssignmentTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceAroundAssignment = false)
         val doc = DocBuilder.inMemory().write("x=")
-        val spaceForbid = SpaceForbid()
 
-        val result = SpaceAroundAssignment.after(prev, curr, next, config, doc, spaceForbid)
+        val result = SpaceAroundAssignment.after(prev, curr, next, config, doc)
 
         assertEquals("x=", result.build())
     }
@@ -100,9 +94,8 @@ class SpaceAroundAssignmentTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceAroundAssignment = true)
         val doc = DocBuilder.inMemory().write("x+")
-        val spaceForbid = SpaceForbid()
 
-        val result = SpaceAroundAssignment.after(prev, curr, next, config, doc, spaceForbid)
+        val result = SpaceAroundAssignment.after(prev, curr, next, config, doc)
 
         assertEquals("x+", result.build())
     }

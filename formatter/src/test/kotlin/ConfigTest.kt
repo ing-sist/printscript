@@ -1,46 +1,49 @@
-import config.FormatterRuleImplementations
+import config.RULE_TO_IMPL
 import config.RuleDefinitions
+import config.activeImplementationsFromJson
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import rules.definitions.LineBreakAfterSemiColonDef
+import rules.definitions.SpaceAfterColonDef
+import rules.definitions.SpaceAroundAssignmentDef
+import rules.definitions.SpaceBeforeColonDef
+import java.io.File
+import kotlin.io.path.createTempFile
 
-class FormatterRuleImplementationsTest {
+class RuleSelectorTest {
     @Test
-    fun `getRuleImplementations retorna lista de reglas`() {
-        val rules = FormatterRuleImplementations.IMPLEMENTATIONS
-
-        assertNotNull(rules)
-        assertTrue(rules.isNotEmpty())
-        assertTrue(rules.all { rule -> true })
+    fun `json vacio - activa solo ENGINE`() {
+        val impls = activeImplementationsFromJson("{}", RuleDefinitions.RULES)
+        assertTrue(impls.isNotEmpty())
+        // chequeo indirecto: ningún id USER obligatorio aparece si no vino en JSON
+        val activeIds = impls.map { it::class.simpleName }.toSet()
+        // ej., si SpaceAroundAssignment es USER en tu modelo:
+        assertFalse(activeIds.contains("SpaceAroundAssignment"))
     }
 
     @Test
-    fun `getRuleImplementations incluye reglas basicas`() {
-        val rules = FormatterRuleImplementations.IMPLEMENTATIONS
-        val ruleNames = rules.map { rule -> rule::class.simpleName }
-
-        // Verificar que se incluyen las reglas principales
-        assertTrue(ruleNames.contains("SpaceAroundAssignment"))
-        assertTrue(ruleNames.contains("LineBreakAfterSemicolon"))
-        assertTrue(ruleNames.contains("ColonSpacing"))
-        assertTrue(ruleNames.contains("Indentation"))
+    fun `RULE_TO_IMPL contiene mapeos basicos`() {
+        // Sanity check del registry
+        assertNotNull(RULE_TO_IMPL[SpaceAroundAssignmentDef.id])
+        assertNotNull(RULE_TO_IMPL[LineBreakAfterSemiColonDef.id])
+        assertNotNull(RULE_TO_IMPL[SpaceBeforeColonDef.id])
+        assertNotNull(RULE_TO_IMPL[SpaceAfterColonDef.id])
     }
 }
 
 class LoaderTest {
-    private fun createTempConfigFile(content: String): java.io.File {
-        val tmp =
-            kotlin.io.path
-                .createTempFile("config-", ".json")
-                .toFile()
-        tmp.writeText(content.trimIndent())
-        return tmp
+    private fun createTempConfigFile(content: String): File {
+        val f = createTempFile("config-", ".json").toFile()
+        f.writeText(content.trimIndent())
+        return f
     }
 
     @Test
-    fun `loadFromFile carga configuracion desde archivo JSON`() {
-        val configFile =
+    fun `loadStyleMapFromFile - carga claves USER provistas`() {
+        val cfg =
             createTempConfigFile(
                 """
             {
@@ -48,55 +51,39 @@ class LoaderTest {
               "spaceAroundAssignment": false,
               "indentation": 8
             }
-        """,
+            """,
             )
+        val map = loadStyleMapFromFile(cfg, RuleDefinitions.RULES)
 
-        val result = loadFromFile(configFile, RuleDefinitions.RULES)
+        // Solo las 3 claves provistas
+        assertEquals(setOf("lineBreakBeforePrintln", "spaceAroundAssignment", "indentation"), map.keys)
+        assertEquals(2, map["lineBreakBeforePrintln"])
+        assertEquals(false, map["spaceAroundAssignment"])
+        assertEquals(8, map["indentation"])
 
-        assertEquals(2, result["lineBreakBeforePrintln"])
-        assertEquals(false, result["spaceAroundAssignment"])
-        assertEquals(8, result["indentation"])
-
-        configFile.delete()
+        cfg.delete()
     }
 
     @Test
-    fun `loadFromFile aplica valores por defecto para claves faltantes`() {
-        val configFile =
-            createTempConfigFile(
-                """
-            {
-              "indentation": 6
-            }
-        """,
-            )
+    fun `loadStyleMapFromFile - JSON parcial no agrega defaults`() {
+        val cfg = createTempConfigFile("""{ "indentation": 6 }""")
+        val map = loadStyleMapFromFile(cfg, RuleDefinitions.RULES)
 
-        val result = loadFromFile(configFile, RuleDefinitions.RULES)
+        assertEquals(setOf("indentation"), map.keys)
+        assertEquals(6, map["indentation"])
+        // No hay otras claves
+        assertFalse(map.containsKey("spaceAroundAssignment"))
+        assertFalse(map.containsKey("lineBreakBeforePrintln"))
 
-        assertEquals(6, result["indentation"])
-        // Los valores por defecto deben estar presentes
-        assertTrue(result.containsKey("lineBreakBeforePrintln"))
-        assertTrue(result.containsKey("spaceAroundAssignment"))
-
-        configFile.delete()
+        cfg.delete()
     }
 
     @Test
-    fun `loadFromFile maneja archivo JSON vacio`() {
-        val configFile = createTempConfigFile("{}")
+    fun `loadStyleMapFromFile - JSON vacio devuelve mapa vacio`() {
+        val cfg = createTempConfigFile("{}")
+        val map = loadStyleMapFromFile(cfg, RuleDefinitions.RULES)
 
-        val result = loadFromFile(configFile, RuleDefinitions.RULES)
-
-        // Todos los valores por defecto deben estar presentes
-        assertTrue(result.containsKey("lineBreakBeforePrintln"))
-        assertTrue(result.containsKey("lineBreakAfterSemicolon"))
-        assertTrue(result.containsKey("spaceBeforeColon"))
-        assertTrue(result.containsKey("spaceAfterColon"))
-        assertTrue(result.containsKey("spaceAroundAssignment"))
-        assertTrue(result.containsKey("spaceAroundOperators"))
-        assertTrue(result.containsKey("indentation"))
-        assertTrue(result.containsKey("inlineIfBraceIfStatement"))
-
-        configFile.delete()
+        assertTrue(map.isEmpty()) // sin defaults acá
+        cfg.delete()
     }
 }

@@ -20,9 +20,9 @@ class TokenRuleVersion11 : TokenRule {
             "\\btrue\\b" to TokenType.BooleanLiteral,
             "\\bfalse\\b" to TokenType.BooleanLiteral,
             // Data types - 1.0 + 1.1 extensions
-            "\\bstring\\b" to TokenType.Keyword.StringType,
-            "\\bnumber\\b" to TokenType.Keyword.NumberType,
-            "\\bboolean\\b" to TokenType.Keyword.BooleanType, // New in 1.1
+            "\\bstring\\b" to TokenType.StringType,
+            "\\bnumber\\b" to TokenType.NumberType,
+            "\\bboolean\\b" to TokenType.BooleanType, // New in 1.1
             // String Literals (both single and double quotes as per PrintScript spec)
             "\"([^\"\\\\]|\\\\.)*\"" to TokenType.StringLiteral,
             "'([^'\\\\]|\\\\.)*'" to TokenType.StringLiteral,
