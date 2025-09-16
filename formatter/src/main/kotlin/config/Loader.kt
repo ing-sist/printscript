@@ -13,7 +13,6 @@ fun loadStyleMapFromString(
     rules: List<Rule<*>>,
 ): Map<String, Any> = styleMapFromText(json, rules) // solo las que me da el user
 
-// ENGINE ∪ USER
 fun activeRuleIdsFromString(
     json: String,
     rules: List<Rule<*>>,
@@ -47,14 +46,15 @@ private fun styleMapFromText(
             .trim()
     if (inner.isBlank()) return emptyMap()
 
-    val raw = parseEntries(inner) // Map<idNormalizada, String>
+    val raw = parseEntries(inner)
     val defsById = rules.associateBy { it.id }
 
     val result = mutableMapOf<String, Any>()
     for ((id, rawVal) in raw) {
-        val def = defsById[id] ?: continue // clave desconocida => ignorar
+        val def = defsById[id] ?: continue
         result[id] = def.parse(rawVal)
     }
+    println(result)
     return result
 }
 
