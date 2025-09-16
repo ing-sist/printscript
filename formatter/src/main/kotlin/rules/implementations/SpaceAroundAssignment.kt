@@ -16,7 +16,7 @@ object SpaceAroundAssignment : BeforeRule, AfterRule {
         var result = out
         if (curr.type is TokenType.Assignment) {
             if (style.spaceAroundAssignment) {
-                if (!result.isAtLineStart()) {
+                if (!result.isAtLineStart() && prev.type !is TokenType.Space) {
                     result = result.space()
                 }
             }
