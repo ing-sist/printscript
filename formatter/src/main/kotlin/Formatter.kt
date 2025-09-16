@@ -19,12 +19,14 @@ class Formatter(
 
         while (curr.type !is TokenType.EOF) {
             val next: Token = tokenStream.peek(0)
-
+            val prevOut = out
             out = applyBeforeRules(prev, curr, next, style, out)
 
             out = indentIfAtLineStart(out, curr.type, level, style)
 
-            out = out.write(curr.lexeme)
+            if (out != prevOut || curr.type !is TokenType.Space) {
+                out = out.write(curr.lexeme)
+            }
 
             out = applyAfterRules(prev, curr, next, style, out)
 

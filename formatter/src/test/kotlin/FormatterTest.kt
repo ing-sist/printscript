@@ -149,8 +149,8 @@ class FormatterTest {
         val formatter = Formatter(emptyList())
         val config = createConfig(indentation = 2)
 
-        val result = formatter.format(stream, config, DocBuilder.inMemory())
-        // Sin reglas adicionales, no hay saltos de línea, por lo que no se aplica indentación
+        val result =
+            formatter.format(stream, config, DocBuilder.inMemory())
         assertEquals("{{x}}", result.build())
     }
 
