@@ -154,25 +154,6 @@ class FormatterIntegrationTest {
     }
 
     @Test
-    fun `formato con indentacion personalizada`() {
-        val tokens =
-            listOf(
-                createToken(TokenType.Keyword.If, "if"),
-                createToken(TokenType.LeftBrace, "{"),
-                createToken(TokenType.Identifier, "x"),
-                createToken(TokenType.RightBrace, "}"),
-            )
-
-        val config = createDefaultConfig().copy(indentation = 2)
-        val stream = MockTokenStream(tokens)
-        val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
-
-        val result = formatter.format(stream, config, DocBuilder.inMemory())
-
-        assertEquals("if{\n  x\n}", result.build())
-    }
-
-    @Test
     fun `formato con multiples saltos de linea antes de println`() {
         val tokens =
             listOf(

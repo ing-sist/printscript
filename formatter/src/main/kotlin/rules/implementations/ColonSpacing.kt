@@ -15,7 +15,7 @@ object ColonSpacing : BeforeRule, AfterRule {
     ): DocBuilder {
         if (curr.type !is TokenType.Colon) return out
 
-        return if (!style.spaceBeforeColon) {
+        return if (!style.spaceBeforeColon || prev.type is TokenType.Space) {
             out
         } else {
             if (out.isAtLineStart()) {
