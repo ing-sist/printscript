@@ -1,5 +1,6 @@
 import config.AliasesMap.ALIASES
 import config.RuleOwner
+import config.allRuleDefs
 import rules.definitions.Rule
 import java.io.File
 
@@ -13,7 +14,6 @@ fun loadStyleMapFromString(
     rules: List<Rule<*>>,
 ): Map<String, Any> = styleMapFromText(json, rules) // solo las que me da el user
 
-// ENGINE ∪ USER
 fun activeRuleIdsFromString(
     json: String,
     rules: List<Rule<*>>,
@@ -47,14 +47,15 @@ private fun styleMapFromText(
             .trim()
     if (inner.isBlank()) return emptyMap()
 
-    val raw = parseEntries(inner) // Map<idNormalizada, String>
+    val raw = parseEntries(inner)
     val defsById = rules.associateBy { it.id }
 
     val result = mutableMapOf<String, Any>()
     for ((id, rawVal) in raw) {
-        val def = defsById[id] ?: continue // clave desconocida => ignorar
+        val def = defsById[id] ?: continue
         result[id] = def.parse(rawVal)
     }
+    println(result)
     return result
 }
 
@@ -77,3 +78,7 @@ fun parseEntries(inner: String): Map<String, String> {
             targetId to value
         }.toMap()
 }
+
+fun loadStyleMapFromString(json: String): Map<String, Any> = styleMapFromText(json, allRuleDefs())
+
+fun loadStyleMapFromFile(file: File): Map<String, Any> = styleMapFromText(file.readText(), allRuleDefs())

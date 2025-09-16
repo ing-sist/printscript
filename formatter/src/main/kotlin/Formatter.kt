@@ -24,17 +24,11 @@ class Formatter(
 
             out = indentIfAtLineStart(out, curr.type, level, style)
 
-            if (out != prevOut || curr.type !is TokenType.Space) {
-                out = out.write(curr.lexeme)
+            if (curr.type is TokenType.Newline) {
+                curr = tokenStream.consume()
+                continue
             }
-
-//            if(curr.type is TokenType.Space) {
-//                if(prevOut == out) { // si ningun before se agrego
-//                    out = out.write(curr.lexeme) // puedo escribir el espacio
-//                }
-//            } else if (curr.type !is TokenType.Newline) {
-//                out = out.write(curr.lexeme)
-//            } else
+            out = printTokenLexeme(out, prevOut, curr, prev)
 
             out = applyAfterRules(prev, curr, next, style, out)
 
@@ -60,6 +54,31 @@ class Formatter(
             }
         }
         return acc
+    }
+
+    fun printTokenLexeme(
+        out: DocBuilder,
+        prevOut: DocBuilder,
+        curr: Token,
+        prev: Token,
+    ): DocBuilder {
+        val beforeChanged = (out !== prevOut)
+
+        var newOut = out
+        if (!beforeChanged) {
+            if (curr.type is TokenType.Space) {
+                if (prev.type !is TokenType.Space) {
+                    newOut = newOut.write(curr.lexeme)
+                }
+            } else {
+                newOut = newOut.write(curr.lexeme)
+            }
+        } else {
+            if (curr.type !is TokenType.Space) {
+                newOut = newOut.write(curr.lexeme)
+            }
+        }
+        return newOut
     }
 
     private fun applyAfterRules(
