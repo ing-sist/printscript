@@ -1,9 +1,9 @@
 package config
 
 import Indentation
-import InlineBraceIfStatement
 import rules.implementations.ColonSpacing
 import rules.implementations.CommaSpacing
+import rules.implementations.IfBraceBelowLine
 import rules.implementations.LineBreakAfterSemicolon
 import rules.implementations.LineBreakBeforePrintln
 import rules.implementations.SpaceAroundAssignment
@@ -13,10 +13,9 @@ import rules.implementations.VarDeclaration
 object FormatterRuleImplementations {
     val IMPLEMENTATIONS =
         listOf(
-            InlineBraceIfStatement,
+            IfBraceBelowLine,
             LineBreakBeforePrintln,
             LineBreakAfterSemicolon,
-//            KeywordSpacing,
             CommaSpacing,
             ColonSpacing,
             SpaceAroundAssignment,

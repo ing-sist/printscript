@@ -17,6 +17,7 @@ class IndentationTest {
             spaceAroundAssignment = true,
             spaceAroundOperators = true,
             indentation = indentation,
+            ifBraceBelowLine = false,
             inlineIfBraceIfStatement = true,
         )
 

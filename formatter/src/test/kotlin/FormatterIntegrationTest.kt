@@ -18,7 +18,8 @@ class FormatterIntegrationTest {
             spaceAroundAssignment = true,
             spaceAroundOperators = true,
             indentation = 4,
-            inlineIfBraceIfStatement = true,
+            ifBraceBelowLine = false,
+            inlineIfBraceIfStatement = false,
         )
 
     @Test
@@ -66,7 +67,7 @@ class FormatterIntegrationTest {
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())
 
-        val expected = "if(true) {\n\n    println(\"test\");\n}"
+        val expected = "if(true){\n\n    println(\"test\");\n}"
         assertEquals(expected, result.build())
     }
 
@@ -168,7 +169,7 @@ class FormatterIntegrationTest {
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())
 
-        assertEquals("if {\n  x\n}", result.build())
+        assertEquals("if{\n  x\n}", result.build())
     }
 
     @Test

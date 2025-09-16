@@ -2,8 +2,8 @@ package rules.definitions
 
 import config.RuleOwner
 
-object LineBreakAfterPrintlnDef : Rule<Int> {
-    override val id: String = "lineBreakAfterPrintln"
+object LineBreakBeforePrintlnDef : Rule<Int> {
+    override val id: String = "lineBreakBeforePrintln"
     override val default: Int = 0
     override val owner: RuleOwner = RuleOwner.USER
 

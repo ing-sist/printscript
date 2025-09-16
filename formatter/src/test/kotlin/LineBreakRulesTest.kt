@@ -13,13 +13,14 @@ class LineBreakRulesTest {
         lineBreakAfterSemicolon: Boolean = true,
         lineBreakBeforePrintln: Int = 1,
     ) = FormatterStyleConfig(
-        lineBreakAfterSemicolon = lineBreakAfterSemicolon,
         lineBreakBeforePrintln = lineBreakBeforePrintln,
+        lineBreakAfterSemicolon = lineBreakAfterSemicolon,
         spaceBeforeColon = true,
         spaceAfterColon = true,
         spaceAroundAssignment = true,
         spaceAroundOperators = true,
         indentation = 4,
+        ifBraceBelowLine = false,
         inlineIfBraceIfStatement = true,
     )
 

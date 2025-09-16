@@ -22,6 +22,7 @@ class FormatterTest {
         spaceAroundAssignment = spaceAroundAssignment,
         spaceAroundOperators = true,
         indentation = indentation,
+        ifBraceBelowLine = false,
         inlineIfBraceIfStatement = true,
     )
 

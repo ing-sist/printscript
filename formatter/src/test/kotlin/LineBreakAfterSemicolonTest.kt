@@ -18,6 +18,7 @@ class LineBreakAfterSemicolonTest {
             spaceAroundAssignment = true,
             spaceAroundOperators = true,
             indentation = 4,
+            ifBraceBelowLine = false,
             inlineIfBraceIfStatement = true,
         )
 
