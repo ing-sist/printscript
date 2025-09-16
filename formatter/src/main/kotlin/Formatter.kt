@@ -24,7 +24,14 @@ class Formatter(
 
             out = indentIfAtLineStart(out, curr.type, level, style)
 
-            if (out != prevOut || curr.type !is TokenType.Space) {
+            if (out != prevOut && curr.type !is TokenType.Space) {
+                out = out.write(curr.lexeme)
+            }
+            if (out == prevOut && curr.type !is TokenType.Space) {
+                out = out.write(curr.lexeme)
+            }
+
+            if (out == prevOut) {
                 out = out.write(curr.lexeme)
             }
 

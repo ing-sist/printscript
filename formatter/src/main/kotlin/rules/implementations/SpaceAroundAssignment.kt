@@ -13,7 +13,7 @@ object SpaceAroundAssignment : BeforeRule, AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
-        if (curr.type is TokenType.Assignment && style.spaceAroundAssignment) {
+        if (curr.type is TokenType.Assignment && style.spaceAroundAssignment && prev.type !is TokenType.Space) {
             result = result.space()
         }
         return result
@@ -27,7 +27,7 @@ object SpaceAroundAssignment : BeforeRule, AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
-        if (curr.type is TokenType.Assignment && style.spaceAroundAssignment) {
+        if (curr.type is TokenType.Assignment && style.spaceAroundAssignment && next.type !is TokenType.Space) {
             result = result.space()
         }
         return result
