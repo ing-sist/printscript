@@ -16,7 +16,7 @@ object DeclarationHelper {
     }
 
     private fun validateType(token: Token): Boolean =
-        token.type in listOf(TokenType.StringType, TokenType.NumberType, TokenType.BooleanType)
+        token.type in listOf(TokenType.Keyword.StringType, TokenType.Keyword.NumberType, TokenType.Keyword.BooleanType)
 
     private fun validateKeyword(token: Token): Boolean =
         token.type == TokenType.Keyword.VariableDeclaration || token.type == TokenType.Keyword.ConstDeclaration

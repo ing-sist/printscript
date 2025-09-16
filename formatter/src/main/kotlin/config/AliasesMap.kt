@@ -2,6 +2,7 @@ package config
 
 import rules.definitions.IfBraceBelowLineDef
 import rules.definitions.IndentationDef
+import rules.definitions.InlineIfBraceIfStatementDef
 import rules.definitions.LineBreakAfterSemiColonDef
 import rules.definitions.LineBreakBeforePrintlnDef
 import rules.definitions.SpaceAfterColonDef
@@ -35,10 +36,7 @@ object AliasesMap {
             "line-breaks-after-println" to Alias(LineBreakBeforePrintlnDef.id),
             "indentation-size" to Alias(IndentationDef.id),
             "indent-inside-if" to Alias(IndentationDef.id),
-            "if-brace-same-line" to
-                Alias(IfBraceBelowLineDef.id) { v ->
-                    (!asBool(v)).toString()
-                },
+            "if-brace-same-line" to Alias(InlineIfBraceIfStatementDef.id),
             "if-brace-below-line" to Alias(IfBraceBelowLineDef.id),
             "mandatory-single-space-separation" to Alias(SpaceAroundAssignmentDef.id),
         )

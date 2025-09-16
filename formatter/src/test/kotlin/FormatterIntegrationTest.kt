@@ -29,7 +29,7 @@ class FormatterIntegrationTest {
                 createToken(TokenType.Keyword.VariableDeclaration, "let"),
                 createToken(TokenType.Identifier, "x"),
                 createToken(TokenType.Colon, ":"),
-                createToken(TokenType.StringType, "string"),
+                createToken(TokenType.Keyword.StringType, "string"),
                 createToken(TokenType.Assignment, "="),
                 createToken(TokenType.StringLiteral, "\"hello\""),
                 createToken(TokenType.Semicolon, ";"),
@@ -67,7 +67,7 @@ class FormatterIntegrationTest {
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())
 
-        val expected = "if(true){\n\n    println(\"test\");\n}"
+        val expected = "if (true){\n\n    println(\"test\");\n}"
         assertEquals(expected, result.build())
     }
 

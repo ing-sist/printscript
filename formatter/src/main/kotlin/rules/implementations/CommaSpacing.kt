@@ -12,9 +12,11 @@ object CommaSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
+        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var result = out
         if (curr.type is TokenType.Comma) {
+            if (spaceForbid.beforeNext == SpaceIntent.FORBID) return out
             result = result.space()
         }
         return result
@@ -26,6 +28,7 @@ object CommaSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
+        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var result = out
         if (curr.type is TokenType.Comma) {
