@@ -13,7 +13,7 @@ object ColonSpacing : BeforeRule, AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
-        if (curr.type is TokenType.Colon && style.spaceBeforeColon) {
+        if (curr.type is TokenType.Colon && style.spaceBeforeColon && prev.type !is TokenType.Space) {
             result = result.space()
         }
         return result
@@ -27,7 +27,7 @@ object ColonSpacing : BeforeRule, AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
-        if (curr.type is TokenType.Colon && style.spaceAfterColon) {
+        if (curr.type is TokenType.Colon && style.spaceAfterColon && next.type !is TokenType.Space) {
             result = result.space()
         }
         return result
