@@ -14,7 +14,7 @@ import rules.definitions.SpaceBeforeColonDef
 import java.io.File
 
 data class FormatterStyleConfig(
-    val lineBreakAfterPrintln: Int,
+    val lineBreakBeforePrintln: Int,
     val lineBreakAfterSemicolon: Boolean,
     val spaceBeforeColon: Boolean,
     val spaceAfterColon: Boolean,
@@ -26,7 +26,7 @@ data class FormatterStyleConfig(
     companion object {
         fun fromMap(style: Map<String, Any>): FormatterStyleConfig =
             FormatterStyleConfig(
-                lineBreakAfterPrintln = style[LineBreakAfterPrintlnDef.id] as Int,
+                lineBreakBeforePrintln = style[LineBreakAfterPrintlnDef.id] as Int,
                 lineBreakAfterSemicolon = style[LineBreakAfterSemiColonDef.id] as Boolean,
                 spaceBeforeColon = style[SpaceBeforeColonDef.id] as Boolean,
                 spaceAfterColon = style[SpaceAfterColonDef.id] as Boolean,
@@ -38,7 +38,7 @@ data class FormatterStyleConfig(
 
         fun default(): FormatterStyleConfig =
             FormatterStyleConfig(
-                lineBreakAfterPrintln = 0,
+                lineBreakBeforePrintln = 0,
                 lineBreakAfterSemicolon = true,
                 spaceBeforeColon = false,
                 spaceAfterColon = true,

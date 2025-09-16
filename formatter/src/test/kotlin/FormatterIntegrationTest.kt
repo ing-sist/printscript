@@ -11,7 +11,7 @@ class FormatterIntegrationTest {
 
     private fun createDefaultConfig() =
         FormatterStyleConfig(
-            lineBreakAfterPrintln = 2,
+            lineBreakBeforePrintln = 1,
             lineBreakAfterSemicolon = true,
             spaceBeforeColon = true,
             spaceAfterColon = true,
@@ -66,7 +66,7 @@ class FormatterIntegrationTest {
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())
 
-        val expected = "if (true) {\n    println(\"test\");\n\n}"
+        val expected = "if (true) {\n\n    println(\"test\");\n}"
         assertEquals(expected, result.build())
     }
 
@@ -172,7 +172,7 @@ class FormatterIntegrationTest {
     }
 
     @Test
-    fun `formato con multiples saltos de linea despues de println`() {
+    fun `formato con multiples saltos de linea antes de println`() {
         val tokens =
             listOf(
                 createToken(TokenType.Identifier, "x"),
@@ -183,12 +183,12 @@ class FormatterIntegrationTest {
                 createToken(TokenType.RightParen, ")"),
             )
 
-        val config = createDefaultConfig().copy(lineBreakAfterPrintln = 3)
+        val config = createDefaultConfig().copy(lineBreakBeforePrintln = 3)
         val stream = MockTokenStream(tokens)
         val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())
 
-        assertEquals("x;\nprintln(\"test\")\n\n\n", result.build())
+        assertEquals("x;\n\n\n\nprintln(\"test\")", result.build())
     }
 }

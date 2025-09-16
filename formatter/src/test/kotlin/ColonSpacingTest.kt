@@ -13,7 +13,7 @@ class ColonSpacingTest {
         spaceBeforeColon: Boolean,
         spaceAfterColon: Boolean,
     ) = FormatterStyleConfig(
-        lineBreakAfterPrintln = 1,
+        lineBreakBeforePrintln = 1,
         lineBreakAfterSemicolon = true,
         spaceBeforeColon = spaceBeforeColon,
         spaceAfterColon = spaceAfterColon,
