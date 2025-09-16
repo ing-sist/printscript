@@ -13,9 +13,7 @@ object KeywordSpacing : BeforeRule, AfterRule {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder =
-        if (curr.type is TokenType.Keyword &&
-            !out.isAtLineStart()
-        ) {
+        if (curr.type is TokenType.Keyword && !out.isAtLineStart()) {
             out.space()
         } else {
             out

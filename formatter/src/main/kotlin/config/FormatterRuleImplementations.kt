@@ -9,6 +9,7 @@ import rules.implementations.LineBreakAfterSemicolon
 import rules.implementations.LineBreakBeforePrintln
 import rules.implementations.SpaceAroundAssignment
 import rules.implementations.SpaceAroundOperators
+import rules.implementations.VarDeclaration
 
 object FormatterRuleImplementations {
     val IMPLEMENTATIONS =
@@ -21,7 +22,7 @@ object FormatterRuleImplementations {
             ColonSpacing,
             SpaceAroundAssignment,
             SpaceAroundOperators,
-            // VarDeclaration,
+            VarDeclaration,
             Indentation,
         )
 }
