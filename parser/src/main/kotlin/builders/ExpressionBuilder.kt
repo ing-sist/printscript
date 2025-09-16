@@ -2,12 +2,14 @@ package builders
 
 import AstNode
 import BinaryOperationNode
+import Result
 import Token
 import TokenType
 import UnaryOperationNode
 import builders.expresionHelpers.AstNodeFactory
 import builders.expresionHelpers.OperatorPrecedenceManager
 import builders.expresionHelpers.ShuntingYardConverter
+import parser.ParseError
 import java.util.Queue
 import java.util.Stack
 
@@ -16,10 +18,19 @@ class ExpressionBuilder : AstBuilder {
     private val shuntingYardConverter = ShuntingYardConverter(operatorPrecedenceManager)
     private val astNodeFactory = AstNodeFactory()
 
-    override fun build(tokens: List<Token>): AstNode {
-        val rpnQueue = shuntingYardConverter.convertToRPN(tokens)
-        return buildASTFromRPN(rpnQueue)
-    }
+    // Existing API preserved: throws on failure
+    override fun build(tokens: List<Token>): AstNode =
+        when (val r = buildResult(tokens)) {
+            is Result.Success -> r.value
+            is Result.Failure -> throw IllegalArgumentException(r.error.toString())
+        }
+
+    // New non-throwing API
+    fun buildResult(tokens: List<Token>): Result<AstNode, ParseError> =
+        when (val rpn = shuntingYardConverter.convertToRPNResult(tokens)) {
+            is Result.Success -> Result.Success(buildASTFromRPN(rpn.value))
+            is Result.Failure -> Result.Failure(rpn.error)
+        }
 
     private fun buildASTFromRPN(rpnQueue: Queue<Any>): AstNode {
         val stack: Stack<AstNode> = Stack()
@@ -29,12 +40,10 @@ class ExpressionBuilder : AstBuilder {
                 is AstNode -> stack.push(element)
                 is Token -> {
                     if (isOperator(element)) {
-                        // Check if this is a unary operator (only one operand available)
                         if (stack.size == 1 && isUnaryOperator(element)) {
                             val operand = stack.pop()
                             stack.push(UnaryOperationNode(element, operand))
                         } else if (stack.size >= 2) {
-                            // Binary operator
                             val right = stack.pop()
                             val left = stack.pop()
                             stack.push(BinaryOperationNode(left, element, right))
