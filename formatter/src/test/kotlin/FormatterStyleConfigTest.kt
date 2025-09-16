@@ -32,7 +32,7 @@ class FormatterStyleConfigTest {
 
         val config = FormatterStyleConfig.fromMap(map)
 
-        assertEquals(3, config.lineBreakBeforePrintln)
+        assertEquals(3, config.lineBreakAfterPrintln)
         assertFalse(config.lineBreakAfterSemicolon)
         assertFalse(config.spaceBeforeColon)
         assertFalse(config.spaceAfterColon)
@@ -57,7 +57,7 @@ class FormatterStyleConfigTest {
 
         val config = FormatterStyleConfig.fromPath(configFile.absolutePath)
 
-        assertEquals(2, config.lineBreakBeforePrintln)
+        assertEquals(2, config.lineBreakAfterPrintln)
         assertFalse(config.spaceAroundAssignment)
         assertEquals(6, config.indentation)
 

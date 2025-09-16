@@ -10,7 +10,7 @@ class IndentationTest {
 
     private fun createConfig(indentation: Int) =
         FormatterStyleConfig(
-            lineBreakBeforePrintln = 1,
+            lineBreakAfterPrintln = 1,
             lineBreakAfterSemicolon = true,
             spaceBeforeColon = true,
             spaceAfterColon = true,

@@ -11,7 +11,7 @@ class FormatterIntegrationTest {
 
     private fun createDefaultConfig() =
         FormatterStyleConfig(
-            lineBreakBeforePrintln = 1,
+            lineBreakAfterPrintln = 1,
             lineBreakAfterSemicolon = true,
             spaceBeforeColon = true,
             spaceAfterColon = true,
@@ -183,7 +183,7 @@ class FormatterIntegrationTest {
                 createToken(TokenType.RightParen, ")"),
             )
 
-        val config = createDefaultConfig().copy(lineBreakBeforePrintln = 3)
+        val config = createDefaultConfig().copy(lineBreakAfterPrintln = 3)
         val stream = MockTokenStream(tokens)
         val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
 

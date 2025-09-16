@@ -11,7 +11,7 @@ class LineBreakAfterSemicolonTest {
 
     private fun createConfig(lineBreakAfterSemicolon: Boolean) =
         FormatterStyleConfig(
-            lineBreakBeforePrintln = 1,
+            lineBreakAfterPrintln = 1,
             lineBreakAfterSemicolon = lineBreakAfterSemicolon,
             spaceBeforeColon = true,
             spaceAfterColon = true,
