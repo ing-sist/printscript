@@ -24,7 +24,7 @@ class LexerTestDSL {
             // Collect all tokens until EOF
             val tokens = mutableListOf<Token>()
             do {
-                val token = lexer.nextToken()
+                val token = lexer.nextToken(false)
                 tokens.add(token)
             } while (token.type != TokenType.EOF)
 
@@ -50,7 +50,7 @@ class LexerTestDSL {
             // Collect all tokens until EOF
             val tokens = mutableListOf<Token>()
             do {
-                val token = lexer.nextToken()
+                val token = lexer.nextToken(false)
                 tokens.add(token)
             } while (token.type != TokenType.EOF)
 
