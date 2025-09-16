@@ -16,7 +16,7 @@ class AnalyzerConfig(
     companion object {
         fun fromPath(
             path: String,
-            defs: List<RuleDefinition<RuleConfig>>,
+            defs: List<RuleDefinition<out RuleConfig>>,
         ): AnalyzerConfig = AnalyzerConfig(loadAnalyzerFromFile(File(path), defs))
     }
 }
