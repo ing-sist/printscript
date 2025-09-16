@@ -12,10 +12,15 @@ object KeywordSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-    ): DocBuilder {
-        // agrego siempre un espacio, a menos q este al inicio
-        return if (curr.type is TokenType.Keyword && !out.isAtLineStart()) out.space() else out
-    }
+    ): DocBuilder =
+        if (curr.type is TokenType.Keyword &&
+            !out.isAtLineStart() &&
+            prev.type !is TokenType.Space
+        ) {
+            out.space()
+        } else {
+            out
+        }
 
     override fun after(
         prev: Token,
@@ -24,7 +29,7 @@ object KeywordSpacing : BeforeRule, AfterRule {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        if (curr.type !is TokenType.Keyword) return out
+        if (curr.type !is TokenType.Keyword && prev.type !is TokenType.Space) return out
 
         val needSpaceAfter =
             when (curr.type) {

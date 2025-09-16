@@ -44,7 +44,7 @@ class LoaderTest {
             createTempConfigFile(
                 """
             {
-              "lineBreakBeforePrintln": 2,
+              "lineBreakAfterPrintln": 2,
               "spaceAroundAssignment": false,
               "indentation": 8
             }
@@ -53,7 +53,7 @@ class LoaderTest {
 
         val result = loadFromFile(configFile, RuleDefinitions.RULES)
 
-        assertEquals(2, result["lineBreakBeforePrintln"])
+        assertEquals(2, result["lineBreakAfterPrintln"])
         assertEquals(false, result["spaceAroundAssignment"])
         assertEquals(8, result["indentation"])
 
@@ -75,7 +75,7 @@ class LoaderTest {
 
         assertEquals(6, result["indentation"])
         // Los valores por defecto deben estar presentes
-        assertTrue(result.containsKey("lineBreakBeforePrintln"))
+        assertTrue(result.containsKey("lineBreakAfterPrintln"))
         assertTrue(result.containsKey("spaceAroundAssignment"))
 
         configFile.delete()
@@ -88,7 +88,7 @@ class LoaderTest {
         val result = loadFromFile(configFile, RuleDefinitions.RULES)
 
         // Todos los valores por defecto deben estar presentes
-        assertTrue(result.containsKey("lineBreakBeforePrintln"))
+        assertTrue(result.containsKey("lineBreakAfterPrintln"))
         assertTrue(result.containsKey("lineBreakAfterSemicolon"))
         assertTrue(result.containsKey("spaceBeforeColon"))
         assertTrue(result.containsKey("spaceAfterColon"))

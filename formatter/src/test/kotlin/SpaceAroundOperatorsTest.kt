@@ -11,7 +11,7 @@ class SpaceAroundOperatorsTest {
 
     private fun createConfig(spaceAroundOperators: Boolean) =
         FormatterStyleConfig(
-            lineBreakBeforePrintln = 1,
+            lineBreakAfterPrintln = 1,
             lineBreakAfterSemicolon = true,
             spaceBeforeColon = true,
             spaceAfterColon = true,
