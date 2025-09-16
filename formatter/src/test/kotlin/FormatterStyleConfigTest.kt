@@ -1,12 +1,11 @@
 import config.FormatterStyleConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.io.File
 
 class FormatterStyleConfigTest {
-//    private val rules = RuleDefinitions.RULES
-
     private fun createTempConfigFile(content: String): File {
         val tmp =
             kotlin.io.path
@@ -20,26 +19,28 @@ class FormatterStyleConfigTest {
     fun `fromMap crea configuracion con valores especificos`() {
         val map =
             mapOf(
-                "lineBreakAfterPrintln" to 3,
-                "lineBreakAfterSemicolon" to false,
+                "lineBreakBeforePrintln" to 1,
+                "lineBreakAfterSemicolon" to true,
                 "spaceBeforeColon" to false,
                 "spaceAfterColon" to false,
                 "spaceAroundAssignment" to false,
                 "spaceAroundOperators" to false,
                 "indentation" to 8,
                 "inlineIfBraceIfStatement" to false,
+                "ifBraceBelowLine" to false,
             )
 
         val config = FormatterStyleConfig.fromMap(map)
 
-        assertEquals(3, config.lineBreakBeforePrintln)
-        assertFalse(config.lineBreakAfterSemicolon)
+        assertEquals(1, config.lineBreakBeforePrintln)
+        assertTrue(config.lineBreakAfterSemicolon)
         assertFalse(config.spaceBeforeColon)
         assertFalse(config.spaceAfterColon)
         assertFalse(config.spaceAroundAssignment)
         assertFalse(config.spaceAroundOperators)
         assertEquals(8, config.indentation)
         assertFalse(config.inlineIfBraceIfStatement)
+        assertFalse(config.ifBraceBelowLine)
     }
 
     @Test
@@ -48,7 +49,7 @@ class FormatterStyleConfigTest {
             createTempConfigFile(
                 """
             {
-              "lineBreakAfterPrintln": 2,
+              "lineBreakBeforePrintln": 2,
               "spaceAroundAssignment": false,
               "indentation": 6
             }
@@ -63,57 +64,6 @@ class FormatterStyleConfigTest {
 
         configFile.delete()
     }
-
-//    @Test
-//    fun `configuracion con todos los valores por defecto`() {
-//        val configFile =
-//            createTempConfigFile(
-//                """
-//            {
-//              "lineBreakBeforePrintln": 1,
-//              "lineBreakAfterSemicolon": true,
-//              "spaceBeforeColon": true,
-//              "spaceAfterColon": true,
-//              "spaceAroundAssignment": true,
-//              "spaceAroundOperators": true,
-//              "indentation": 4,
-//              "inlineIfBraceIfStatement": true
-//            }
-//        """,
-//            )
-//
-//        val config = FormatterStyleConfig.fromPath(configFile.absolutePath)
-//
-//        assertEquals(1, config.lineBreakBeforePrintln)
-//        assertFalse(config.lineBreakAfterSemicolon)
-//        assertFalse(config.spaceBeforeColon)
-//        assertFalse(config.spaceAfterColon)
-//        assertFalse(config.spaceAroundAssignment)
-//        assertFalse(config.spaceAroundOperators)
-//        assertEquals(4, config.indentation)
-//        assertFalse(config.inlineIfBraceIfStatement)
-//
-//        configFile.delete()
-//    }
-
-//    @Test
-//    fun `configuracion JSON vacio usa defaults`() {
-//        val configFile = createTempConfigFile("{}")
-//        val map = loadFromFile(configFile, rules)
-//        val config = FormatterStyleConfig.fromMap(map)
-//
-//        // Verifica que se usen los valores por defecto cuando el JSON está vacío
-//        assertEquals(1, config.lineBreakBeforePrintln) // default
-//        assertTrue(config.lineBreakAfterSemicolon) // default
-//        assertTrue(config.spaceBeforeColon) // default
-//        assertTrue(config.spaceAfterColon) // default
-//        assertTrue(config.spaceAroundAssignment) // default
-//        assertTrue(config.spaceAroundOperators) // default
-//        assertEquals(4, config.indentation) // default
-//        assertTrue(config.inlineIfBraceIfStatement) // default
-//
-//        configFile.delete()
-//    }
 
     @Test
     fun `configuracion con claves desconocidas las ignora`() {
@@ -137,34 +87,4 @@ class FormatterStyleConfigTest {
 
         configFile.delete()
     }
-
-//    @Test
-//    fun `configuracion parcial mezcla valores especificos con defaults`() {
-//        val configFile =
-//            createTempConfigFile(
-//                """
-//            {
-//              "lineBreakBeforePrintln": 5,
-//              "indentation": 8,
-//              "spaceAroundAssignment": false
-//            }
-//        """,
-//            )
-//
-//        val config = FormatterStyleConfig.fromPath(configFile.absolutePath)
-//
-//        // Valores especificados
-//        assertEquals(5, config.lineBreakBeforePrintln)
-//        assertEquals(8, config.indentation)
-//        assertFalse(config.spaceAroundAssignment)
-//
-//        // Valores por defecto para los no especificados
-//        assertTrue(config.lineBreakAfterSemicolon)
-//        assertTrue(config.spaceBeforeColon)
-//        assertTrue(config.spaceAfterColon)
-//        assertTrue(config.spaceAroundOperators)
-//        assertTrue(config.inlineIfBraceIfStatement)
-//
-//        configFile.delete()
-//    }
 }

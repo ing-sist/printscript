@@ -20,7 +20,8 @@ class ColonSpacingTest {
         spaceAroundAssignment = true,
         spaceAroundOperators = true,
         indentation = 4,
-        inlineIfBraceIfStatement = true,
+        ifBraceBelowLine = false,
+        inlineIfBraceIfStatement = false,
     )
 
     @Test

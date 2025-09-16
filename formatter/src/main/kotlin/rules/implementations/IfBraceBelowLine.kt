@@ -2,23 +2,20 @@ package rules.implementations
 
 import DocBuilder
 import Token
-import TokenType
 import config.FormatterStyleConfig
 
-object VarDeclaration : AfterRule {
-    override fun after(
+object IfBraceBelowLine : BeforeRule {
+    override fun before(
         prev: Token,
         curr: Token,
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
+        if (!style.ifBraceBelowLine) return out
         var result = out
-        if (curr.type is TokenType.Keyword.VariableDeclaration &&
-            next.type !is TokenType.Semicolon &&
-            next.type !is TokenType.Space
-        ) {
-            result = result.space()
+        if (curr.type is TokenType.LeftBrace) {
+            result = result.newline()
         }
         return result
     }

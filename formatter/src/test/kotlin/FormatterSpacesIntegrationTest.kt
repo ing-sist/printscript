@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class FormatterSpacesIntegrationTest {
-    private fun t(
+    fun t(
         type: TokenType,
         lex: String,
     ) = Token(type, lex, Location(1, 1, 1))
 
-    private fun defaultStyle() =
+    fun defaultStyle() =
         FormatterStyleConfig(
             lineBreakBeforePrintln = 1,
             lineBreakAfterSemicolon = true,
@@ -19,6 +19,7 @@ class FormatterSpacesIntegrationTest {
             spaceAroundOperators = true,
             indentation = 4,
             inlineIfBraceIfStatement = true,
+            ifBraceBelowLine = false,
         )
 
     // 2) Quita espacios si el estilo NO los requiere antes de ':' (spaceBeforeColon=false)

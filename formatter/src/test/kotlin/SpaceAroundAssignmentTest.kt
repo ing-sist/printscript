@@ -18,6 +18,7 @@ class SpaceAroundAssignmentTest {
             spaceAroundAssignment = spaceAroundAssignment,
             spaceAroundOperators = true,
             indentation = 4,
+            ifBraceBelowLine = false,
             inlineIfBraceIfStatement = true,
         )
 

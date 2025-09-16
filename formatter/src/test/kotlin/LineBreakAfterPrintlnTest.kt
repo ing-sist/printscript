@@ -13,12 +13,13 @@ class LineBreakAfterPrintlnTest {
         FormatterStyleConfig(
             lineBreakBeforePrintln = lineBreakAfterPrintln,
             lineBreakAfterSemicolon = true,
+            spaceBeforeColon = true,
             spaceAfterColon = true,
             spaceAroundAssignment = true,
             spaceAroundOperators = true,
             indentation = 4,
+            ifBraceBelowLine = false,
             inlineIfBraceIfStatement = true,
-            spaceBeforeColon = true,
         )
 
     @Test
