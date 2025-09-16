@@ -31,13 +31,6 @@ class Formatter(
 
             out = printTokenLexeme(out, prevOut, curr, prev)
 
-//
-//            if((out == prevOut))
-//            if ((out == prevOut)|| (curr.type !is TokenType.Space)) {
-//                if (prev.type is TokenType.Space) continue
-//                out = out.write(curr.lexeme)
-//            }
-
             out = applyAfterRules(prev, curr, next, style, out)
 
             level = updatedLevelAfter(curr.type, level)
