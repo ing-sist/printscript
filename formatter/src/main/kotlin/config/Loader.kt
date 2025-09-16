@@ -106,35 +106,38 @@ private fun parseText(
     // si no, default. Las reglas del ENGINE siempre van con su default.
     val result = mutableMapOf<String, Any>()
     for (rule in rules) {
-        if (rule.owner == RuleOwner.ENGINE) {
-            result[rule.id] = rule.default
-        } else {
-            val inputValue = raw[rule.id]
-            result[rule.id] = if (inputValue != null) rule.parse(inputValue) else rule.default
-        }
+        val inputValue = raw[rule.id]
+        val value =
+            if (rule.owner == RuleOwner.ENGINE) {
+                rule.default
+            } else if (inputValue != null) {
+                rule.parse(inputValue)
+            } else {
+                rule.default
+            }
+        println("APPLY ${rule.id} owner=${rule.owner} <- '$inputValue' => $value (default=${rule.default})")
+        result[rule.id] = value
     }
     return result
 }
 
 private fun parseEntries(inner: String): MutableMap<String, String> {
-    // Permitimos que haya comas con espacios / saltos de línea.
-    // Este parser es simple: no soporta strings con comas dentro del valor.
     val entries =
         inner
             .splitToSequence(',')
             .map { it.trim() }
             .filter { it.isNotEmpty() }
 
+    fun clean(s: String) = s.trim().removeSurrounding("\"")
+
     val raw = mutableMapOf<String, String>()
     for (e in entries) {
-        // Partimos solo en el primer ":" para tolerar valores con ":" a la derecha (mínimo)
         val idx = e.indexOf(':')
         require(idx > 0) { "Entrada inválida: $e" }
 
-        val keyRaw = e.substring(0, idx).trim().removeSurrounding("\"")
-        val valueRaw = e.substring(idx + 1).trim()
+        val keyRaw = clean(e.substring(0, idx))
+        val valueRaw = clean(e.substring(idx + 1))
 
-        // normalizamos la clave vía alias (si existe) y aplicamos transformación del valor
         val alias = ALIASES[keyRaw]
         val targetId = alias?.targetId ?: keyRaw
         val value = alias?.transform?.invoke(valueRaw) ?: valueRaw
