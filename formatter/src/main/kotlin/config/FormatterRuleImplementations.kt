@@ -4,7 +4,6 @@ import Indentation
 import InlineBraceIfStatement
 import rules.implementations.ColonSpacing
 import rules.implementations.CommaSpacing
-import rules.implementations.KeywordSpacing
 import rules.implementations.LineBreakAfterSemicolon
 import rules.implementations.LineBreakBeforePrintln
 import rules.implementations.SpaceAroundAssignment
@@ -17,7 +16,7 @@ object FormatterRuleImplementations {
             InlineBraceIfStatement,
             LineBreakBeforePrintln,
             LineBreakAfterSemicolon,
-            KeywordSpacing,
+//            KeywordSpacing,
             CommaSpacing,
             ColonSpacing,
             SpaceAroundAssignment,

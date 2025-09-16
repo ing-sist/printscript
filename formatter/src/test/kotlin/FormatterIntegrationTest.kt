@@ -66,7 +66,7 @@ class FormatterIntegrationTest {
 
         val result = formatter.format(stream, config, DocBuilder.inMemory())
 
-        val expected = "if (true) {\n\n    println(\"test\");\n}"
+        val expected = "if(true) {\n\n    println(\"test\");\n}"
         assertEquals(expected, result.build())
     }
 
