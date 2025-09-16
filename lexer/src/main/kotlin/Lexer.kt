@@ -16,11 +16,17 @@ class Lexer(
     /**
      * Returns next token. If readSpace == false, whitespace tokens are skipped.
      */
-    fun nextToken(readSpace: Boolean): Token {
+    fun nextToken(
+        readSpace: Boolean,
+        readNewline: Boolean,
+    ): Token {
         while (true) {
             val token = produceNextToken()
-            if (!readSpace && token.type is TokenType.Space) continue
-            return token
+            val skip =
+                (token.type is TokenType.Space && !readSpace) ||
+                    (token.type is TokenType.Newline && !readNewline)
+
+            if (!skip) return token
         }
     }
 
