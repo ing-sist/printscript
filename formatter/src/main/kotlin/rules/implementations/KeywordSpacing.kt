@@ -12,14 +12,10 @@ object KeywordSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var out = out
-        if (curr.type is TokenType.Keyword && !out.isAtLineStart()) {
-            if (spaceForbid.beforeNext != SpaceIntent.FORBID) {
-                out = out.space()
-                spaceForbid.forbidBefore()
-            }
+        if (curr.type is TokenType.Keyword && !out.isAtLineStart() && prev.type !is TokenType.Space) {
+            out = out.space()
         }
         return out
     }
@@ -30,7 +26,6 @@ object KeywordSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var out = out
         if (curr.type !is TokenType.Keyword) return out
@@ -43,7 +38,6 @@ object KeywordSpacing : BeforeRule, AfterRule {
             }
         if (needSpaceAfter) {
             out = out.space()
-            spaceForbid.forbidAfter()
         }
         return out
     }

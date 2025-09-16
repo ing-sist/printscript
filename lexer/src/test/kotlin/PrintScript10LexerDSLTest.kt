@@ -17,7 +17,7 @@ class PrintScript10LexerDSLTest {
                 TokenType.Keyword.VariableDeclaration,
                 TokenType.Identifier,
                 TokenType.Colon,
-                TokenType.Keyword.NumberType,
+                TokenType.NumberType,
                 TokenType.Semicolon,
             ).withLexemes("let", "x", ":", "number", ";")
             .endsWithEOF()
@@ -32,7 +32,7 @@ class PrintScript10LexerDSLTest {
             .withTokenAt(0, TokenType.Keyword.VariableDeclaration, "let")
             .withTokenAt(1, TokenType.Identifier, "name")
             .withTokenAt(2, TokenType.Colon, ":")
-            .withTokenAt(3, TokenType.Keyword.StringType, "string")
+            .withTokenAt(3, TokenType.StringType, "string")
             .withTokenAt(4, TokenType.Assignment, "=")
             .withTokenAt(5, TokenType.StringLiteral, "\"John\"")
             .withTokenAt(6, TokenType.Semicolon, ";")

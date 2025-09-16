@@ -135,7 +135,7 @@ class InterpreterCoreTests {
     fun `should reject type mismatch in declaration`() {
         // let number: number = "not a number";
         val identifier = createIdentifier("number")
-        val declaration = DeclarationNode(identifier, createToken(TokenType.Keyword.NumberType, "number"), true)
+        val declaration = DeclarationNode(identifier, createToken(TokenType.NumberType, "number"), true)
         val stringValue = createStringLiteral("not a number")
         val declarationNode = DeclarationAssignmentNode(declaration, stringValue)
 
@@ -246,7 +246,7 @@ class InterpreterCoreTests {
         isMutable: Boolean,
     ): DeclarationAssignmentNode {
         val identifier = createIdentifier(name)
-        val declaration = DeclarationNode(identifier, createToken(TokenType.Keyword.StringType, "string"), isMutable)
+        val declaration = DeclarationNode(identifier, createToken(TokenType.StringType, "string"), isMutable)
         val valueNode = createStringLiteral(value)
         return DeclarationAssignmentNode(declaration, valueNode)
     }
@@ -257,7 +257,7 @@ class InterpreterCoreTests {
         isMutable: Boolean,
     ): DeclarationAssignmentNode {
         val identifier = createIdentifier(name)
-        val declaration = DeclarationNode(identifier, createToken(TokenType.Keyword.NumberType, "number"), isMutable)
+        val declaration = DeclarationNode(identifier, createToken(TokenType.NumberType, "number"), isMutable)
         val valueNode = createNumberLiteral(value)
         return DeclarationAssignmentNode(declaration, valueNode)
     }
@@ -268,7 +268,7 @@ class InterpreterCoreTests {
         isMutable: Boolean,
     ): DeclarationAssignmentNode {
         val identifier = createIdentifier(name)
-        val declaration = DeclarationNode(identifier, createToken(TokenType.Keyword.BooleanType, "boolean"), isMutable)
+        val declaration = DeclarationNode(identifier, createToken(TokenType.BooleanType, "boolean"), isMutable)
         val valueNode = createBooleanLiteral(value)
         return DeclarationAssignmentNode(declaration, valueNode)
     }
@@ -279,7 +279,7 @@ class InterpreterCoreTests {
         isMutable: Boolean,
     ): DeclarationAssignmentNode {
         val identifier = createIdentifier(name)
-        val declaration = DeclarationNode(identifier, createToken(TokenType.Keyword.StringType, "string"), isMutable)
+        val declaration = DeclarationNode(identifier, createToken(TokenType.StringType, "string"), isMutable)
         return DeclarationAssignmentNode(declaration, value)
     }
 
@@ -289,7 +289,7 @@ class InterpreterCoreTests {
         isMutable: Boolean,
     ): DeclarationAssignmentNode {
         val identifier = createIdentifier(name)
-        val declaration = DeclarationNode(identifier, createToken(TokenType.Keyword.NumberType, "number"), isMutable)
+        val declaration = DeclarationNode(identifier, createToken(TokenType.NumberType, "number"), isMutable)
         return DeclarationAssignmentNode(declaration, value)
     }
 

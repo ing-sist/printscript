@@ -26,16 +26,10 @@ object SpaceAroundOperators : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var result = out
         if (curr.type in operators && style.spaceAroundOperators) {
             result = result.space()
-            spaceForbid.forbidBefore()
-        }
-
-        if (curr.type in operators && !style.spaceAroundOperators) {
-            spaceForbid.forbidBefore()
         }
 
         return result
@@ -47,15 +41,10 @@ object SpaceAroundOperators : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var result = out
         if (curr.type in operators && style.spaceAroundOperators) {
             result = result.space()
-            spaceForbid.forbidAfter()
-        }
-        if (curr.type in operators && !style.spaceAroundOperators) {
-            spaceForbid.forbidAfter()
         }
         return result
     }

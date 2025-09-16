@@ -20,7 +20,7 @@ class DeclarationAssignmentValidatorTest {
                 tok(TokenType.Keyword.VariableDeclaration, "let"),
                 tok(TokenType.Identifier, "x"),
                 tok(TokenType.Colon, ":"),
-                tok(TokenType.Keyword.NumberType, "number"),
+                tok(TokenType.NumberType, "number"),
                 tok(TokenType.Assignment, "="),
                 tok(TokenType.NumberLiteral, "3"),
                 tok(TokenType.Plus, "+"),
@@ -43,7 +43,7 @@ class DeclarationAssignmentValidatorTest {
                 tok(TokenType.Keyword.VariableDeclaration, "let"),
                 tok(TokenType.Identifier, "a"),
                 tok(TokenType.Colon, ":"),
-                tok(TokenType.Keyword.NumberType, "number"),
+                tok(TokenType.NumberType, "number"),
                 tok(TokenType.Semicolon, ";"),
                 tok(TokenType.EOF, "EOF"),
             )

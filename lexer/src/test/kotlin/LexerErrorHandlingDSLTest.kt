@@ -46,7 +46,7 @@ class LexerErrorHandlingDSLTest {
             .shouldTokenizeSuccessfully()
             .containingTypes(
                 TokenType.Keyword.ConstDeclaration,
-                TokenType.Keyword.BooleanType,
+                TokenType.BooleanType,
                 TokenType.BooleanLiteral,
             ).endsWithEOF()
 

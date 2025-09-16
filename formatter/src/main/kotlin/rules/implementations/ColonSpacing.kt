@@ -2,6 +2,7 @@ package rules.implementations
 
 import DocBuilder
 import Token
+import TokenType
 import config.FormatterStyleConfig
 
 object ColonSpacing : BeforeRule, AfterRule {
@@ -11,19 +12,18 @@ object ColonSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
-        if (curr.type is TokenType.Colon) {
-            return if (!style.spaceBeforeColon) {
-                spaceForbid.forbidBefore()
+        if (curr.type !is TokenType.Colon) return out
+
+        return if (!style.spaceBeforeColon) {
+            out
+        } else {
+            if (out.isAtLineStart()) {
                 out
             } else {
-                val r = if (!out.isAtLineStart()) out.space() else out
-                spaceForbid.forbidBefore()
-                r
+                out.space()
             }
         }
-        return out
     }
 
     override fun after(
@@ -32,17 +32,9 @@ object ColonSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
-        var result = out
-        if (curr.type is TokenType.Colon && style.spaceAfterColon && next.type !is TokenType.Space) {
-            result = result.space()
-            spaceForbid.forbidAfter()
-        }
-        if (curr.type is TokenType.Colon && !style.spaceBeforeColon) {
-            spaceForbid.forbidAfter()
-        }
+        if (curr.type !is TokenType.Colon || !style.spaceAfterColon) return out
 
-        return result
+        return out.space()
     }
 }

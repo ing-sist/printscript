@@ -1,6 +1,5 @@
 import config.FormatterStyleConfig
 import rules.implementations.BeforeRule
-import rules.implementations.SpaceForbid
 
 object InlineBraceIfStatement : BeforeRule {
     override fun before(
@@ -9,7 +8,6 @@ object InlineBraceIfStatement : BeforeRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
         if (!style.inlineIfBraceIfStatement) return out
         var result = out

@@ -2,7 +2,6 @@ import config.FormatterStyleConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import rules.implementations.LineBreakAfterSemicolon
-import rules.implementations.SpaceForbid
 
 class LineBreakAfterSemicolonTest {
     private fun createToken(
@@ -30,9 +29,8 @@ class LineBreakAfterSemicolonTest {
         val next = createToken(TokenType.Identifier, "x")
         val config = createConfig(lineBreakAfterSemicolon = true)
         val doc = DocBuilder.inMemory().write("x = 5;")
-        val spaceForbid = SpaceForbid()
 
-        val result = LineBreakAfterSemicolon.after(prev, curr, next, config, doc, spaceForbid)
+        val result = LineBreakAfterSemicolon.after(prev, curr, next, config, doc)
 
         assertEquals("x = 5;\n", result.build())
     }
@@ -44,9 +42,8 @@ class LineBreakAfterSemicolonTest {
         val next = createToken(TokenType.Identifier, "x")
         val config = createConfig(lineBreakAfterSemicolon = false)
         val doc = DocBuilder.inMemory().write("x = 5;")
-        val spaceForbid = SpaceForbid()
 
-        val result = LineBreakAfterSemicolon.after(prev, curr, next, config, doc, spaceForbid)
+        val result = LineBreakAfterSemicolon.after(prev, curr, next, config, doc)
 
         assertEquals("x = 5;", result.build())
     }
@@ -58,9 +55,8 @@ class LineBreakAfterSemicolonTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(lineBreakAfterSemicolon = true)
         val doc = DocBuilder.inMemory().write("x =")
-        val spaceForbid = SpaceForbid()
 
-        val result = LineBreakAfterSemicolon.after(prev, curr, next, config, doc, spaceForbid)
+        val result = LineBreakAfterSemicolon.after(prev, curr, next, config, doc)
 
         assertEquals("x =", result.build())
     }

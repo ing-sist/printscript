@@ -7,13 +7,13 @@ sealed interface TokenType {
         data object Else : Keyword
 
         data object ConstDeclaration : Keyword
-
-        data object StringType : Keyword
-
-        data object NumberType : Keyword
-
-        data object BooleanType : Keyword
     }
+
+    data object StringType : TokenType
+
+    data object NumberType : TokenType
+
+    data object BooleanType : TokenType
 
     data object FunctionCall : TokenType
 

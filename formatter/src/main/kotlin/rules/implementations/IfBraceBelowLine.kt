@@ -11,7 +11,6 @@ object IfBraceBelowLine : BeforeRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
         if (!style.ifBraceBelowLine) return out
         var result = out
