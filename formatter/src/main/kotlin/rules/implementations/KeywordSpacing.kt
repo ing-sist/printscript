@@ -12,12 +12,15 @@ object KeywordSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-    ): DocBuilder =
+    ): DocBuilder {
+        val out = out
         if (curr.type is TokenType.Keyword && !out.isAtLineStart()) {
-            out.space()
-        } else {
-            out
+            if (next.type !is TokenType.Space) {
+                return out.space()
+            }
         }
+        return out
+    }
 
     override fun after(
         prev: Token,
