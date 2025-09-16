@@ -28,7 +28,6 @@ class Formatter(
                 curr = tokenStream.consume()
                 continue
             }
-
             out = printTokenLexeme(out, prevOut, curr, prev)
 
             out = applyAfterRules(prev, curr, next, style, out)

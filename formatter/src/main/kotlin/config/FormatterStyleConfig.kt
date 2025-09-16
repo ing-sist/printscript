@@ -1,6 +1,5 @@
 package config
 
-import config.RuleDefinitions.RULES
 import loadStyleMapFromFile
 import loadStyleMapFromString
 import rules.definitions.IfBraceBelowLineDef
@@ -65,8 +64,8 @@ data class FormatterStyleConfig(
                 inlineIfBraceIfStatement = false,
             )
 
-        fun fromJson(json: String): FormatterStyleConfig = fromMap(loadStyleMapFromString(json, RULES))
+        fun fromJson(json: String): FormatterStyleConfig = fromMap(loadStyleMapFromString(json))
 
-        fun fromPath(path: String): FormatterStyleConfig = fromMap(loadStyleMapFromFile(File(path), RULES))
+        fun fromPath(path: String): FormatterStyleConfig = fromMap(loadStyleMapFromFile(File(path)))
     }
 }

@@ -1,83 +1,62 @@
+// RuleRegistry.kt
 package config
 
-import Indentation
-import InlineBraceIfStatement
 import parseEntries
-import rules.definitions.CommaSpacingDef
-import rules.definitions.IfBraceBelowLineDef
-import rules.definitions.IndentationDef
-import rules.definitions.InlineIfBraceIfStatementDef
-import rules.definitions.KeywordDef
-import rules.definitions.LineBreakAfterSemiColonDef
-import rules.definitions.LineBreakBeforePrintlnDef
 import rules.definitions.Rule
-import rules.definitions.SpaceAfterColonDef
-import rules.definitions.SpaceAroundAssignmentDef
-import rules.definitions.SpaceAroundOperatorsDef
-import rules.definitions.SpaceBeforeColonDef
-import rules.implementations.ColonSpacing
-import rules.implementations.CommaSpacing
-import rules.implementations.IfBraceBelowLine
-import rules.implementations.KeywordSpacing
-import rules.implementations.LineBreakAfterSemicolon
-import rules.implementations.LineBreakBeforePrintln
 import rules.implementations.RuleImplementation
-import rules.implementations.SpaceAroundAssignment
-import rules.implementations.SpaceAroundOperators
 import java.io.File
+import java.util.LinkedHashMap
 
-val RULE_TO_IMPL: Map<String, RuleImplementation> =
-    mapOf(
-        SpaceAroundAssignmentDef.id to SpaceAroundAssignment,
-        SpaceAroundOperatorsDef.id to SpaceAroundOperators,
-        SpaceBeforeColonDef.id to ColonSpacing,
-        SpaceAfterColonDef.id to ColonSpacing,
-        LineBreakAfterSemiColonDef.id to LineBreakAfterSemicolon,
-        LineBreakBeforePrintlnDef.id to LineBreakBeforePrintln,
-        InlineIfBraceIfStatementDef.id to InlineBraceIfStatement,
-        IndentationDef.id to Indentation,
-        IfBraceBelowLineDef.id to IfBraceBelowLine,
-        CommaSpacingDef.id to CommaSpacing,
-        KeywordDef.id to KeywordSpacing,
-    )
+// --- NUEVO: mapas mutables internos ---
+private val defsMutable = LinkedHashMap<String, Rule<*>>()
+private val implsMutable = LinkedHashMap<String, RuleImplementation>()
+
+// Exposición solo de lectura
+val RULE_DEFS_BY_ID: Map<String, Rule<*>> get() = defsMutable
+val RULE_TO_IMPL: Map<String, RuleImplementation> get() = implsMutable
+
+// --- NUEVO: APIs de autoregistro ---
+fun registerDef(def: Rule<*>) {
+    defsMutable[def.id] = def
+}
+
+fun registerImpl(
+    id: String,
+    impl: RuleImplementation,
+) {
+    implsMutable[id] = impl
+}
+
+// --- Helpers públicos ---
+fun allRuleDefs(): List<Rule<*>> = RULE_DEFS_BY_ID.values.toList()
 
 fun selectImplementations(activeIds: Set<String>): List<RuleImplementation> = activeIds.mapNotNull { RULE_TO_IMPL[it] }
 
-fun activeImplementationsFromJson(
-    json: String,
-    defs: List<Rule<*>>,
-): List<RuleImplementation> {
-    // 1) Engine ids
-    val engineIds = defs.filter { it.owner == RuleOwner.ENGINE }.map { it.id }.toSet()
+// --- Activación SIN pasar defs ---
+fun activeImplementationsFromJson(json: String): List<RuleImplementation> {
+    val engineIds =
+        RULE_DEFS_BY_ID.values
+            .filter { it.owner == RuleOwner.ENGINE }
+            .map { it.id }
+            .toSet()
 
-    // 2) User ids (normalizados con alias)
     val inner =
         json
             .trim()
             .removePrefix("{")
             .removeSuffix("}")
             .trim()
-    val userIds: Set<String> =
+    val userIds =
         if (inner.isBlank()) {
             emptySet()
         } else {
-            parseEntries(inner).keys // tu parseEntries ya aplica alias+transform
+            parseEntries(inner).keys.toSet() // ya normaliza aliases
         }
 
-    // 3) Engine impls + User impls
-    val impls = mutableListOf<RuleImplementation>()
-    impls += engineIds.mapNotNull { RULE_TO_IMPL[it] }
-    impls += userIds.mapNotNull { RULE_TO_IMPL[it] }
-
-    return impls.distinct()
+    val active = engineIds + userIds
+    return selectImplementations(active).distinct()
 }
 
-fun activeImplementationsFromFile(
-    file: File,
-    defs: List<Rule<*>>,
-): List<RuleImplementation> = activeImplementationsFromJson(file.readText(), defs)
+fun activeImplementationsFromFile(file: File): List<RuleImplementation> = activeImplementationsFromJson(file.readText())
 
-fun activeImplementationsFromPath(
-    path: String,
-    defs: List<Rule<*>>,
-): List<RuleImplementation> = activeImplementationsFromFile(File(path), defs)
+fun activeImplementationsFromPath(path: String): List<RuleImplementation> = activeImplementationsFromFile(File(path))

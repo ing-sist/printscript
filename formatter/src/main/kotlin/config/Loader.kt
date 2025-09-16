@@ -1,5 +1,6 @@
 import config.AliasesMap.ALIASES
 import config.RuleOwner
+import config.allRuleDefs
 import rules.definitions.Rule
 import java.io.File
 
@@ -77,3 +78,7 @@ fun parseEntries(inner: String): Map<String, String> {
             targetId to value
         }.toMap()
 }
+
+fun loadStyleMapFromString(json: String): Map<String, Any> = styleMapFromText(json, allRuleDefs())
+
+fun loadStyleMapFromFile(file: File): Map<String, Any> = styleMapFromText(file.readText(), allRuleDefs())
