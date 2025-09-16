@@ -11,7 +11,7 @@ object InlineBraceIfStatement : BeforeRule {
     ): DocBuilder {
         if (!style.inlineIfBraceIfStatement) return out
         var result = out
-        if (curr.type is TokenType.LeftBrace) result = result.space()
+        if (curr.type is TokenType.LeftBrace && prev.type !is TokenType.Space) result = result.space()
         return result
     }
 }

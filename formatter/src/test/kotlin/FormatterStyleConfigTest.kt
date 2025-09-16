@@ -20,7 +20,7 @@ class FormatterStyleConfigTest {
     fun `fromMap crea configuracion con valores especificos`() {
         val map =
             mapOf(
-                "lineBreakBeforePrintln" to 3,
+                "lineBreakAfterPrintln" to 3,
                 "lineBreakAfterSemicolon" to false,
                 "spaceBeforeColon" to false,
                 "spaceAfterColon" to false,
@@ -48,7 +48,7 @@ class FormatterStyleConfigTest {
             createTempConfigFile(
                 """
             {
-              "lineBreakBeforePrintln": 2,
+              "lineBreakAfterPrintln": 2,
               "spaceAroundAssignment": false,
               "indentation": 6
             }

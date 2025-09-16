@@ -2,8 +2,8 @@ package config
 
 import rules.definitions.IndentationDef
 import rules.definitions.InlineIfBraceIfStatementDef
+import rules.definitions.LineBreakAfterPrintlnDef
 import rules.definitions.LineBreakAfterSemiColonDef
-import rules.definitions.LineBreakBeforePrintlnDef
 import rules.definitions.SpaceAfterColonDef
 import rules.definitions.SpaceAroundAssignmentDef
 import rules.definitions.SpaceAroundOperatorsDef
@@ -32,7 +32,7 @@ object AliasesMap {
                 },
             "mandatory-space-surrounding-operations" to Alias(SpaceAroundOperatorsDef.id),
             "mandatory-line-break-after-statement" to Alias(LineBreakAfterSemiColonDef.id),
-            "line-breaks-after-println" to Alias(LineBreakBeforePrintlnDef.id),
+            "line-breaks-after-println" to Alias(LineBreakAfterPrintlnDef.id),
             "indentation-size" to Alias(IndentationDef.id),
             "indent-inside-if" to Alias(IndentationDef.id),
             "if-brace-same-line" to Alias(InlineIfBraceIfStatementDef.id),

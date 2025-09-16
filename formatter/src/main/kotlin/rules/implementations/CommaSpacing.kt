@@ -14,7 +14,7 @@ object CommaSpacing : BeforeRule, AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
-        if (curr.type is TokenType.Colon) {
+        if (curr.type is TokenType.Colon && prev.type !is TokenType.Space) {
             result = result.space()
         }
         return result
@@ -28,7 +28,7 @@ object CommaSpacing : BeforeRule, AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
-        if (curr.type is TokenType.Comma) {
+        if (curr.type is TokenType.Comma && prev.type !is TokenType.Space) {
             result = result.space()
         }
         return result

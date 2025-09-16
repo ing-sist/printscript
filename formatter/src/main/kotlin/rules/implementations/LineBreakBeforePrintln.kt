@@ -12,7 +12,6 @@ object LineBreakBeforePrintln : BeforeRule {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        if (style.lineBreakBeforePrintln == 0) return out
         var result = out
         if (curr.lexeme.lowercase() == "println") {
             repeat(style.lineBreakBeforePrintln) {
