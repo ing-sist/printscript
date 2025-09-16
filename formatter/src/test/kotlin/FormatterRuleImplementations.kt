@@ -1,7 +1,3 @@
-package config
-
-import Indentation
-import InlineBraceIfStatement
 import rules.implementations.ColonSpacing
 import rules.implementations.CommaSpacing
 import rules.implementations.IfBraceBelowLine

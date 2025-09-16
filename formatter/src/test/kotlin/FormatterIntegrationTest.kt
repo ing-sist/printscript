@@ -1,4 +1,4 @@
-import config.FormatterRuleImplementations
+import FormatterRuleImplementations
 import config.FormatterStyleConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
