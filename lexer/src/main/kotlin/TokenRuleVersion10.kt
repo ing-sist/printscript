@@ -7,6 +7,7 @@ class TokenRuleVersion10 : TokenRule {
         linkedMapOf(
             // Espacios en blanco
             "\\s+" to TokenType.Space,
+            "\n" to TokenType.Newline,
             // Keywords (word boundaries for exact matches)
             "\\blet\\b" to TokenType.Keyword.VariableDeclaration,
             "\\bprintln\\b" to TokenType.FunctionCall,

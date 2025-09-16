@@ -72,4 +72,6 @@ sealed interface TokenType {
     data object Space : TokenType
 
     data object ERROR : TokenType
+
+    data object Newline : TokenType
 }

@@ -24,14 +24,14 @@ class Formatter(
 
             out = indentIfAtLineStart(out, curr.type, level, style)
 
-            if (out != prevOut && curr.type !is TokenType.Space) {
+            if (out != prevOut && curr.type !is TokenType.Space && curr.type !is TokenType.Newline) {
                 out = out.write(curr.lexeme)
             }
-            if (out == prevOut && curr.type !is TokenType.Space) {
+            if (out == prevOut && curr.type !is TokenType.Space && curr.type !is TokenType.Newline) {
                 out = out.write(curr.lexeme)
             }
 
-            if (out == prevOut && !out.isAtLineStart()) {
+            if (out == prevOut && !out.isAtLineStart() && curr.type !is TokenType.Newline) {
                 out = out.write(curr.lexeme)
             }
 
