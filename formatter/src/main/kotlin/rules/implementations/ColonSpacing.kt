@@ -34,7 +34,6 @@ object ColonSpacing : BeforeRule, AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         if (curr.type !is TokenType.Colon || !style.spaceAfterColon) return out
-
         return out.space()
     }
 }
