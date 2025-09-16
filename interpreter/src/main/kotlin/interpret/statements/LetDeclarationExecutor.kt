@@ -18,9 +18,9 @@ class LetDeclarationExecutor(
     ): Result<Unit, InterpreterException> {
         val psType =
             when (node.declaration.type.type) {
-                TokenType.NumberType -> PSType.NUMBER
-                TokenType.StringType -> PSType.STRING
-                TokenType.BooleanType -> PSType.BOOLEAN
+                TokenType.Keyword.NumberType -> PSType.NUMBER
+                TokenType.Keyword.StringType -> PSType.STRING
+                TokenType.Keyword.BooleanType -> PSType.BOOLEAN
                 else -> return Result.Failure(InterpreterException("Unknown type: ${node.declaration.type.type}"))
             }
 

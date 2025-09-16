@@ -14,10 +14,11 @@ object KeywordSpacing : BeforeRule, AfterRule {
         out: DocBuilder,
         spaceForbid: SpaceForbid,
     ): DocBuilder {
-        val out = out
+        var out = out
         if (curr.type is TokenType.Keyword && !out.isAtLineStart()) {
-            if (next.type !is TokenType.Space) {
-                return out.space()
+            if (spaceForbid.beforeNext != SpaceIntent.FORBID) {
+                out = out.space()
+                spaceForbid.forbidBefore()
             }
         }
         return out
@@ -31,6 +32,7 @@ object KeywordSpacing : BeforeRule, AfterRule {
         out: DocBuilder,
         spaceForbid: SpaceForbid,
     ): DocBuilder {
+        var out = out
         if (curr.type !is TokenType.Keyword) return out
 
         val needSpaceAfter =
@@ -39,6 +41,10 @@ object KeywordSpacing : BeforeRule, AfterRule {
                 is TokenType.Keyword.VariableDeclaration -> next.type is TokenType.Identifier
                 else -> false
             }
-        return if (needSpaceAfter) out.space() else out
+        if (needSpaceAfter) {
+            out = out.space()
+            spaceForbid.forbidAfter()
+        }
+        return out
     }
 }
