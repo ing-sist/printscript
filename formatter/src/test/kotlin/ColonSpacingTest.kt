@@ -2,6 +2,7 @@ import config.FormatterStyleConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import rules.implementations.ColonSpacing
+import rules.implementations.SpaceForbid
 
 class ColonSpacingTest {
     private fun createToken(
@@ -31,8 +32,9 @@ class ColonSpacingTest {
         val next = createToken(TokenType.StringType, "string")
         val config = createConfig(spaceBeforeColon = true, spaceAfterColon = false)
         val doc = DocBuilder.inMemory().write("x")
+        val spaceForbid = SpaceForbid()
 
-        val result = ColonSpacing.before(prev, curr, next, config, doc)
+        val result = ColonSpacing.before(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("x ", result.build())
     }
@@ -44,8 +46,9 @@ class ColonSpacingTest {
         val next = createToken(TokenType.StringType, "string")
         val config = createConfig(spaceBeforeColon = false, spaceAfterColon = false)
         val doc = DocBuilder.inMemory().write("x")
+        val spaceForbid = SpaceForbid()
 
-        val result = ColonSpacing.before(prev, curr, next, config, doc)
+        val result = ColonSpacing.before(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("x", result.build())
     }
@@ -57,8 +60,9 @@ class ColonSpacingTest {
         val next = createToken(TokenType.StringType, "string")
         val config = createConfig(spaceBeforeColon = false, spaceAfterColon = true)
         val doc = DocBuilder.inMemory().write("x:")
+        val spaceForbid = SpaceForbid()
 
-        val result = ColonSpacing.after(prev, curr, next, config, doc)
+        val result = ColonSpacing.after(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("x: ", result.build())
     }
@@ -70,8 +74,9 @@ class ColonSpacingTest {
         val next = createToken(TokenType.StringType, "string")
         val config = createConfig(spaceBeforeColon = false, spaceAfterColon = false)
         val doc = DocBuilder.inMemory().write("x:")
+        val spaceForbid = SpaceForbid()
 
-        val result = ColonSpacing.after(prev, curr, next, config, doc)
+        val result = ColonSpacing.after(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("x:", result.build())
     }
@@ -82,12 +87,13 @@ class ColonSpacingTest {
         val curr = createToken(TokenType.Colon, ":")
         val next = createToken(TokenType.StringType, "string")
         val config = createConfig(spaceBeforeColon = true, spaceAfterColon = true)
+        val spaceForbid = SpaceForbid()
 
         val doc1 = DocBuilder.inMemory().write("x")
-        val result1 = ColonSpacing.before(prev, curr, next, config, doc1)
+        val result1 = ColonSpacing.before(prev, curr, next, config, doc1, spaceForbid)
 
         val doc2 = result1.write(":")
-        val result2 = ColonSpacing.after(prev, curr, next, config, doc2)
+        val result2 = ColonSpacing.after(prev, curr, next, config, doc2, spaceForbid)
 
         assertEquals("x : ", result2.build())
     }
@@ -99,9 +105,10 @@ class ColonSpacingTest {
         val next = createToken(TokenType.NumberLiteral, "5")
         val config = createConfig(spaceBeforeColon = true, spaceAfterColon = true)
         val doc = DocBuilder.inMemory().write("x")
+        val spaceForbid = SpaceForbid()
 
-        val beforeResult = ColonSpacing.before(prev, curr, next, config, doc)
-        val afterResult = ColonSpacing.after(prev, curr, next, config, doc)
+        val beforeResult = ColonSpacing.before(prev, curr, next, config, doc, spaceForbid)
+        val afterResult = ColonSpacing.after(prev, curr, next, config, doc, spaceForbid)
 
         assertEquals("x", beforeResult.build())
         assertEquals("x", afterResult.build())

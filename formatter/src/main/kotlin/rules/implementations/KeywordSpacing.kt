@@ -12,6 +12,7 @@ object KeywordSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
+        spaceForbid: SpaceForbid,
     ): DocBuilder {
         val out = out
         if (curr.type is TokenType.Keyword && !out.isAtLineStart()) {
@@ -28,6 +29,7 @@ object KeywordSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
+        spaceForbid: SpaceForbid,
     ): DocBuilder {
         if (curr.type !is TokenType.Keyword) return out
 

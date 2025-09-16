@@ -12,11 +12,17 @@ object VarDeclaration : AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
+        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var result = out
+
+        if (curr.type is TokenType.Keyword.VariableDeclaration && next.type !is TokenType.Space) {
+            spaceForbid.forbidAfter()
+            return result
+        }
+
         if (curr.type is TokenType.Keyword.VariableDeclaration &&
-            next.type !is TokenType.Semicolon &&
-            next.type !is TokenType.Space
+            next.type !is TokenType.Semicolon
         ) {
             result = result.space()
         }
