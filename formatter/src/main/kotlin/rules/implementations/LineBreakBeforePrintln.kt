@@ -13,6 +13,7 @@ object LineBreakBeforePrintln : BeforeRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
+        if (style.lineBreakBeforePrintln == 0) return result
         if (curr.lexeme.lowercase() == "println") {
             repeat(style.lineBreakBeforePrintln) {
                 result = result.newline()

@@ -22,6 +22,8 @@ class LineBreakRulesTest {
         indentation = 4,
         ifBraceBelowLine = false,
         inlineIfBraceIfStatement = true,
+        spaceBetweenTokens = false,
+        keywordSpacing = false,
     )
 
     // -------------------------------

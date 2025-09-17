@@ -20,6 +20,8 @@ class SpaceAroundAssignmentTest {
             indentation = 4,
             ifBraceBelowLine = false,
             inlineIfBraceIfStatement = true,
+            spaceBetweenTokens = false,
+            keywordSpacing = false,
         )
 
     @Test

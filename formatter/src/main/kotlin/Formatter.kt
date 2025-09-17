@@ -25,9 +25,11 @@ class Formatter(
             out = indentIfAtLineStart(out, curr.type, level, style)
 
             if (curr.type is TokenType.Newline) {
-                curr = tokenStream.consume()
-                continue
+                curr = next
+                out = applyBeforeRules(prev, curr, next, style, out)
+                out = indentIfAtLineStart(out, curr.type, level, style)
             }
+
             out = printTokenLexeme(out, prevOut, curr, prev)
 
             out = applyAfterRules(prev, curr, next, style, out)

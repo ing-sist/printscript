@@ -24,6 +24,8 @@ class FormatterTest {
         indentation = indentation,
         ifBraceBelowLine = false,
         inlineIfBraceIfStatement = true,
+        spaceBetweenTokens = false,
+        keywordSpacing = true,
     )
 
     // Mock rule para testing

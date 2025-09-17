@@ -8,6 +8,11 @@ class DocBuilder private constructor(
         fun to(target: Appendable): DocBuilder = DocBuilder(target, true)
     }
 
+    fun getLastSent(): Char? {
+        val sb = out as? StringBuilder ?: return null
+        return if (sb.isEmpty()) null else sb[sb.length - 1]
+    }
+
     fun isAtLineStart(): Boolean = lineStart
 
     fun write(s: String): DocBuilder = DocBuilder(out.append(s), lineStart = false)

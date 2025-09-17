@@ -5,12 +5,14 @@ import loadStyleMapFromString
 import rules.definitions.IfBraceBelowLineDef
 import rules.definitions.IndentationDef
 import rules.definitions.InlineIfBraceIfStatementDef
+import rules.definitions.KeywordDef
 import rules.definitions.LineBreakAfterSemiColonDef
 import rules.definitions.LineBreakBeforePrintlnDef
 import rules.definitions.SpaceAfterColonDef
 import rules.definitions.SpaceAroundAssignmentDef
 import rules.definitions.SpaceAroundOperatorsDef
 import rules.definitions.SpaceBeforeColonDef
+import rules.definitions.SpaceBetweenTokensDef
 import java.io.File
 
 data class FormatterStyleConfig(
@@ -23,6 +25,8 @@ data class FormatterStyleConfig(
     val indentation: Int,
     val inlineIfBraceIfStatement: Boolean,
     val ifBraceBelowLine: Boolean,
+    val spaceBetweenTokens: Boolean,
+    val keywordSpacing: Boolean,
 ) {
     companion object {
         fun fromMap(style: Map<String, Any>): FormatterStyleConfig {
@@ -48,6 +52,8 @@ data class FormatterStyleConfig(
                 indentation = int(IndentationDef.id, d.indentation),
                 ifBraceBelowLine = bool(IfBraceBelowLineDef.id, d.ifBraceBelowLine),
                 inlineIfBraceIfStatement = bool(InlineIfBraceIfStatementDef.id, d.inlineIfBraceIfStatement),
+                spaceBetweenTokens = bool(SpaceBetweenTokensDef.id, d.spaceBetweenTokens),
+                keywordSpacing = bool(KeywordDef.id, d.keywordSpacing),
             )
         }
 
@@ -62,6 +68,8 @@ data class FormatterStyleConfig(
                 indentation = 4,
                 ifBraceBelowLine = false,
                 inlineIfBraceIfStatement = false,
+                spaceBetweenTokens = false,
+                keywordSpacing = false,
             )
 
         fun fromJson(json: String): FormatterStyleConfig = fromMap(loadStyleMapFromString(json))

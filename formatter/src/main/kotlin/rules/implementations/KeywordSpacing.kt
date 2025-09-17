@@ -13,11 +13,15 @@ object KeywordSpacing : BeforeRule, AfterRule {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        var out = out
-        if (curr.type is TokenType.Keyword && !out.isAtLineStart() && prev.type !is TokenType.Space) {
-            out = out.space()
+        var newOut = out
+        if (curr.type !is TokenType.Keyword.VariableDeclaration) return newOut
+        if (!out.isAtLineStart() ||
+            prev.type !is TokenType.Space ||
+            out.getLastSent().toString() != " "
+        ) {
+            newOut = out.space()
         }
-        return out
+        return newOut
     }
 
     override fun after(
@@ -27,9 +31,20 @@ object KeywordSpacing : BeforeRule, AfterRule {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        val out = out
-        if (curr.type !is TokenType.Keyword || next.type is TokenType.Space) return out
+        var newOut = out
+        if (curr.type !is TokenType.Keyword.VariableDeclaration ||
+            next.type is TokenType.Space
+        ) {
+            return newOut
+        }
 
-        return out.space()
+        if (!out.isAtLineStart() ||
+            prev.type !is TokenType.Space ||
+            out.getLastSent().toString() != " "
+        ) {
+            newOut = newOut.space()
+        }
+
+        return newOut.space()
     }
 }

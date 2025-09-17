@@ -20,6 +20,8 @@ class LineBreakAfterPrintlnTest {
             indentation = 4,
             ifBraceBelowLine = false,
             inlineIfBraceIfStatement = true,
+            spaceBetweenTokens = false,
+            keywordSpacing = true,
         )
 
     @Test

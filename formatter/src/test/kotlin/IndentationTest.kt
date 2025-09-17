@@ -19,6 +19,8 @@ class IndentationTest {
             indentation = indentation,
             ifBraceBelowLine = false,
             inlineIfBraceIfStatement = true,
+            spaceBetweenTokens = false,
+            keywordSpacing = true,
         )
 
     @Test
