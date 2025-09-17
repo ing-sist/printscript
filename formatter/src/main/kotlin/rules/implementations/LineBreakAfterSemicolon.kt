@@ -16,7 +16,7 @@ object LineBreakAfterSemicolon : AfterRule {
         var result = out
         if (curr.type is TokenType.Semicolon && style.lineBreakAfterSemicolon) {
             if (next.type is TokenType.EOF) return result
-            result = result.newline()
+            result.newline()
         }
 
         return result
