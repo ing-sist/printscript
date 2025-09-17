@@ -31,18 +31,11 @@ object KeywordSpacing : BeforeRule, AfterRule {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        var newOut = out
+        val newOut = out
         if (curr.type !is TokenType.Keyword.VariableDeclaration ||
             next.type is TokenType.Space
         ) {
             return newOut
-        }
-
-        if (!out.isAtLineStart() ||
-            prev.type !is TokenType.Space ||
-            out.getLastSent().toString() != " "
-        ) {
-            newOut = newOut.space()
         }
 
         return newOut.space()

@@ -14,11 +14,9 @@ object SpaceBetweenTokens : AfterRule {
     ): DocBuilder {
         var newOut = out
         if (!style.spaceBetweenTokens) return newOut
-        if ((
-                curr.type !is TokenType.Space &&
-                    out.getLastSent().toString() != " " &&
-                    !out.isAtLineStart()
-            )
+        if (curr.type !is TokenType.Space &&
+            out.getLastSent().toString() != " " &&
+            !out.isAtLineStart()
         ) {
             newOut = newOut.space()
         }

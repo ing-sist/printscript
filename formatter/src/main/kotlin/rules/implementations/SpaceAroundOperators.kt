@@ -28,6 +28,9 @@ object SpaceAroundOperators : BeforeRule, AfterRule {
         out: DocBuilder,
     ): DocBuilder {
         var result = out
+        if (out.getLastSent().toString() == " " || prev.type is TokenType.Space) {
+            return result
+        }
         if (curr.type in operators && style.spaceAroundOperators) {
             result = result.space()
         }

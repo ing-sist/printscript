@@ -15,7 +15,10 @@ object ColonSpacing : BeforeRule, AfterRule {
     ): DocBuilder {
         if (curr.type !is TokenType.Colon) return out
 
-        return if (!style.spaceBeforeColon || prev.type is TokenType.Space) {
+        return if (!style.spaceBeforeColon ||
+            prev.type is TokenType.Space ||
+            out.getLastSent().toString() == " "
+        ) {
             out
         } else {
             if (out.isAtLineStart()) {
@@ -33,7 +36,7 @@ object ColonSpacing : BeforeRule, AfterRule {
         style: FormatterStyleConfig,
         out: DocBuilder,
     ): DocBuilder {
-        if (curr.type !is TokenType.Colon || !style.spaceAfterColon) return out
+        if (curr.type !is TokenType.Colon || !style.spaceAfterColon || next.type is TokenType.Space) return out
         return out.space()
     }
 }
