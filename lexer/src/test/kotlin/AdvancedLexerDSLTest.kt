@@ -94,7 +94,7 @@ class AdvancedLexerDSLTest {
             .withTokenAt(0, TokenType.Keyword.ConstDeclaration, "const")
             .withTokenAt(1, TokenType.Identifier, "flag")
             .withTokenAt(2, TokenType.Colon, ":")
-            .withTokenAt(3, TokenType.Keyword.BooleanType, "boolean")
+            .withTokenAt(3, TokenType.BooleanType, "boolean")
             .withTokenAt(4, TokenType.Assignment, "=")
             .withTokenAt(5, TokenType.BooleanLiteral, "true")
             .withTokenAt(6, TokenType.Semicolon, ";")
@@ -169,7 +169,7 @@ class AdvancedLexerDSLTest {
                 TokenType.Keyword.Else,
                 TokenType.Keyword.ConstDeclaration,
                 TokenType.Keyword.VariableDeclaration,
-                TokenType.Keyword.BooleanType,
+                TokenType.BooleanType,
                 TokenType.BooleanLiteral,
                 TokenType.LeftBrace,
                 TokenType.RightBrace,

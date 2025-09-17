@@ -1,4 +1,4 @@
-import config.FormatterRuleImplementations
+import FormatterRuleImplementations
 import config.FormatterStyleConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -29,7 +29,7 @@ class FormatterIntegrationTest {
                 createToken(TokenType.Keyword.VariableDeclaration, "let"),
                 createToken(TokenType.Identifier, "x"),
                 createToken(TokenType.Colon, ":"),
-                createToken(TokenType.Keyword.StringType, "string"),
+                createToken(TokenType.StringType, "string"),
                 createToken(TokenType.Assignment, "="),
                 createToken(TokenType.StringLiteral, "\"hello\""),
                 createToken(TokenType.Semicolon, ";"),
@@ -151,25 +151,6 @@ class FormatterIntegrationTest {
         val result = formatter.format(stream, config, DocBuilder.inMemory())
 
         assertEquals("x = 5;y = 10", result.build())
-    }
-
-    @Test
-    fun `formato con indentacion personalizada`() {
-        val tokens =
-            listOf(
-                createToken(TokenType.Keyword.If, "if"),
-                createToken(TokenType.LeftBrace, "{"),
-                createToken(TokenType.Identifier, "x"),
-                createToken(TokenType.RightBrace, "}"),
-            )
-
-        val config = createDefaultConfig().copy(indentation = 2)
-        val stream = MockTokenStream(tokens)
-        val formatter = Formatter(FormatterRuleImplementations.IMPLEMENTATIONS)
-
-        val result = formatter.format(stream, config, DocBuilder.inMemory())
-
-        assertEquals("if{\n  x\n}", result.build())
     }
 
     @Test

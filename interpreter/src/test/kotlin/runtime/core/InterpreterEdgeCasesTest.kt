@@ -59,7 +59,7 @@ class InterpreterEdgeCasesTest {
                 "readInput",
                 LiteralNode(Token(TokenType.StringLiteral, "\"Enter: \"", Location(0, 0, 0))),
             )
-        val declaration = createDeclarationWithExpression("input", TokenType.Keyword.StringType, readInputCall, true)
+        val declaration = createDeclarationWithExpression("input", TokenType.StringType, readInputCall, true)
 
         val result = interpreter.execute(declaration)
         assertTrue(result.isSuccess)
@@ -73,7 +73,7 @@ class InterpreterEdgeCasesTest {
                 "readEnv",
                 LiteralNode(Token(TokenType.StringLiteral, "\"TEST_ENV\"", Location(0, 0, 0))),
             )
-        val declaration = createDeclarationWithExpression("env", TokenType.Keyword.StringType, readEnvCall, true)
+        val declaration = createDeclarationWithExpression("env", TokenType.StringType, readEnvCall, true)
 
         val result = interpreter.execute(declaration)
         assertTrue(result.isSuccess)
@@ -88,7 +88,7 @@ class InterpreterEdgeCasesTest {
                 Token(TokenType.Plus, "+", Location(0, 0, 0)),
                 LiteralNode(Token(TokenType.NumberLiteral, "3", Location(0, 0, 0))),
             )
-        val declaration = createDeclarationWithExpression("result", TokenType.Keyword.NumberType, addition, true)
+        val declaration = createDeclarationWithExpression("result", TokenType.NumberType, addition, true)
 
         val result = interpreter.execute(declaration)
         assertTrue(result.isSuccess)
@@ -149,7 +149,7 @@ class InterpreterEdgeCasesTest {
     ) = DeclarationAssignmentNode(
         DeclarationNode(
             IdentifierNode(Token(TokenType.Identifier, name, Location(0, 0, 0)), name),
-            Token(TokenType.Keyword.NumberType, "number", Location(0, 0, 0)),
+            Token(TokenType.NumberType, "number", Location(0, 0, 0)),
             isMutable,
         ),
         LiteralNode(Token(TokenType.NumberLiteral, value.toString(), Location(0, 0, 0))),

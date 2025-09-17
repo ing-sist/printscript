@@ -1,8 +1,7 @@
 package config
 
-import config.RuleDefinitions.RULES
-import loadFromFile
-import loadFromString
+import loadStyleMapFromFile
+import loadStyleMapFromString
 import rules.definitions.IfBraceBelowLineDef
 import rules.definitions.IndentationDef
 import rules.definitions.InlineIfBraceIfStatementDef
@@ -26,34 +25,47 @@ data class FormatterStyleConfig(
     val ifBraceBelowLine: Boolean,
 ) {
     companion object {
-        fun fromMap(style: Map<String, Any>): FormatterStyleConfig =
-            FormatterStyleConfig(
-                lineBreakBeforePrintln = style[LineBreakBeforePrintlnDef.id] as Int,
-                lineBreakAfterSemicolon = style[LineBreakAfterSemiColonDef.id] as Boolean,
-                spaceBeforeColon = style[SpaceBeforeColonDef.id] as Boolean,
-                spaceAfterColon = style[SpaceAfterColonDef.id] as Boolean,
-                spaceAroundAssignment = style[SpaceAroundAssignmentDef.id] as Boolean,
-                spaceAroundOperators = style[SpaceAroundOperatorsDef.id] as Boolean,
-                indentation = style[IndentationDef.id] as Int,
-                ifBraceBelowLine = style[IfBraceBelowLineDef.id] as Boolean,
-                inlineIfBraceIfStatement = style[InlineIfBraceIfStatementDef.id] as Boolean,
+        fun fromMap(style: Map<String, Any>): FormatterStyleConfig {
+            val d = default()
+
+            fun bool(
+                key: String,
+                fallback: Boolean,
+            ): Boolean = (style[key] as? Boolean) ?: fallback
+
+            fun int(
+                key: String,
+                fallback: Int,
+            ): Int = (style[key] as? Number)?.toInt() ?: fallback
+
+            return FormatterStyleConfig(
+                lineBreakBeforePrintln = int(LineBreakBeforePrintlnDef.id, d.lineBreakBeforePrintln),
+                lineBreakAfterSemicolon = bool(LineBreakAfterSemiColonDef.id, d.lineBreakAfterSemicolon),
+                spaceBeforeColon = bool(SpaceBeforeColonDef.id, d.spaceBeforeColon),
+                spaceAfterColon = bool(SpaceAfterColonDef.id, d.spaceAfterColon),
+                spaceAroundAssignment = bool(SpaceAroundAssignmentDef.id, d.spaceAroundAssignment),
+                spaceAroundOperators = bool(SpaceAroundOperatorsDef.id, d.spaceAroundOperators),
+                indentation = int(IndentationDef.id, d.indentation),
+                ifBraceBelowLine = bool(IfBraceBelowLineDef.id, d.ifBraceBelowLine),
+                inlineIfBraceIfStatement = bool(InlineIfBraceIfStatementDef.id, d.inlineIfBraceIfStatement),
             )
+        }
 
         fun default(): FormatterStyleConfig =
             FormatterStyleConfig(
                 lineBreakBeforePrintln = 0,
                 lineBreakAfterSemicolon = true,
                 spaceBeforeColon = false,
-                spaceAfterColon = true,
-                spaceAroundAssignment = true,
-                spaceAroundOperators = true,
+                spaceAfterColon = false,
+                spaceAroundAssignment = false,
+                spaceAroundOperators = false,
                 indentation = 4,
                 ifBraceBelowLine = false,
                 inlineIfBraceIfStatement = false,
             )
 
-        fun fromJson(json: String): FormatterStyleConfig = fromMap(loadFromString(json, RULES))
+        fun fromJson(json: String): FormatterStyleConfig = fromMap(loadStyleMapFromString(json))
 
-        fun fromPath(path: String): FormatterStyleConfig = fromMap(loadFromFile(File(path), RULES))
+        fun fromPath(path: String): FormatterStyleConfig = fromMap(loadStyleMapFromFile(File(path)))
     }
 }

@@ -12,14 +12,10 @@ object KeywordSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
         var out = out
-        if (curr.type is TokenType.Keyword && !out.isAtLineStart()) {
-            if (spaceForbid.beforeNext != SpaceIntent.FORBID) {
-                out = out.space()
-                spaceForbid.forbidBefore()
-            }
+        if (curr.type is TokenType.Keyword && !out.isAtLineStart() && prev.type !is TokenType.Space) {
+            out = out.space()
         }
         return out
     }
@@ -30,21 +26,10 @@ object KeywordSpacing : BeforeRule, AfterRule {
         next: Token,
         style: FormatterStyleConfig,
         out: DocBuilder,
-        spaceForbid: SpaceForbid,
     ): DocBuilder {
-        var out = out
-        if (curr.type !is TokenType.Keyword) return out
+        val out = out
+        if (curr.type !is TokenType.Keyword || next.type is TokenType.Space) return out
 
-        val needSpaceAfter =
-            when (curr.type) {
-                is TokenType.Keyword.If -> next.type is TokenType.LeftParen
-                is TokenType.Keyword.VariableDeclaration -> next.type is TokenType.Identifier
-                else -> false
-            }
-        if (needSpaceAfter) {
-            out = out.space()
-            spaceForbid.forbidAfter()
-        }
-        return out
+        return out.space()
     }
 }

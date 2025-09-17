@@ -18,7 +18,7 @@ class PrintScript11LexerDSLTest {
                 TokenType.Keyword.ConstDeclaration,
                 TokenType.Identifier,
                 TokenType.Colon,
-                TokenType.Keyword.NumberType,
+                TokenType.NumberType,
                 TokenType.Assignment,
                 TokenType.NumberLiteral,
                 TokenType.Semicolon,
@@ -33,7 +33,7 @@ class PrintScript11LexerDSLTest {
         lexCode11("let isActive: boolean = true; let isDisabled: boolean = false;")
             .shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.Keyword.BooleanType,
+                TokenType.BooleanType,
                 TokenType.BooleanLiteral,
             ).withTokenAt(5, TokenType.BooleanLiteral, "true") // Fixed index
             .withTokenAt(12, TokenType.BooleanLiteral, "false") // Fixed index
@@ -118,7 +118,7 @@ class PrintScript11LexerDSLTest {
                 TokenType.Keyword.VariableDeclaration,
                 TokenType.Identifier,
                 TokenType.Colon,
-                TokenType.Keyword.StringType,
+                TokenType.StringType,
                 TokenType.Assignment,
                 TokenType.StringLiteral,
                 TokenType.Semicolon,
@@ -138,7 +138,7 @@ class PrintScript11LexerDSLTest {
             .containingTypes(
                 TokenType.Keyword.VariableDeclaration,
                 TokenType.Keyword.ConstDeclaration,
-                TokenType.Keyword.BooleanType,
+                TokenType.BooleanType,
                 TokenType.BooleanLiteral,
             ).withTokenCountExcludingEOF(21)
             .endsWithEOF()
@@ -176,7 +176,7 @@ class PrintScript11LexerDSLTest {
                 TokenType.Keyword.ConstDeclaration,
                 TokenType.Keyword.If,
                 TokenType.Keyword.Else,
-                TokenType.Keyword.BooleanType,
+                TokenType.BooleanType,
                 TokenType.BooleanLiteral,
                 TokenType.BooleanLiteral,
             ).withLexemes("const", "if", "else", "boolean", "true", "false")
@@ -208,10 +208,10 @@ class PrintScript11LexerDSLTest {
             .shouldTokenizeSuccessfully()
             .containingTypes(
                 TokenType.BooleanLiteral,
-                TokenType.Keyword.BooleanType,
-            ).withTokenAt(3, TokenType.Keyword.BooleanType, "boolean")
+                TokenType.BooleanType,
+            ).withTokenAt(3, TokenType.BooleanType, "boolean")
             .withTokenAt(5, TokenType.BooleanLiteral, "true")
-            .withTokenAt(10, TokenType.Keyword.BooleanType, "boolean")
+            .withTokenAt(10, TokenType.BooleanType, "boolean")
             .withTokenAt(12, TokenType.BooleanLiteral, "false")
             .endsWithEOF()
     }
@@ -223,7 +223,7 @@ class PrintScript11LexerDSLTest {
             .shouldTokenizeSuccessfully()
             .containingTypes(
                 TokenType.Keyword.VariableDeclaration,
-                TokenType.Keyword.BooleanType,
+                TokenType.BooleanType,
                 TokenType.BooleanLiteral,
                 TokenType.Keyword.If,
                 TokenType.Identifier,

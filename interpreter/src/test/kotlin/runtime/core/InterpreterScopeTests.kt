@@ -204,7 +204,7 @@ class InterpreterScopeTests {
         value: String,
     ): DeclarationAssignmentNode {
         val identifier = createIdentifier(name)
-        val declaration = DeclarationNode(identifier, createToken(TokenType.Keyword.StringType, "string"), true)
+        val declaration = DeclarationNode(identifier, createToken(TokenType.StringType, "string"), true)
         val valueNode = createStringLiteral(value)
         return DeclarationAssignmentNode(declaration, valueNode)
     }
@@ -214,7 +214,7 @@ class InterpreterScopeTests {
         value: Double,
     ): DeclarationAssignmentNode {
         val identifier = createIdentifier(name)
-        val declaration = DeclarationNode(identifier, createToken(TokenType.Keyword.NumberType, "number"), true)
+        val declaration = DeclarationNode(identifier, createToken(TokenType.NumberType, "number"), true)
         val valueNode = createNumberLiteral(value)
         return DeclarationAssignmentNode(declaration, valueNode)
     }
@@ -224,7 +224,7 @@ class InterpreterScopeTests {
         value: Boolean,
     ): DeclarationAssignmentNode {
         val identifier = createIdentifier(name)
-        val declaration = DeclarationNode(identifier, createToken(TokenType.Keyword.BooleanType, "boolean"), true)
+        val declaration = DeclarationNode(identifier, createToken(TokenType.BooleanType, "boolean"), true)
         val valueNode = createBooleanLiteral(value)
         return DeclarationAssignmentNode(declaration, valueNode)
     }

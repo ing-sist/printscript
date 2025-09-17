@@ -2,7 +2,6 @@ import config.FormatterStyleConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import rules.implementations.LineBreakBeforePrintln
-import rules.implementations.SpaceForbid
 
 class LineBreakAfterPrintlnTest {
     private fun createToken(
@@ -30,9 +29,8 @@ class LineBreakAfterPrintlnTest {
         val next = createToken(TokenType.LeftParen, "(")
         val config = createConfig(lineBreakAfterPrintln = 0)
         val doc = DocBuilder.inMemory().write("x = 5;")
-        val spaceForbid = SpaceForbid()
 
-        val result = LineBreakBeforePrintln.before(prev, curr, next, config, doc, spaceForbid)
+        val result = LineBreakBeforePrintln.before(prev, curr, next, config, doc)
 
         assertEquals("x = 5;", result.build())
     }
@@ -44,9 +42,8 @@ class LineBreakAfterPrintlnTest {
         val next = createToken(TokenType.LeftParen, "(")
         val config = createConfig(lineBreakAfterPrintln = 2)
         val doc = DocBuilder.inMemory().write("x = 5;")
-        val spaceForbid = SpaceForbid()
 
-        val result = LineBreakBeforePrintln.before(prev, curr, next, config, doc, spaceForbid)
+        val result = LineBreakBeforePrintln.before(prev, curr, next, config, doc)
 
         assertEquals("x = 5;", result.build())
     }

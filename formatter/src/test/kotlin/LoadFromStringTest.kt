@@ -3,10 +3,11 @@ import org.junit.jupiter.api.Test
 import rules.definitions.SpaceAfterColonDef
 import rules.definitions.SpaceBeforeColonDef
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class LoadFromStringTest {
     @Test
-    fun `loadFromString parses simple json`() {
+    fun `loadStyleMapFromString parsea json simple (solo USER)`() {
         val json =
             """
             {
@@ -15,20 +16,18 @@ class LoadFromStringTest {
             }
             """.trimIndent()
 
-        val result = loadFromString(json, RULES)
+        val result = loadStyleMapFromString(json, RULES)
 
+        // Solo devuelve lo provisto por el usuario
+        assertEquals(setOf(SpaceBeforeColonDef.id, SpaceAfterColonDef.id), result.keys)
         assertEquals(false, result[SpaceBeforeColonDef.id])
         assertEquals(true, result[SpaceAfterColonDef.id])
     }
 
     @Test
-    fun `loadFromString with empty json returns defaults`() {
+    fun `loadStyleMapFromString con json vacio devuelve mapa vacio`() {
         val json = "{}"
-        val result = loadFromString(json, RULES)
-
-        // Todos los ids de las RULES deben estar presentes con sus defaults
-        for (rule in RULES) {
-            assertEquals(rule.default, result[rule.id])
-        }
+        val result = loadStyleMapFromString(json, RULES)
+        assertTrue(result.isEmpty())
     }
 }

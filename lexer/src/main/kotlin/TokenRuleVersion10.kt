@@ -12,8 +12,8 @@ class TokenRuleVersion10 : TokenRule {
             "\\blet\\b" to TokenType.Keyword.VariableDeclaration,
             "\\bprintln\\b" to TokenType.FunctionCall,
             // Data types
-            "\\bstring\\b" to TokenType.Keyword.StringType,
-            "\\bnumber\\b" to TokenType.Keyword.NumberType,
+            "\\bstring\\b" to TokenType.StringType,
+            "\\bnumber\\b" to TokenType.NumberType,
             // String Literals (both single and double quotes as per PrintScript spec)
             "\"([^\"\\\\]|\\\\.)*\"" to TokenType.StringLiteral,
             "'([^'\\\\]|\\\\.)*'" to TokenType.StringLiteral,
