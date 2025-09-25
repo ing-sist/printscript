@@ -22,10 +22,10 @@ class TokenRuleVersion10 : TokenRule {
             "\\d+" to TokenType.NumberLiteral, // Then integers
             // Single character operators and symbols
             "=" to TokenType.Assignment,
-            "\\+" to TokenType.Plus,
-            "-" to TokenType.Minus,
-            "\\*" to TokenType.Multiply,
-            "/" to TokenType.Divide,
+            "\\+" to TokenType.Operator.Plus,
+            "-" to TokenType.Operator.Minus,
+            "\\*" to TokenType.Operator.Multiply,
+            "/" to TokenType.Operator.Divide,
             ":" to TokenType.Colon,
             ";" to TokenType.Semicolon,
             "\\(" to TokenType.LeftParen,

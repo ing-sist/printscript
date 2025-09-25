@@ -39,7 +39,7 @@ class InterpreterOperationsTests {
         val addition =
             createBinaryOperation(
                 createNumberLiteral(5.0),
-                TokenType.Plus,
+                TokenType.Operator.Plus,
                 createNumberLiteral(3.0),
             )
         val declaration = createNumberDeclarationWithExpression("result", addition)
@@ -112,7 +112,7 @@ class InterpreterOperationsTests {
         val concatenation =
             createBinaryOperation(
                 createStringLiteral("Hello"),
-                TokenType.Plus,
+                TokenType.Operator.Plus,
                 createStringLiteral(" World"),
             )
         val declaration = createStringDeclarationWithExpression("result", concatenation)

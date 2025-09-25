@@ -30,7 +30,7 @@ class DocBuilder private constructor(
     fun build(): String {
         val sb =
             out as? StringBuilder
-                ?: error("DocBuilder not in memory")
+                ?: error("old.DocBuilder not in memory")
         return sb.toString()
     }
 }

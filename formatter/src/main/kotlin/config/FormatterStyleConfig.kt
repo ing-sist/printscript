@@ -1,79 +1,15 @@
 package config
 
-import loadStyleMapFromFile
-import loadStyleMapFromString
-import rules.definitions.IfBraceBelowLineDef
-import rules.definitions.IndentationDef
-import rules.definitions.InlineIfBraceIfStatementDef
-import rules.definitions.KeywordDef
-import rules.definitions.LineBreakAfterSemiColonDef
-import rules.definitions.LineBreakBeforePrintlnDef
-import rules.definitions.SpaceAfterColonDef
-import rules.definitions.SpaceAroundAssignmentDef
-import rules.definitions.SpaceAroundOperatorsDef
-import rules.definitions.SpaceBeforeColonDef
-import rules.definitions.SpaceBetweenTokensDef
-import java.io.File
-
-data class FormatterStyleConfig(
-    val lineBreakBeforePrintln: Int,
-    val lineBreakAfterSemicolon: Boolean,
-    val spaceBeforeColon: Boolean,
-    val spaceAfterColon: Boolean,
-    val spaceAroundAssignment: Boolean,
-    val spaceAroundOperators: Boolean,
-    val indentation: Int,
-    val inlineIfBraceIfStatement: Boolean,
-    val ifBraceBelowLine: Boolean,
-    val spaceBetweenTokens: Boolean,
-    val keywordSpacing: Boolean,
+class FormatterStyleConfig(
+    private val values: Map<RuleDef<*>, Any> = emptyMap(),
 ) {
-    companion object {
-        fun fromMap(style: Map<String, Any>): FormatterStyleConfig {
-            val d = default()
+    @Suppress("UNCHECKED_CAST")
+    operator fun <T> get(key: RuleDef<T>): T? = (values[key] as? T) ?: key.default
 
-            fun bool(
-                key: String,
-                fallback: Boolean,
-            ): Boolean = (style[key] as? Boolean) ?: fallback
+    fun <T> contains(key: RuleDef<T>): Boolean = values.containsKey(key)
 
-            fun int(
-                key: String,
-                fallback: Int,
-            ): Int = (style[key] as? Number)?.toInt() ?: fallback
+    fun keys(): Set<RuleDef<*>> = values.keys
 
-            return FormatterStyleConfig(
-                lineBreakBeforePrintln = int(LineBreakBeforePrintlnDef.id, d.lineBreakBeforePrintln),
-                lineBreakAfterSemicolon = bool(LineBreakAfterSemiColonDef.id, d.lineBreakAfterSemicolon),
-                spaceBeforeColon = bool(SpaceBeforeColonDef.id, d.spaceBeforeColon),
-                spaceAfterColon = bool(SpaceAfterColonDef.id, d.spaceAfterColon),
-                spaceAroundAssignment = bool(SpaceAroundAssignmentDef.id, d.spaceAroundAssignment),
-                spaceAroundOperators = bool(SpaceAroundOperatorsDef.id, d.spaceAroundOperators),
-                indentation = int(IndentationDef.id, d.indentation),
-                ifBraceBelowLine = bool(IfBraceBelowLineDef.id, d.ifBraceBelowLine),
-                inlineIfBraceIfStatement = bool(InlineIfBraceIfStatementDef.id, d.inlineIfBraceIfStatement),
-                spaceBetweenTokens = bool(SpaceBetweenTokensDef.id, d.spaceBetweenTokens),
-                keywordSpacing = bool(KeywordDef.id, d.keywordSpacing),
-            )
-        }
+    fun merge(override: FormatterStyleConfig): FormatterStyleConfig = FormatterStyleConfig(values + override.values)
 
-        fun default(): FormatterStyleConfig =
-            FormatterStyleConfig(
-                lineBreakBeforePrintln = 0,
-                lineBreakAfterSemicolon = true,
-                spaceBeforeColon = false,
-                spaceAfterColon = false,
-                spaceAroundAssignment = false,
-                spaceAroundOperators = false,
-                indentation = 4,
-                ifBraceBelowLine = false,
-                inlineIfBraceIfStatement = false,
-                spaceBetweenTokens = false,
-                keywordSpacing = false,
-            )
-
-        fun fromJson(json: String): FormatterStyleConfig = fromMap(loadStyleMapFromString(json))
-
-        fun fromPath(path: String): FormatterStyleConfig = fromMap(loadStyleMapFromFile(File(path)))
-    }
 }

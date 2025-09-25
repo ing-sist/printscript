@@ -35,13 +35,13 @@ class BinaryOperationEvaluator(
         return try {
             val result =
                 when (operator) {
-                    TokenType.Plus -> evaluateAddition(left, right)
-                    TokenType.Minus, TokenType.Multiply, TokenType.Divide ->
+                    TokenType.Operator.Plus -> evaluateAddition(left, right)
+                    TokenType.Operator.Minus, TokenType.Operator.Multiply, TokenType.Operator.Divide ->
                         evaluateArithmeticOperation(left, right, operator)
-                    TokenType.Equals, TokenType.NotEquals ->
+                    TokenType.Operator.Equals, TokenType.Operator.NotEquals ->
                         evaluateEqualityOperation(left, right, operator)
-                    TokenType.LessThan, TokenType.LessThanOrEqual,
-                    TokenType.GreaterThan, TokenType.GreaterThanOrEqual,
+                    TokenType.Operator.LessThan, TokenType.Operator.LessThanOrEqual,
+                    TokenType.Operator.GreaterThan, TokenType.Operator.GreaterThanOrEqual,
                     ->
                         evaluateComparisonOperation(left, right, operator)
                     else -> return Result.Failure(InterpreterException("Unsupported binary operator: $operator"))
@@ -63,9 +63,9 @@ class BinaryOperationEvaluator(
     ): PSValue {
         val operation: (Double, Double) -> Double =
             when (operator) {
-                TokenType.Minus -> { a, b -> a - b }
-                TokenType.Multiply -> { a, b -> a * b }
-                TokenType.Divide -> { a, b -> a / b }
+                TokenType.Operator.Minus -> { a, b -> a - b }
+                TokenType.Operator.Multiply -> { a, b -> a * b }
+                TokenType.Operator.Divide -> { a, b -> a / b }
                 else -> throw InterpreterException("Invalid arithmetic operator: $operator")
             }
         return evaluateArithmetic(left, right, operation)
@@ -78,8 +78,8 @@ class BinaryOperationEvaluator(
     ): PSValue {
         val isEqual = areEqual(left, right)
         return when (operator) {
-            TokenType.Equals -> PSBoolean(isEqual)
-            TokenType.NotEquals -> PSBoolean(!isEqual)
+            TokenType.Operator.Equals -> PSBoolean(isEqual)
+            TokenType.Operator.NotEquals -> PSBoolean(!isEqual)
             else -> throw InterpreterException("Invalid equality operator: $operator")
         }
     }
@@ -91,10 +91,10 @@ class BinaryOperationEvaluator(
     ): PSValue {
         val operation: (Double, Double) -> Boolean =
             when (operator) {
-                TokenType.LessThan -> { a, b -> a < b }
-                TokenType.LessThanOrEqual -> { a, b -> a <= b }
-                TokenType.GreaterThan -> { a, b -> a > b }
-                TokenType.GreaterThanOrEqual -> { a, b -> a >= b }
+                TokenType.Operator.LessThan -> { a, b -> a < b }
+                TokenType.Operator.LessThanOrEqual -> { a, b -> a <= b }
+                TokenType.Operator.GreaterThan -> { a, b -> a > b }
+                TokenType.Operator.GreaterThanOrEqual -> { a, b -> a >= b }
                 else -> throw InterpreterException("Invalid comparison operator: $operator")
             }
         return evaluateComparison(left, right, operation)

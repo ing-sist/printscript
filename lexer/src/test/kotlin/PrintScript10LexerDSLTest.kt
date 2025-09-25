@@ -47,7 +47,7 @@ class PrintScript10LexerDSLTest {
             .containingTypes(
                 TokenType.Keyword.VariableDeclaration,
                 TokenType.NumberLiteral,
-                TokenType.Plus,
+                TokenType.Operator.Plus,
                 TokenType.Multiply,
             ).withTokenCountExcludingEOF(11)
             .endsWithEOF()
@@ -98,7 +98,7 @@ class PrintScript10LexerDSLTest {
             .containingTypes(
                 TokenType.LeftParen,
                 TokenType.RightParen,
-                TokenType.Plus,
+                TokenType.Operator.Plus,
                 TokenType.Divide,
             ).withTokenCountExcludingEOF(13)
             .endsWithEOF()
@@ -138,7 +138,7 @@ class PrintScript10LexerDSLTest {
         lexCode10("let result: number = a + b - c * d / e;")
             .shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.Plus,
+                TokenType.Operator.Plus,
                 TokenType.Minus,
                 TokenType.Multiply,
                 TokenType.Divide,
