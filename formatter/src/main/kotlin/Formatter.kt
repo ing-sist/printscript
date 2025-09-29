@@ -154,3 +154,4 @@ class Formatter(
             else -> level
         }
 }
+
