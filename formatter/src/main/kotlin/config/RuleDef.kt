@@ -135,3 +135,15 @@ object KeywordSpacingAfterDef : RuleDef<Boolean> {
             ?: error("keyword's rule must be a boolean")
 }
 
+object BraceLineBreakDef : RuleDef<Int> {
+    override val default: Int = 1
+    override val id: String = "BraceLineBreak"
+    override fun parse(json: JsonPrimitive): Int {
+        val jsonInt = json.intOrNull
+        if (jsonInt == null || jsonInt < 0) {
+            error("# line breaks is an integer greater than 0")
+        }
+        return jsonInt
+    }
+
+}

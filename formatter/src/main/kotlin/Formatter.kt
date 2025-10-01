@@ -58,16 +58,18 @@ class Formatter(
                 out = out.write(curr.lexeme)
             }
 
-            if(curr.type is TokenType.Space) {
+            if(curr.type is TokenType.Space && !out.lastWasNewline()) {
 
+                val prevIsRightBrace = prev.type is TokenType.RightBrace
                 while (tokenStream.peek(0).type is TokenType.Space) {
                     tokenStream.consume()
                 }
 
+
                 val spaceAllowedAfterPrev = applyAfterSpacingRules(prev, style)
                 val spaceAllowedBeforeNext = applyBeforeSpacingRules(tokenStream.peek(0), style)
                 val keepSpace = (spaceAllowedAfterPrev == null) && (spaceAllowedBeforeNext == null)
-                if (keepSpace && !out.isAtLineStart() && !out.lastWasSpace()) out = out.space()
+                if (keepSpace && !out.isAtLineStart() && !out.lastWasSpace() && !prevIsRightBrace) out = out.space()
             }
 
             if(afterNewline != null) {
