@@ -32,11 +32,23 @@ class Formatter(
                 repeat(beforeNewline) { out = out.newline() }
             }
 
-            out = indentIfAtLineStart(out, curr.type, level, style)
+            if (out.isAtLineStart() && curr.type !is TokenType.Space) {
+                if (curr.type is TokenType.RightBrace) {
+                    level = if (level == 0) 0
+                    else {
+                        level - 1
+                    }
+                }
+                val indentSize = style[IndentationDef] ?: IndentationDef.default
+                out = out.indent(level * indentSize)
+            }
+
+
+//            out = indentIfAtLineStart(out, curr.type, level, style)
             // aca ya imprimo token y espacio si corresponden
-            if(beforeNewline == 0 && curr.type !is TokenType.Space) { // si no aplique newline, me fijo de espacio
+            if(beforeNewline == 0 && curr.type !is TokenType.Space && !out.isAtLineStart()) { // si no aplique newline, me fijo de espacio
                 when (beforeSpacing) {
-                    true -> { if(out.getLastSent().toString() != " "){ out = out.space() } } // si ya agregue un space, no agrego otro
+                    true -> { if(!out.lastWasSpace()){ out = out.space() } } // si ya agregue un space, no agrego otro
                     false, null -> { }
                 // si alguien me prohibe o da igual y no hay, no aplico
                 }
@@ -47,10 +59,15 @@ class Formatter(
             }
 
             if(curr.type is TokenType.Space) {
+
+                while (tokenStream.peek(0).type is TokenType.Space) {
+                    tokenStream.consume()
+                }
+
                 val spaceAllowedAfterPrev = applyAfterSpacingRules(prev, style)
                 val spaceAllowedBeforeNext = applyBeforeSpacingRules(tokenStream.peek(0), style)
                 val keepSpace = (spaceAllowedAfterPrev == null) && (spaceAllowedBeforeNext == null)
-                if (keepSpace && !out.isAtLineStart()) out = out.space()
+                if (keepSpace && !out.isAtLineStart() && !out.lastWasSpace()) out = out.space()
             }
 
             if(afterNewline != null) {
@@ -59,14 +76,18 @@ class Formatter(
 
             if(afterNewline == 0 && curr.type !is TokenType.Space) {
                 when (afterSpacing) {
-                    true -> { if(out.getLastSent().toString() != " "){ out = out.space() }
+                    true -> { if(!out.lastWasSpace()){ out = out.space() }
                     } // si ya agregue un space, no agrego otro
                     false, null -> { }
                     // si alguien me prohibe o da igual y no hay, no aplico
                 }
             }
 
-            level = updatedLevelAfter(curr.type, level)
+            level = when (curr.type) {
+                is TokenType.LeftBrace  -> level + 1
+                is TokenType.RightBrace -> (level - 1).coerceAtLeast(0)
+                else -> level
+            }
             prev = curr
             curr = tokenStream.consume()
 
@@ -85,6 +106,16 @@ class Formatter(
             if (currType is TokenType.RightBrace) (level - 1).coerceAtLeast(0) else level
         return out.indent(visibleLevel * (style[IndentationDef] ?: IndentationDef.default))
     }
+
+    private fun updatedLevelAfter(
+        currType: TokenType,
+        level: Int,
+    ): Int =
+        when (currType) {
+            is TokenType.LeftBrace -> level + 1
+            is TokenType.RightBrace -> (level - 1).coerceAtLeast(0)
+            else -> level
+        }
 
     private fun peekNextNonBlankType(ts: TokenStream): TokenType {
         var i = 0
@@ -106,7 +137,7 @@ class Formatter(
         curr: Token,
         style: FormatterStyleConfig,
         out: DocBuilder
-    ): Int? {
+    ): Int {
         var need = 0
         for (rule in rules) {
             if (rule is NewlineBeforeRule) {
@@ -168,15 +199,5 @@ class Formatter(
         }
         return if (putSpace == true) true else null
     }
-
-    private fun updatedLevelAfter(
-        currType: TokenType,
-        level: Int,
-    ): Int =
-        when (currType) {
-            is TokenType.LeftBrace -> level + 1
-            is TokenType.RightBrace -> (level - 1).coerceAtLeast(0)
-            else -> level
-        }
 }
 

@@ -2,7 +2,7 @@ package config
 
 import MaxSpaceBetweenTokens
 import impl.newlines.BelowLineBraceIfStatement
-import impl.spaces.Indentation
+import impl.newlines.BraceIndentation
 import impl.spaces.InlineBraceIfStatement
 import impl.spaces.KeywordSpacingAfter
 import impl.newlines.LineBreakAfterSemiColon
@@ -18,7 +18,7 @@ object ForceRulesInit {
         SpaceAroundAssignment
         InlineBraceIfStatement
         BelowLineBraceIfStatement
-        Indentation
+        BraceIndentation
         LineBreakAfterSemiColon
         LineBreakBeforePrintln
         MaxSpaceBetweenTokens

@@ -60,7 +60,6 @@ object LineBreakBeforePrintlnDef : RuleDef<Int> {
     override val default: Int? = null
     override val id: String = "LineBreakBeforePrintln"
 
-    
 
     override fun parse(json: JsonPrimitive): Int {
         val jsonInt = json.intOrNull
@@ -93,7 +92,7 @@ object MaxSpaceBetweenTokensDef : RuleDef<Boolean> {
 }
 
 object IndentationDef : RuleDef<Int> {
-    override val default = 4
+    override val default = 2
     override val id: String = "Indentation"
 
     

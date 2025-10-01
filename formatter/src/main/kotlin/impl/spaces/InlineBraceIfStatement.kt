@@ -18,9 +18,7 @@ object InlineBraceIfStatement : SpaceBeforeRule {
         curr: Token,
         style: FormatterStyleConfig,
     ): Boolean? {
-        var result: Boolean? = true
-        if(style[InlineBraceIfStatementIdDef] == false) return false
-        if (curr.type !is TokenType.LeftBrace) result = null
-        return result
+        if (curr.type !is TokenType.LeftBrace) return null
+        return style[InlineBraceIfStatementIdDef]
     }
 }

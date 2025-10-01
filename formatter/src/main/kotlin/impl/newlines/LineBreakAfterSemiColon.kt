@@ -21,7 +21,7 @@ object LineBreakAfterSemiColon : NewlineAfterRule {
         out: DocBuilder,
     ): Int {
         var result = 0
-        if (curr.type is TokenType.Semicolon) result = 1
+        if (curr.type is TokenType.Semicolon && !out.lastWasNewline()) result = 1
         return result
     }
 }

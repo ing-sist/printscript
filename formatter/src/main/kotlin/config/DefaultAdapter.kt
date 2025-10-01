@@ -1,22 +1,24 @@
 package config
 
 object DefaultRuleAdapter : RuleIdNameAdapter {
-    override fun resolve(externalName: String): RuleDef<*>? =
-        when (externalName) {
-            "SpaceAroundOperators"     -> SpaceAroundOperatorsDef
-            "enforce-spacing-around-equals"    -> SpaceAroundAssignmentDef
-            "enforce-no-spacing-around-equals"    -> SpaceAroundAssignmentDef
-            "Indentation"              -> IndentationDef
-            "KeywordSpacingAfter"      -> KeywordSpacingAfterDef
-            "line-breaks-after-println" -> LineBreakBeforePrintlnDef
-            "mandatory-space-surrounding-operations" -> SpaceAroundOperatorsDef
-            "enforce-spacing-before-colon-in-declaration" -> SpaceBeforeColonDef
-            "enforce-spacing-after-colon-in-declaration" -> SpaceAfterColonDef
-            "if-brace-below-line" -> BelowLineBraceIfStatementDef
-            "if-brace-same-line" -> InlineBraceIfStatementIdDef
-            "indent-inside-if" -> IndentationDef
-            "mandatory-line-break-after-statement" -> LineBreakAfterSemiColonDef
-            "mandatory-single-space-separation" -> MaxSpaceBetweenTokensDef
+    override fun resolve(name: String): RuleMapping? =
+        when (name) {
+            "SpaceAroundOperators"     -> RuleMapping(SpaceAroundOperatorsDef) {it}
+            "enforce-spacing-around-equals"    -> RuleMapping(SpaceAroundAssignmentDef) { it}
+            "enforce-no-spacing-around-equals"    -> RuleMapping(SpaceAroundAssignmentDef) { v ->
+                when (v) { null -> null; is Boolean -> !v; else -> {}}
+            }
+            "Indentation"              -> RuleMapping(IndentationDef) {it}
+            "KeywordSpacingAfter"      -> RuleMapping(KeywordSpacingAfterDef) {it}
+            "line-breaks-after-println" -> RuleMapping(LineBreakBeforePrintlnDef) {it}
+            "mandatory-space-surrounding-operations" -> RuleMapping(SpaceAroundOperatorsDef) {it}
+            "enforce-spacing-before-colon-in-declaration" -> RuleMapping(SpaceBeforeColonDef) {it}
+            "enforce-spacing-after-colon-in-declaration" -> RuleMapping(SpaceAfterColonDef) {it}
+            "if-brace-below-line" -> RuleMapping(BelowLineBraceIfStatementDef) {it}
+            "if-brace-same-line" -> RuleMapping(InlineBraceIfStatementIdDef) {it}
+            "indent-inside-if" -> RuleMapping(IndentationDef) {it}
+            "mandatory-line-break-after-statement" -> RuleMapping(LineBreakAfterSemiColonDef) {it}
+            "mandatory-single-space-separation" -> RuleMapping(MaxSpaceBetweenTokensDef) {it}
             else -> null
         }
 }
