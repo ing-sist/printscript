@@ -1,16 +1,16 @@
 package config
 
-import impl.BelowLineBraceIfStatement
-import impl.Indentation
-import impl.InlineBraceIfStatement
-import impl.KeywordSpacingAfter
-import impl.LineBreakAfterSemiColon
-import impl.LineBreakBeforePrintln
-//import impl.MaxSpaceBetweenTokens
-import impl.SpaceAfterColon
-import impl.SpaceAroundAssignment
-import impl.SpaceAroundOperators
-import impl.SpaceBeforeColon
+import MaxSpaceBetweenTokens
+import impl.newlines.BelowLineBraceIfStatement
+import impl.spaces.Indentation
+import impl.spaces.InlineBraceIfStatement
+import impl.spaces.KeywordSpacingAfter
+import impl.newlines.LineBreakAfterSemiColon
+import impl.newlines.LineBreakBeforePrintln
+import impl.spaces.SpaceAfterColon
+import impl.spaces.SpaceAroundAssignment
+import impl.spaces.SpaceAroundOperators
+import impl.spaces.SpaceBeforeColon
 
 object ForceRulesInit {
     fun loadAll() {
@@ -21,7 +21,7 @@ object ForceRulesInit {
         Indentation
         LineBreakAfterSemiColon
         LineBreakBeforePrintln
-//        MaxSpaceBetweenTokens
+        MaxSpaceBetweenTokens
         SpaceAfterColon
         SpaceAroundOperators
         SpaceBeforeColon

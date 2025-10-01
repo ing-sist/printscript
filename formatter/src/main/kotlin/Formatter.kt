@@ -17,54 +17,59 @@ class Formatter(
         var out = initial
         var level = 0
 
-        var prev = Token(TokenType.EOF, "", Location(-1, -1, -1))
+        println(rules)
         var curr = tokenStream.consume()
+        var prev = Token(TokenType.EOF, "", Location(-1, -1, -1))
 
         while (curr.type !is TokenType.EOF) {
-            // agrego newline porque newline > space
-            val beforeNewline = applyBeforeNewlineRules(curr, style, out)
-            repeat(beforeNewline) { out = out.newline() }
+            val beforeNewline: Int? = applyBeforeNewlineRules(curr, style, out)
+            val afterNewline = applyAfterNewlineRules(curr, style, out, tokenStream)
+            val beforeSpacing = applyBeforeSpacingRules(curr, style)
+            val afterSpacing = applyAfterSpacingRules(curr, style)
 
-            out = indentIfAtLineStart(out, curr.type, level, style)
-
-
-            val needBefore = applyBeforeSpacingRules(curr, style)
-            val needAfter = applyAfterSpacingRules(curr, style)
-            if(curr.type !is TokenType.Space){
-                when (needBefore) {
-                    false -> out = out.write(curr.lexeme)
-                    null -> { out = out.write(curr.lexeme) }
-                    true -> {
-                        if(out.getLastSent().toString() != " "){
-                            out = out.space()
-                        }
-                        out = out.write(curr.lexeme)
-                    }
-                }
-                when (needAfter) {
-                    true -> out = out.space()
-                    null -> { }
-                    false -> {
-
-                    }
-                }
-            } else {
-                val prevAfterSpace = applyAfterSpacingRules(prev, style)
-                val nextBeforeSpace = applyBeforeSpacingRules(tokenStream.peek(0), style)
-                if (out.getLastSent().toString() == " " || nextBeforeSpace == false || prevAfterSpace == false) {
-                    prev = curr
-                    curr = tokenStream.consume()
-                    continue
-                }
-                out = out.space()
+            // agrego newlines porque newlines > space
+            if(beforeNewline != null) {
+                repeat(beforeNewline) { out = out.newline() }
             }
 
-            val afterNewline = applyAfterNewlineRules(curr, style, out)
-            repeat(afterNewline) { out = out.newline() }
+            out = indentIfAtLineStart(out, curr.type, level, style)
+            // aca ya imprimo token y espacio si corresponden
+            if(beforeNewline == 0 && curr.type !is TokenType.Space) { // si no aplique newline, me fijo de espacio
+                when (beforeSpacing) {
+                    true -> { if(out.getLastSent().toString() != " "){ out = out.space() } } // si ya agregue un space, no agrego otro
+                    false, null -> { }
+                // si alguien me prohibe o da igual y no hay, no aplico
+                }
+            }
+
+            if(curr.type !is TokenType.Space) {
+                out = out.write(curr.lexeme)
+            }
+
+            if(curr.type is TokenType.Space) {
+                val spaceAllowedAfterPrev = applyAfterSpacingRules(prev, style)
+                val spaceAllowedBeforeNext = applyBeforeSpacingRules(tokenStream.peek(0), style)
+                val keepSpace = (spaceAllowedAfterPrev == null) && (spaceAllowedBeforeNext == null)
+                if (keepSpace && !out.isAtLineStart()) out = out.space()
+            }
+
+            if(afterNewline != null) {
+                repeat(afterNewline) { out = out.newline() }
+            }
+
+            if(afterNewline == 0 && curr.type !is TokenType.Space) {
+                when (afterSpacing) {
+                    true -> { if(out.getLastSent().toString() != " "){ out = out.space() }
+                    } // si ya agregue un space, no agrego otro
+                    false, null -> { }
+                    // si alguien me prohibe o da igual y no hay, no aplico
+                }
+            }
 
             level = updatedLevelAfter(curr.type, level)
             prev = curr
             curr = tokenStream.consume()
+
         }
         return out
     }
@@ -81,19 +86,53 @@ class Formatter(
         return out.indent(visibleLevel * (style[IndentationDef] ?: IndentationDef.default))
     }
 
+    private fun peekNextNonBlankType(ts: TokenStream): TokenType {
+        var i = 0
+        while (true) {
+            val t = ts.peek(i)   // miro i tokens adelante
+            when (t.type) {
+                is TokenType.Space,
+                is TokenType.Newline -> {
+                    i++           // salto el espacio o newline
+                    continue      // sigo buscando
+                }
+                else -> return t.type  // devuelvo lo primero que no sea espacio/newline
+            }
+        }
+    }
+
 
     private fun applyBeforeNewlineRules(
         curr: Token,
         style: FormatterStyleConfig,
         out: DocBuilder
-    ): Int {
-        var needsNewline = 0
+    ): Int? {
+        var need = 0
         for (rule in rules) {
             if (rule is NewlineBeforeRule) {
-                needsNewline = rule.newlineBefore(curr, style, out)
+                val v = rule.newlineBefore(curr, style, out)
+                if (v > need) need = v
             }
         }
-        return needsNewline
+        return need
+    }
+
+    private fun applyAfterNewlineRules(
+        curr: Token,
+        style: FormatterStyleConfig,
+        out: DocBuilder,
+        tokenStream: TokenStream
+    ): Int? {
+        var need = 0
+        for (rule in rules) {
+            if (rule is NewlineAfterRule) {
+                val v = rule.newlineAfter(curr, style, out)
+                if (v > need) need = v
+            }
+        }
+        val next = peekNextNonBlankType(tokenStream)
+        if(next is TokenType.EOF) return 0
+        return need
     }
 
     private fun applyBeforeSpacingRules(
@@ -128,20 +167,6 @@ class Formatter(
             }
         }
         return if (putSpace == true) true else null
-    }
-
-    private fun applyAfterNewlineRules(
-        curr: Token,
-        style: FormatterStyleConfig,
-        out: DocBuilder
-    ): Int {
-        var needsNewline = 0
-        for (rule in rules) {
-            if (rule is NewlineAfterRule) {
-                needsNewline = rule.newlineAfter(curr, style, out)
-            }
-        }
-        return needsNewline
     }
 
     private fun updatedLevelAfter(

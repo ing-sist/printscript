@@ -1,4 +1,4 @@
-package impl
+package impl.newlines
 
 import DocBuilder
 import Token

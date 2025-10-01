@@ -1,4 +1,4 @@
-package impl
+package impl.spaces
 
 import Token
 import config.FormatterStyleConfig
@@ -14,13 +14,9 @@ object SpaceAfterColon : SpaceAfterRule {
         RuleRegistry.registerRule(this)
     }
 
-    override fun spaceAfter(
-        curr: Token,
-        style: FormatterStyleConfig,
-    ): Boolean? {
-        var result: Boolean? = true
-        if(style[SpaceAfterColonDef] == false) return false
-        if (curr.type !is TokenType.Colon) result = null
-        return result
+
+    override fun spaceAfter(curr: Token, style: FormatterStyleConfig): Boolean? {
+        if (curr.type !is TokenType.Colon) return null
+        return style[SpaceAfterColonDef]
     }
 }

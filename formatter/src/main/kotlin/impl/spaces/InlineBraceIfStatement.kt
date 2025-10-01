@@ -1,14 +1,14 @@
-package impl
+package impl.spaces
 
 import Token
 import config.FormatterStyleConfig
+import config.InlineBraceIfStatementIdDef
 import config.RuleDef
 import config.RuleRegistry
-import config.SpaceBeforeColonDef
 import impl.interfaces.SpaceBeforeRule
 
-object SpaceBeforeColon : SpaceBeforeRule {
-    override val id: RuleDef<Boolean> = SpaceBeforeColonDef
+object InlineBraceIfStatement : SpaceBeforeRule {
+    override val id: RuleDef<Boolean> = InlineBraceIfStatementIdDef
 
     init {
         RuleRegistry.registerRule(this)
@@ -19,8 +19,8 @@ object SpaceBeforeColon : SpaceBeforeRule {
         style: FormatterStyleConfig,
     ): Boolean? {
         var result: Boolean? = true
-        if(style[SpaceBeforeColonDef] == false) return false
-        if (curr.type !is TokenType.Colon) result = null
+        if(style[InlineBraceIfStatementIdDef] == false) return false
+        if (curr.type !is TokenType.LeftBrace) result = null
         return result
     }
 }

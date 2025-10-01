@@ -11,6 +11,7 @@ interface RuleDef<T> {
     fun parse(json: JsonPrimitive): T
 }
 
+
 object SpaceAroundOperatorsDef : RuleDef<Boolean> {
     override val default = true
     override val id: String = "SpaceAroundOperators"
@@ -82,10 +83,9 @@ object LineBreakAfterSemiColonDef : RuleDef<Boolean> {
 }
 
 object MaxSpaceBetweenTokensDef : RuleDef<Boolean> {
-    override val default = true
+    override val default = null
     override val id: String = "MaxSpaceBetweenTokens"
 
-    
 
     override fun parse(json: JsonPrimitive): Boolean =
         json.booleanOrNull

@@ -1,14 +1,14 @@
-package impl
+package impl.spaces
 
 import Token
 import TokenType
 import config.FormatterStyleConfig
 import config.RuleDef
 import config.RuleRegistry
+import config.SpaceAfterColonDef
 import config.SpaceAroundAssignmentDef
 import impl.interfaces.SpaceAfterRule
 import impl.interfaces.SpaceBeforeRule
-import java.awt.desktop.AppReopenedEvent
 
 object SpaceAroundAssignment : SpaceBeforeRule, SpaceAfterRule {
     override val id: RuleDef<Boolean> = SpaceAroundAssignmentDef
@@ -21,23 +21,15 @@ object SpaceAroundAssignment : SpaceBeforeRule, SpaceAfterRule {
         curr: Token,
         style: FormatterStyleConfig,
     ): Boolean? {
-        var result: Boolean? = true
-
-        if(curr.type != TokenType.Assignment){
-            result = null
-        } else {
-            if(style[SpaceAroundAssignmentDef] == false) result = false
-        }
-        return result
+        if (curr.type !is TokenType.Assignment) return null
+        return style[SpaceAroundAssignmentDef]
     }
 
     override fun spaceAfter(
         curr: Token,
         style: FormatterStyleConfig,
     ): Boolean? {
-        var result: Boolean? = true
         if (curr.type !is TokenType.Assignment) return null
-        if(style[SpaceAroundAssignmentDef] == false) result = false
-        return result
+        return style[SpaceAroundAssignmentDef]
     }
 }

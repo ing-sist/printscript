@@ -1,4 +1,4 @@
-package impl
+package impl.spaces
 
 import Token
 import TokenType

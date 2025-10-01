@@ -1,8 +1,7 @@
-package impl
+package impl.newlines
 
 import DocBuilder
 import Token
-import TokenType
 import config.BelowLineBraceIfStatementDef
 import config.FormatterStyleConfig
 import config.RuleDef
