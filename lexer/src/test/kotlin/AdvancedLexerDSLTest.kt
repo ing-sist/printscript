@@ -38,7 +38,7 @@ class AdvancedLexerDSLTest {
                 TokenType.Keyword.ConstDeclaration,
                 TokenType.Keyword.VariableDeclaration,
                 TokenType.NumberLiteral,
-                TokenType.Multiply,
+                TokenType.Operator.Multiply,
             ).endsWithEOF()
     }
 

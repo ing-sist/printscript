@@ -59,12 +59,12 @@ class ShuntingYardConverterTests {
         val tokens =
             listOf(
                 tok(TokenType.NumberLiteral, "1"),
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.NumberLiteral, "2"),
-                tok(TokenType.Multiply, "*"),
+                tok(TokenType.Operator.Multiply, "*"),
                 tok(TokenType.LeftParen, "("),
                 tok(TokenType.NumberLiteral, "3"),
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.NumberLiteral, "4"),
                 tok(TokenType.RightParen, ")"),
             )
@@ -82,9 +82,9 @@ class ShuntingYardConverterTests {
         val plusInner = items[4] as Token // si tu Token real es otro paquete, ajusta el import
         val mul = items[5] as Token
         val plusOuter = items[6] as Token
-        Assertions.assertEquals(TokenType.Plus, plusInner.type)
-        Assertions.assertEquals(TokenType.Multiply, mul.type)
-        Assertions.assertEquals(TokenType.Plus, plusOuter.type)
+        Assertions.assertEquals(TokenType.Operator.Plus, plusInner.type)
+        Assertions.assertEquals(TokenType.Operator.Multiply, mul.type)
+        Assertions.assertEquals(TokenType.Operator.Plus, plusOuter.type)
     }
 
     @Test
@@ -108,7 +108,7 @@ class ShuntingYardConverterTests {
                 tok(TokenType.FunctionCall, "f"),
                 tok(TokenType.LeftParen, "("),
                 tok(TokenType.NumberLiteral, "1"),
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.NumberLiteral, "2"),
                 tok(TokenType.RightParen, ")"),
             )
@@ -124,7 +124,7 @@ class ShuntingYardConverterTests {
         // el content es un AST de la expresión "1 + 2"
         val arg = fn.content
         val bin = Assertions.assertInstanceOf(BinaryOperationNode::class.java, arg) as BinaryOperationNode
-        Assertions.assertEquals(TokenType.Plus, bin.operator.type)
+        Assertions.assertEquals(TokenType.Operator.Plus, bin.operator.type)
     }
 
     @Test
@@ -210,10 +210,10 @@ class ShuntingYardConverterTests {
         val tokens =
             listOf(
                 tok(TokenType.NumberLiteral, "1"),
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.LeftParen, "("),
                 tok(TokenType.NumberLiteral, "2"),
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.NumberLiteral, "3"),
                 tok(TokenType.RightParen, ")"),
             )
@@ -228,7 +228,7 @@ class ShuntingYardConverterTests {
         Assertions.assertInstanceOf(LiteralNode::class.java, items[2]) // 3
         val innerPlus = items[3] as Token
         val outerPlus = items[4] as Token
-        Assertions.assertEquals(TokenType.Plus, innerPlus.type)
-        Assertions.assertEquals(TokenType.Plus, outerPlus.type)
+        Assertions.assertEquals(TokenType.Operator.Plus, innerPlus.type)
+        Assertions.assertEquals(TokenType.Operator.Plus, outerPlus.type)
     }
 }
