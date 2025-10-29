@@ -58,7 +58,7 @@ class InterpreterOperationsTests {
         val subtraction =
             createBinaryOperation(
                 createNumberLiteral(10.0),
-                TokenType.Minus,
+                TokenType.Operator.Minus,
                 createNumberLiteral(4.0),
             )
         val declaration = createNumberDeclarationWithExpression("result", subtraction)
@@ -76,7 +76,7 @@ class InterpreterOperationsTests {
         val multiplication =
             createBinaryOperation(
                 createNumberLiteral(6.0),
-                TokenType.Multiply,
+                TokenType.Operator.Multiply,
                 createNumberLiteral(7.0),
             )
         val declaration = createNumberDeclarationWithExpression("result", multiplication)
@@ -94,7 +94,7 @@ class InterpreterOperationsTests {
         val division =
             createBinaryOperation(
                 createNumberLiteral(15.0),
-                TokenType.Divide,
+                TokenType.Operator.Divide,
                 createNumberLiteral(3.0),
             )
         val declaration = createNumberDeclarationWithExpression("result", division)
@@ -130,7 +130,7 @@ class InterpreterOperationsTests {
         val comparison =
             createBinaryOperation(
                 createNumberLiteral(5.0),
-                TokenType.Equals,
+                TokenType.Operator.Equals,
                 createNumberLiteral(5.0),
             )
         val declaration = createBooleanDeclarationWithExpression("result", comparison)
@@ -148,7 +148,7 @@ class InterpreterOperationsTests {
         val comparison =
             createBinaryOperation(
                 createNumberLiteral(5.0),
-                TokenType.NotEquals,
+                TokenType.Operator.NotEquals,
                 createNumberLiteral(3.0),
             )
         val declaration = createBooleanDeclarationWithExpression("result", comparison)
@@ -166,7 +166,7 @@ class InterpreterOperationsTests {
         val comparison =
             createBinaryOperation(
                 createNumberLiteral(3.0),
-                TokenType.LessThan,
+                TokenType.Operator.LessThan,
                 createNumberLiteral(5.0),
             )
         val declaration = createBooleanDeclarationWithExpression("result", comparison)
@@ -256,7 +256,7 @@ class InterpreterOperationsTests {
         val comparison =
             createBinaryOperation(
                 createVariableReference("x"),
-                TokenType.GreaterThan,
+                TokenType.Operator.GreaterThan,
                 createVariableReference("y"),
             )
         val conditional =

@@ -44,7 +44,7 @@ class BinaryOperationErrorTests {
         val expr =
             createBinaryOp(
                 left = createBooleanLiteral(true),
-                op = TokenType.Plus,
+                op = TokenType.Operator.Plus,
                 right = createNumberLiteral(2.0),
             )
         val decl = createDeclarationWithExpr("x", TokenType.NumberType, isMutable = true, expr = expr)
@@ -61,7 +61,7 @@ class BinaryOperationErrorTests {
         val expr =
             createBinaryOp(
                 left = createStringLiteral("3"),
-                op = TokenType.Multiply,
+                op = TokenType.Operator.Multiply,
                 right = createNumberLiteral(2.0),
             )
         val decl = createDeclarationWithExpr("y", TokenType.NumberType, isMutable = true, expr = expr)
@@ -78,7 +78,7 @@ class BinaryOperationErrorTests {
         val expr =
             createBinaryOp(
                 left = createStringLiteral("a"),
-                op = TokenType.LessThan,
+                op = TokenType.Operator.LessThan,
                 right = createNumberLiteral(1.0),
             )
         val decl = createDeclarationWithExpr("b", TokenType.BooleanType, isMutable = true, expr = expr)

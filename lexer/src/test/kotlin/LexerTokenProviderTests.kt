@@ -56,7 +56,7 @@ class LexerTokenProviderTests {
         val c4 = p.consume()
 
         assertTrue(c1.type is TokenType.NumberLiteral) // 1
-        assertTrue(c2.type is TokenType.Plus) // +
+        assertTrue(c2.type is TokenType.Operator.Plus) // +
         assertTrue(c3.type is TokenType.NumberLiteral) // 2
         assertTrue(c4.type is TokenType.EOF) // EOF
     }
@@ -66,7 +66,7 @@ class LexerTokenProviderTests {
     fun peekDoesNotConsume() {
         val p = providerFrom("1 + 2")
         val peek1 = p.peek(1) // fuerza lookahead a contener al menos [1,+]
-        assertTrue(peek1.type is TokenType.Plus)
+        assertTrue(peek1.type is TokenType.Operator.Plus)
 
         val c1 = p.consume()
         assertTrue(c1.type is TokenType.NumberLiteral) // aún entrega '1', no '+'
@@ -82,7 +82,7 @@ class LexerTokenProviderTests {
         // Esperamos: 1, +, 2, EOF
         assertEquals(4, types.size)
         assertTrue(types[0] is TokenType.NumberLiteral)
-        assertTrue(types[1] is TokenType.Plus)
+        assertTrue(types[1] is TokenType.Operator.Plus)
         assertTrue(types[2] is TokenType.NumberLiteral)
         assertTrue(types[3] is TokenType.EOF)
     }
@@ -138,8 +138,8 @@ class LexerTokenProviderTests {
         val types = drainTypes(p)
 
         assertTrue(types.first() is TokenType.NumberLiteral)
-        assertTrue(types.any { it is TokenType.Multiply })
-        assertTrue(types.any { it is TokenType.Plus })
+        assertTrue(types.any { it is TokenType.Operator.Multiply })
+        assertTrue(types.any { it is TokenType.Operator.Plus })
         assertTrue(types.last() is TokenType.EOF)
 
         // No intentamos consumir luego de EOF para no forzar comportamiento indefinido.

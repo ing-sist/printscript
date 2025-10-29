@@ -48,7 +48,7 @@ class PrintScript10LexerDSLTest {
                 TokenType.Keyword.VariableDeclaration,
                 TokenType.NumberLiteral,
                 TokenType.Operator.Plus,
-                TokenType.Multiply,
+                TokenType.Operator.Multiply,
             ).withTokenCountExcludingEOF(11)
             .endsWithEOF()
     }
@@ -99,7 +99,7 @@ class PrintScript10LexerDSLTest {
                 TokenType.LeftParen,
                 TokenType.RightParen,
                 TokenType.Operator.Plus,
-                TokenType.Divide,
+                TokenType.Operator.Divide,
             ).withTokenCountExcludingEOF(13)
             .endsWithEOF()
     }
@@ -139,9 +139,9 @@ class PrintScript10LexerDSLTest {
             .shouldTokenizeSuccessfully()
             .containingTypes(
                 TokenType.Operator.Plus,
-                TokenType.Minus,
-                TokenType.Multiply,
-                TokenType.Divide,
+                TokenType.Operator.Minus,
+                TokenType.Operator.Multiply,
+                TokenType.Operator.Divide,
             ).endsWithEOF()
     }
 }

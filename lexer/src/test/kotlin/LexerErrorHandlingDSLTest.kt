@@ -122,9 +122,9 @@ class LexerErrorHandlingDSLTest {
             .shouldTokenizeSuccessfully()
             .containingTypes(
                 TokenType.Operator.Plus,
-                TokenType.Minus,
-                TokenType.Multiply,
-                TokenType.Divide,
+                TokenType.Operator.Minus,
+                TokenType.Operator.Multiply,
+                TokenType.Operator.Divide,
             ).endsWithEOF()
     }
 

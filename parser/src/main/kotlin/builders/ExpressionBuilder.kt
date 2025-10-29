@@ -60,5 +60,7 @@ class ExpressionBuilder : AstBuilder {
 
     private fun isOperator(token: Token): Boolean = operatorPrecedenceManager.isOperator(token.type)
 
-    private fun isUnaryOperator(token: Token): Boolean = token.type is TokenType.Operator.Minus || token.type is TokenType.Operator.Plus
+    private fun isUnaryOperator(token: Token): Boolean =
+        token.type is TokenType.Operator.Minus ||
+            token.type is TokenType.Operator.Plus
 }

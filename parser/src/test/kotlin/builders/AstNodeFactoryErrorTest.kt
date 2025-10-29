@@ -18,7 +18,7 @@ class AstNodeFactoryErrorTest {
         // Elegimos tokens claramente no mapeados en el when del factory
         val unsupported =
             listOf(
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.LeftParen, "("),
                 tok(TokenType.RightParen, ")"),
             )

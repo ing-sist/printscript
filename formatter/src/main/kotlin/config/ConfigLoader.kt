@@ -42,11 +42,11 @@ class ConfigLoader(
             is Boolean -> JsonPrimitive(v)
             is Number -> {
                 val d = v.toDouble()
-                require(d % 1.0 == 0.0) {"Expected integer but got non-integer: $v"}
+                require(d % 1.0 == 0.0) { "Expected integer but got non-integer: $v" }
                 val asLong = d.toLong()
 
                 require(asLong > Int.MIN_VALUE || asLong < Int.MAX_VALUE) {
-                   "Integer out of range for Int: $v"
+                    "Integer out of range for Int: $v"
                 }
                 JsonPrimitive(asLong.toInt())
             }
