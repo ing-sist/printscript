@@ -78,7 +78,6 @@ sealed interface TokenType {
                 Operator.register(this)
             }
         }
-
     }
 
     data object Assignment : TokenType

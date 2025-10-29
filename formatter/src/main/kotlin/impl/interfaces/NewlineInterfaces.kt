@@ -10,7 +10,7 @@ interface NewlineBeforeRule : NewlineRulesImpl {
     fun newlineBefore(
         curr: Token,
         style: FormatterStyleConfig,
-        out: DocBuilder
+        out: DocBuilder,
     ): Int
 }
 
@@ -18,6 +18,6 @@ interface NewlineAfterRule : NewlineRulesImpl {
     fun newlineAfter(
         curr: Token,
         style: FormatterStyleConfig,
-        out: DocBuilder
+        out: DocBuilder,
     ): Int
 }

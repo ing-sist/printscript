@@ -9,7 +9,7 @@ import simple.SimpleArgRule
 class AnalyzerConfigLoadingTests {
     private fun cfgFrom(
         json: String,
-        defs: List<shared.RuleDefinition<out shared.RuleConfig>>,
+        defs: List<shared.RuleDefinition<shared.RuleConfig>>,
     ): AnalyzerConfig {
         val tmp =
             kotlin.io.path

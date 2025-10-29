@@ -15,7 +15,11 @@ object LineBreakBeforePrintln : NewlineBeforeRule {
         RuleRegistry.registerRule(this)
     }
 
-    override fun newlineBefore(curr: Token, style: FormatterStyleConfig, out: DocBuilder): Int {
+    override fun newlineBefore(
+        curr: Token,
+        style: FormatterStyleConfig,
+        out: DocBuilder,
+    ): Int {
         val lineBreakQuantity: Int? = style[id]
         if (curr.lexeme.lowercase() == "println") {
             return lineBreakQuantity ?: 0

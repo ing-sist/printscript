@@ -23,7 +23,7 @@ object SpaceAroundOperators : SpaceBeforeRule, SpaceAfterRule {
         style: FormatterStyleConfig,
     ): Boolean? {
         var result: Boolean? = true
-        if(style[SpaceAroundOperatorsDef] == false) return false
+        if (style[SpaceAroundOperatorsDef] == false) return false
         if (curr.type !in operators) result = null
         return result
     }
@@ -33,7 +33,7 @@ object SpaceAroundOperators : SpaceBeforeRule, SpaceAfterRule {
         style: FormatterStyleConfig,
     ): Boolean? {
         var result: Boolean? = true
-        if(style[SpaceAroundOperatorsDef] == false) return false
+        if (style[SpaceAroundOperatorsDef] == false) return false
         if (curr.type !in operators) result = null
         return result
     }

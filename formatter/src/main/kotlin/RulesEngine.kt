@@ -6,34 +6,8 @@ import impl.interfaces.Rule
 import impl.interfaces.SpaceAfterRule
 import impl.interfaces.SpaceBeforeRule
 
-class Formatter(
-    private val rules: List<Rule>,
-) {
-    fun format(
-        tokenStream: TokenStream,
-        style: FormatterStyleConfig,
-        initial: DocBuilder,
-    ): DocBuilder {
-        var out = initial
-        var level = 0
-
-        var curr = tokenStream.consume()
-        var prev = Token(TokenType.EOF, "", Location(-1, -1, -1))
-
-        while (curr.type !is TokenType.EOF) {
-            out = applyBeforeWhiteSpaces(curr, style, out)
-            out = adjustBeforeLevel(curr, level, out, style)
-
-            out = writeToken(prev,curr, out, style, tokenStream)
-            out = applyAfterWhiteSpaces(curr, style, out, tokenStream)
-            level = adjustAfterLevel(curr, level)
-            prev = curr
-            curr = tokenStream.consume()
-        }
-        return out
-    }
-
-    private fun writeToken(prev: Token,curr: Token, out: DocBuilder,
+class RulesEngine(private val rules: List<Rule>,) {
+    fun writeToken(prev: Token,curr: Token, out: DocBuilder,
                            style: FormatterStyleConfig, tokenStream: TokenStream): DocBuilder {
         var newOut = out
         val beforeSpacing = applyBeforeSpacingRules(curr, style)
@@ -54,6 +28,13 @@ class Formatter(
             newOut = newOut.write(curr.lexeme)
         }
 
+        newOut = writeSpace(prev, curr, out, style, tokenStream)
+        return newOut
+    }
+
+    private fun writeSpace(prev: Token, curr: Token,out: DocBuilder, style: FormatterStyleConfig,
+                           tokenStream: TokenStream): DocBuilder{
+        var newOut = out
         if (curr.type is TokenType.Space && !out.lastWasNewline()) {
             val prevIsRightBrace = prev.type is TokenType.RightBrace
 
@@ -73,9 +54,10 @@ class Formatter(
             }
         }
         return newOut
+
     }
 
-    private fun applyBeforeWhiteSpaces(curr: Token, style: FormatterStyleConfig,
+    fun applyBeforeWhiteSpaces(curr: Token, style: FormatterStyleConfig,
                                        out: DocBuilder): DocBuilder {
         var newOut = out
         val beforeNewline: Int? = applyBeforeNewlineRules(curr, style, out)
@@ -85,7 +67,7 @@ class Formatter(
         return newOut
     }
 
-    private fun adjustBeforeLevel(curr: Token, level: Int, out: DocBuilder, style: FormatterStyleConfig): DocBuilder{
+    fun adjustBeforeLevel(curr: Token, level: Int, out: DocBuilder, style: FormatterStyleConfig): DocBuilder{
         var newLevel = level
         var newOut = out
         if (out.isAtLineStart() && curr.type !is TokenType.Space) {
@@ -104,7 +86,7 @@ class Formatter(
     }
 
 
-    private fun adjustAfterLevel(curr: Token, level: Int): Int{
+    fun adjustAfterLevel(curr: Token, level: Int): Int{
         var newLevel = level
         newLevel =
             when (curr.type) {
@@ -115,7 +97,7 @@ class Formatter(
         return newLevel
     }
 
-    private fun applyAfterWhiteSpaces(curr: Token, style: FormatterStyleConfig, out: DocBuilder,
+    fun applyAfterWhiteSpaces(curr: Token, style: FormatterStyleConfig, out: DocBuilder,
                                       tokenStream: TokenStream): DocBuilder {
         var newOut = out
         val afterNewline = applyAfterNewlineRules(curr, style, out, tokenStream)
@@ -141,7 +123,7 @@ class Formatter(
             when (t.type) {
                 is TokenType.Space,
                 is TokenType.Newline,
-                -> {
+                    -> {
                     i++ // salto el espacio o newline
                     continue // sigo buscando
                 }

@@ -17,7 +17,7 @@ object MaxSpaceBetweenTokens : SpaceBeforeRule {
     ): Boolean? {
         val result: Boolean? = true
         val type = curr.type
-        if(type is TokenType.Space || type is TokenType.Semicolon) return false
+        if (type is TokenType.Space || type is TokenType.Semicolon) return false
         return result
     }
 }

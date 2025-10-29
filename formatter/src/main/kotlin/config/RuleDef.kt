@@ -11,12 +11,9 @@ interface RuleDef<T> {
     fun parse(json: JsonPrimitive): T
 }
 
-
 object SpaceAroundOperatorsDef : RuleDef<Boolean> {
     override val default = true
     override val id: String = "SpaceAroundOperators"
-
-    
 
     override fun parse(json: JsonPrimitive): Boolean =
         json.booleanOrNull
@@ -27,8 +24,6 @@ object SpaceBeforeColonDef : RuleDef<Boolean> {
     override val default = null
     override val id: String = "SpaceBeforeColon"
 
-    
-
     override fun parse(json: JsonPrimitive): Boolean =
         json.booleanOrNull
             ?: error("space before colon's rule must be a boolean")
@@ -37,8 +32,6 @@ object SpaceBeforeColonDef : RuleDef<Boolean> {
 object SpaceAfterColonDef : RuleDef<Boolean> {
     override val default = null
     override val id: String = "SpaceAfterColon"
-
-    
 
     override fun parse(json: JsonPrimitive): Boolean =
         json.booleanOrNull
@@ -49,8 +42,6 @@ object SpaceAroundAssignmentDef : RuleDef<Boolean> {
     override val default = null
     override val id: String = "SpaceAroundAssignment"
 
-    
-
     override fun parse(json: JsonPrimitive): Boolean =
         json.booleanOrNull
             ?: error("space around assigment's rule must be a boolean")
@@ -59,7 +50,6 @@ object SpaceAroundAssignmentDef : RuleDef<Boolean> {
 object LineBreakBeforePrintlnDef : RuleDef<Int> {
     override val default: Int? = null
     override val id: String = "LineBreakBeforePrintln"
-
 
     override fun parse(json: JsonPrimitive): Int {
         val jsonInt = json.intOrNull
@@ -74,8 +64,6 @@ object LineBreakAfterSemiColonDef : RuleDef<Boolean> {
     override val default = true
     override val id: String = "LineBreakAfterSemiColon"
 
-    
-
     override fun parse(json: JsonPrimitive): Boolean =
         json.booleanOrNull
             ?: error("line break after semicolon's rule must be a boolean")
@@ -84,7 +72,6 @@ object LineBreakAfterSemiColonDef : RuleDef<Boolean> {
 object MaxSpaceBetweenTokensDef : RuleDef<Boolean> {
     override val default = null
     override val id: String = "MaxSpaceBetweenTokens"
-
 
     override fun parse(json: JsonPrimitive): Boolean =
         json.booleanOrNull
@@ -95,8 +82,6 @@ object IndentationDef : RuleDef<Int> {
     override val default = 2
     override val id: String = "Indentation"
 
-    
-
     override fun parse(json: JsonPrimitive): Int =
         json.intOrNull
             ?: error("# indentation spaces must be an integer")
@@ -105,8 +90,6 @@ object IndentationDef : RuleDef<Int> {
 object InlineBraceIfStatementIdDef : RuleDef<Boolean> {
     override val default = null
     override val id: String = "InlineBraceIfStatement"
-
-    
 
     override fun parse(json: JsonPrimitive): Boolean =
         json.booleanOrNull
@@ -117,8 +100,6 @@ object BelowLineBraceIfStatementDef : RuleDef<Boolean> {
     override val default = null
     override val id: String = "BelowLineBraceIfStatement"
 
-    
-
     override fun parse(json: JsonPrimitive): Boolean =
         json.booleanOrNull
             ?: error("below line brace if statement's rule must be a boolean")
@@ -128,8 +109,6 @@ object KeywordSpacingAfterDef : RuleDef<Boolean> {
     override val default: Boolean = true
     override val id: String = "KeywordSpacingAfter"
 
-    
-
     override fun parse(json: JsonPrimitive): Boolean =
         json.booleanOrNull
             ?: error("keyword's rule must be a boolean")
@@ -138,6 +117,7 @@ object KeywordSpacingAfterDef : RuleDef<Boolean> {
 object BraceLineBreakDef : RuleDef<Int> {
     override val default: Int = 1
     override val id: String = "BraceLineBreak"
+
     override fun parse(json: JsonPrimitive): Int {
         val jsonInt = json.intOrNull
         if (jsonInt == null || jsonInt < 0) {
@@ -145,5 +125,4 @@ object BraceLineBreakDef : RuleDef<Int> {
         }
         return jsonInt
     }
-
 }

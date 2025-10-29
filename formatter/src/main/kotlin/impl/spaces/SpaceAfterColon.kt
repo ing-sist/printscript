@@ -14,8 +14,10 @@ object SpaceAfterColon : SpaceAfterRule {
         RuleRegistry.registerRule(this)
     }
 
-
-    override fun spaceAfter(curr: Token, style: FormatterStyleConfig): Boolean? {
+    override fun spaceAfter(
+        curr: Token,
+        style: FormatterStyleConfig,
+    ): Boolean? {
         if (curr.type !is TokenType.Colon) return null
         return style[SpaceAfterColonDef]
     }

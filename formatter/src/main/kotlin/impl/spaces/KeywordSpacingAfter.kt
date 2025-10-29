@@ -8,7 +8,7 @@ import config.RuleDef
 import config.RuleRegistry
 import impl.interfaces.SpaceAfterRule
 
-object KeywordSpacingAfter : SpaceAfterRule  {
+object KeywordSpacingAfter : SpaceAfterRule {
     override val id: RuleDef<Boolean> = KeywordSpacingAfterDef
 
     init {

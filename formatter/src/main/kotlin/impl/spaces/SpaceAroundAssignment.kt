@@ -5,7 +5,6 @@ import TokenType
 import config.FormatterStyleConfig
 import config.RuleDef
 import config.RuleRegistry
-import config.SpaceAfterColonDef
 import config.SpaceAroundAssignmentDef
 import impl.interfaces.SpaceAfterRule
 import impl.interfaces.SpaceBeforeRule

@@ -11,6 +11,7 @@ object RuleRegistry {
     }
 
     fun allDefs(): List<RuleDef<*>> = defs.toList()
+
     fun resolveDef(id: String): RuleDef<*>? = defsById[id]
 
     private val rules = linkedSetOf<Rule>()
@@ -20,7 +21,5 @@ object RuleRegistry {
         rules += rule
     }
 
-    fun allRules(): List<Rule> {
-        return rules.toList()
-    }
+    fun allRules(): List<Rule> = rules.toList()
 }

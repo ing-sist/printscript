@@ -16,13 +16,21 @@ object BelowLineBraceIfStatement : NewlineBeforeRule, NewlineAfterRule {
         RuleRegistry.registerRule(this)
     }
 
-    override fun newlineBefore(curr: Token, style: FormatterStyleConfig, out: DocBuilder): Int {
+    override fun newlineBefore(
+        curr: Token,
+        style: FormatterStyleConfig,
+        out: DocBuilder,
+    ): Int {
         var result = 0
-        if (curr.type is TokenType.LeftBrace || curr.type is TokenType.RightBrace) result = 1
+        if (curr.type is TokenType.LeftBrace) result = 1
         return result
     }
 
-    override fun newlineAfter(curr: Token, style: FormatterStyleConfig, out: DocBuilder): Int {
+    override fun newlineAfter(
+        curr: Token,
+        style: FormatterStyleConfig,
+        out: DocBuilder,
+    ): Int {
         var result = 0
         if (curr.type is TokenType.LeftBrace || curr.type is TokenType.RightBrace) result = 1
         return result

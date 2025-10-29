@@ -5,30 +5,36 @@ class DocBuilder private constructor(
     private val lastWasNewline: Boolean,
 ) {
     companion object {
-        fun inMemory(): DocBuilder = DocBuilder(StringBuilder(),
-            lineStart = true, lastWasSpace = false, lastWasNewline = false
-        )
+        fun inMemory(): DocBuilder =
+            DocBuilder(
+                StringBuilder(),
+                lineStart = true,
+                lastWasSpace = false,
+                lastWasNewline = false,
+            )
 
-        fun to(target: Appendable): DocBuilder = DocBuilder(target,
-            lineStart = true, lastWasSpace = false, lastWasNewline = false
-        )
+        fun to(target: Appendable): DocBuilder =
+            DocBuilder(
+                target,
+                lineStart = true,
+                lastWasSpace = false,
+                lastWasNewline = false,
+            )
     }
 
-    fun lastWasSpace(): Boolean {
-        return lastWasSpace
-    }
+    fun lastWasSpace(): Boolean = lastWasSpace
 
-    fun lastWasNewline(): Boolean {
-        return lastWasNewline
-    }
+    fun lastWasNewline(): Boolean = lastWasNewline
 
     fun isAtLineStart(): Boolean = lineStart
 
-    fun write(s: String): DocBuilder = DocBuilder(out.append(s),
-        lineStart = false,
-        lastWasSpace = false,
-        lastWasNewline = false
-    )
+    fun write(s: String): DocBuilder =
+        DocBuilder(
+            out.append(s),
+            lineStart = false,
+            lastWasSpace = false,
+            lastWasNewline = false,
+        )
 
     fun space(): DocBuilder = DocBuilder(out.append(' '), false, lastWasSpace = true, lastWasNewline = false)
 
