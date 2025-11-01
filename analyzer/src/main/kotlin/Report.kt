@@ -28,6 +28,12 @@ class Report private constructor(
     fun size(): Int = memory?.size() ?: 0
 
     fun first(): Diagnostic = memory?.first() ?: error("Streaming report has no in-memory diagnostics")
+
+    // Added: iterate over diagnostics when in-memory
+    fun forEach(consumer: (Diagnostic) -> Unit) {
+        val mem = memory ?: error("Streaming report has no in-memory diagnostics")
+        mem.forEach(consumer)
+    }
 }
 
 class InMemoryReport : DiagnosticSender {
@@ -42,6 +48,11 @@ class InMemoryReport : DiagnosticSender {
     fun size() = list.size
 
     fun first(): Diagnostic = list.first()
+
+    // Added: iteration support
+    fun forEach(consumer: (Diagnostic) -> Unit) {
+        list.forEach(consumer)
+    }
 }
 
 class StreamingTextReport(

@@ -1,60 +1,23 @@
-package commands
-
-import Result
 import com.github.ajalt.clikt.parameters.arguments.argument
-import com.github.ajalt.clikt.parameters.types.path
-import processor.FileProcessor
+import com.github.ajalt.clikt.parameters.types.file
 
-/**
- * Command for validating PrintScript files.
- * Checks syntax and semantics without executing the code.
- */
-class ValidateCommand :
-    BaseCommand(
+class ValidateCommand(
+    private val engine: PrintScriptEngine,
+) : BaseCliCommand(
         name = "validate",
-        help = "Validate syntax and semantics of a PrintScript file",
+        help =
+            "Validate a PrintScript program by lexing and parsing it.\n\n" +
+                "Example: printscript validate src/hello.ps --version 1.0",
     ) {
-    private val filePath by argument(
-        name = "file",
-        help = "Path to the PrintScript file to validate",
-    ).path(mustExist = true, canBeFile = true, canBeDir = false)
+    private val source by argument(help = "Source file to validate")
+        .file(mustExist = true, canBeDir = false)
 
-    override fun run() {
-        try {
-            validateVersion()
-            val file = filePath.toFile()
+    override fun executeLogic() {
+        engine.setVersion(version)
+        // validateSyntax will use the 'reporter' from the base class
+        engine.validateSyntax(source.absolutePath, reporter)
 
-            progressReporter.reportProgress("Starting validation of ${file.name}")
-            progressReporter.reportProgress("Using PrintScript version $version")
-
-            val fileProcessor = FileProcessor(progressReporter)
-
-            val result =
-                fileProcessor.processFileStreaming(file) { _ ->
-                    // Here we would validate the tokens using lexer and parser
-                    // For now, we'll simulate the validation process
-                    progressReporter.reportProgress("Validating syntax...", 50)
-                    progressReporter.reportProgress("Validating semantics...", 75)
-
-                    // Return success result
-                    Result.Success(Unit)
-                }
-
-            result.fold(
-                onSuccess = {
-                    reportSuccess("File ${file.name} is valid")
-                },
-                onFailure = { error ->
-                    progressReporter.reportError(error.message)
-                    System.exit(1)
-                },
-            )
-        } catch (e: IllegalArgumentException) {
-            handleError(e)
-        } catch (e: SecurityException) {
-            handleError(e)
-        } catch (e: IllegalStateException) {
-            handleError(e)
-        }
+        // 'reportSuccess' comes from the reporter and clears the progress line
+        reporter.reportSuccess("Validation complete")
     }
 }

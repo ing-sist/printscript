@@ -1,71 +1,31 @@
-package commands
-
-import Result
 import com.github.ajalt.clikt.parameters.arguments.argument
-import com.github.ajalt.clikt.parameters.options.option
-import com.github.ajalt.clikt.parameters.types.path
-import processor.FileProcessor
+import com.github.ajalt.clikt.parameters.types.file
 
-/**
- * Command for executing PrintScript files.
- */
-class ExecuteCommand :
-    BaseCommand(
+class ExecuteCommand(
+    private val engine: PrintScriptEngine,
+) : BaseCliCommand(
         name = "execute",
-        help = "Execute a PrintScript file",
+        help = "Execute a PrintScript program\n\nExample: printscript execute -v 1.1 src/hello.ps",
     ) {
-    private val filePath by argument(
-        name = "file",
-        help = "Path to the PrintScript file to execute",
-    ).path(mustExist = true, canBeFile = true, canBeDir = false)
+    private val source by argument(help = "Source file to execute").file(mustExist = true, canBeDir = false)
 
-    private val inputFile by option(
-        "--input",
-        "-i",
-        help = "Path to input file for readInput function calls",
-    )
+    /**
+     * This is the main logic that executes inside the try-catch of the base class.
+     */
+    override fun executeLogic() {
+        engine.setVersion(version) // 'version' comes from BaseCliCommand
 
-    override fun run() {
-        try {
-            validateVersion()
-            val file = filePath.toFile()
+        val output = engine.execute(source.absolutePath, reporter)
 
-            progressReporter.reportProgress("Starting execution of ${file.name}")
-            progressReporter.reportProgress("Using PrintScript version $version")
+        // Clear the progress line before printing the output
+        reporter.clearProgressLine()
 
-            // Validate input file if provided
-            val inputFileObj = inputFile?.let { validateFile(it) }
-
-            val fileProcessor = FileProcessor(progressReporter)
-
-            val result =
-                fileProcessor.processFileStreaming(file) { _ ->
-                    progressReporter.reportProgress("Lexing and parsing...", 25)
-                    progressReporter.reportProgress("Executing...", 50)
-
-                    // For readInput functionality in version 1.1
-                    if (version == "1.1" && inputFileObj != null) {
-                        progressReporter.reportProgress("Processing input file...", 75)
-                    }
-
-                    Result.Success(Unit)
-                }
-
-            result.fold(
-                onSuccess = {
-                    reportSuccess("Execution completed successfully")
-                },
-                onFailure = { error ->
-                    progressReporter.reportError("Execution failed: ${error.message}")
-                    System.exit(1)
-                },
-            )
-        } catch (e: IllegalArgumentException) {
-            handleError(e)
-        } catch (e: SecurityException) {
-            handleError(e)
-        } catch (e: IllegalStateException) {
-            handleError(e)
+        // Print the program output (if any)
+        if (output.isNotBlank()) {
+            echo(output)
+        } else {
+            // Optional: report success if there was no output
+            reporter.reportSuccess("Execution complete. No output.")
         }
     }
 }

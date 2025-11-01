@@ -4,27 +4,16 @@ import AstNode
 import Result
 import TokenStream
 import parser.ParseError
-import validators.AssignmentValidator
 import validators.AstValidator
-import validators.DeclarationAssignmentValidator
-import validators.DeclarationValidator
-import validators.FunctionCallValidator
-import validators.IfValidator
 
 interface ValidatorsProvider {
     fun findValidatorAndBuild(stream: TokenStream): Result<AstNode, ParseError?>
 }
 
-class DefaultValidatorsProvider : ValidatorsProvider {
-    private val validators: List<AstValidator> by lazy {
-        listOf(
-            IfValidator(this), // New for PrintScript 1.1 - must be before others to handle if statements
-            DeclarationAssignmentValidator(),
-            DeclarationValidator(),
-            AssignmentValidator(),
-            FunctionCallValidator(),
-        )
-    }
+class DefaultValidatorsProvider(
+    version: String,
+) : ValidatorsProvider {
+    private val validators: List<AstValidator> = ValidatorsFactory.createValidators(version)
 
     override fun findValidatorAndBuild(stream: TokenStream): Result<AstNode, ParseError?> {
         var result: Result<AstNode, ParseError?> = Result.Failure(ParseError.NoValidParser(listOf(stream.peek())))

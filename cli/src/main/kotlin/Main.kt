@@ -1,26 +1,12 @@
-import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
-import commands.AnalyzeCommand
-import commands.ExecuteCommand
-import commands.FormatCommand
-import commands.ValidateCommand
 
 fun main(args: Array<String>) {
-    PrintScriptCLI()
+    val engine = PrintScriptEngine()
+    PrintScriptCLI(engine)
         .subcommands(
-            ValidateCommand(),
-            ExecuteCommand(),
-            FormatCommand(),
-            AnalyzeCommand(),
+            ValidateCommand(engine),
+            ExecuteCommand(engine),
+            FormatCommand(engine),
+            AnalyzeCommand(engine),
         ).main(args)
-}
-
-class PrintScriptCLI :
-    CliktCommand(
-        name = "printscript",
-        help = "PrintScript CLI - A command-line interface for PrintScript language operations",
-    ) {
-    override fun run() {
-        echo("Welcome to PrintScript CLI. Use --help to see available commands.")
-    }
 }

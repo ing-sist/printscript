@@ -7,6 +7,10 @@ application {
     mainClass = 'MainKt'
 }
 
+run {
+    standardInput = System.in
+}
+
 dependencies {
     implementation project(':lexer')
     implementation project(':parser')
@@ -19,7 +23,4 @@ dependencies {
 
     // CLI library for argument parsing
     implementation 'com.github.ajalt.clikt:clikt:4.2.1'
-
-    // JSON parsing library
-    implementation 'com.google.code.gson:gson:2.10.1'
 }

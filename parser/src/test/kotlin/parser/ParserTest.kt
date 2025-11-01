@@ -14,6 +14,9 @@ import util.tok
 import validators.provider.DefaultValidatorsProvider
 
 class ParserTest {
+    // Use version 1.1 by default for tests (includes all features)
+    private val defaultVersion = "1.1"
+
     @Test
     @DisplayName("parse returns first valid AST node for a declaration")
     fun testParseSuccess() {
@@ -32,7 +35,7 @@ class ParserTest {
                 tok(TokenType.Semicolon, ";"),
                 tok(TokenType.EOF, "EOF"),
             )
-        val parser = Parser(DefaultValidatorsProvider())
+        val parser = Parser(DefaultValidatorsProvider(defaultVersion))
         val result = parser.parse(TestTokenProvider(tokens))
         assertTrue(result is Result.Success)
         assertInstanceOf(DeclarationAssignmentNode::class.java, (result as Result.Success).value)
@@ -48,7 +51,7 @@ class ParserTest {
                 tok(TokenType.Semicolon, ";"),
                 tok(TokenType.EOF, "EOF"),
             )
-        val parser = Parser(DefaultValidatorsProvider())
+        val parser = Parser(DefaultValidatorsProvider(defaultVersion))
         val result = parser.parse(TestTokenProvider(tokens))
         assertTrue(result is Result.Failure)
         assertInstanceOf(ParseError.NoValidParser::class.java, (result as Result.Failure).errorOrNull())
@@ -73,7 +76,7 @@ class ParserTest {
                 tok(TokenType.Semicolon, ";"),
                 tok(TokenType.EOF, "EOF"),
             )
-        val parser = Parser(DefaultValidatorsProvider())
+        val parser = Parser(DefaultValidatorsProvider(defaultVersion))
         val result = parser.parse(TestTokenProvider(tokens))
         assertTrue(result is Result.Success)
         assertInstanceOf(DeclarationAssignmentNode::class.java, (result as Result.Success).value)
@@ -98,7 +101,7 @@ class ParserTest {
                 tok(TokenType.Semicolon, ";"),
                 tok(TokenType.EOF, "EOF"),
             )
-        val parser = Parser(DefaultValidatorsProvider())
+        val parser = Parser(DefaultValidatorsProvider(defaultVersion))
         val result = parser.parse(TestTokenProvider(tokens))
         assertTrue(result is Result.Success)
         assertInstanceOf(DeclarationAssignmentNode::class.java, (result as Result.Success).value)
@@ -125,7 +128,7 @@ class ParserTest {
                 tok(TokenType.Semicolon, ";"),
                 tok(TokenType.EOF, "EOF"),
             )
-        val parser = Parser(DefaultValidatorsProvider())
+        val parser = Parser(DefaultValidatorsProvider(defaultVersion))
         val result = parser.parse(TestTokenProvider(tokens))
         assertTrue(result is Result.Success)
         assertInstanceOf(DeclarationAssignmentNode::class.java, (result as Result.Success).value)
@@ -147,7 +150,7 @@ class ParserTest {
                 tok(TokenType.Semicolon, ";"),
                 tok(TokenType.EOF, "EOF"),
             )
-        val parser = Parser(DefaultValidatorsProvider())
+        val parser = Parser(DefaultValidatorsProvider(defaultVersion))
         val result = parser.parse(TestTokenProvider(tokens))
         assertTrue(result is Result.Success)
         assertInstanceOf(AssignmentNode::class.java, (result as Result.Success).value)

@@ -1,0 +1,6 @@
+{
+  "space-before-colon": false,
+  "space-after-colon": true,
+  "space-around-equals": true,
+  "newline-before-println": 1
+}

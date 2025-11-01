@@ -1,0 +1,13 @@
+let firstName: string = readInput("First name: ");
+let lastName: string = readInput("Last name: ");
+
+let fullName: string = firstName + " " + lastName;
+println("Full name: ");
+println(fullName);
+
+let username: string = readEnv("USER");
+println("System user: ");
+println(username);
+
+let message: string = "Hello " + fullName + ", you are logged in as " + username;
+println(message);
