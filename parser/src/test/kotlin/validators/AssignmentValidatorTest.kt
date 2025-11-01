@@ -22,7 +22,7 @@ class AssignmentValidatorTest {
                 tok(TokenType.Identifier, "x"),
                 tok(TokenType.Assignment, "="),
                 tok(TokenType.NumberLiteral, "1"),
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.NumberLiteral, "2"),
                 tok(TokenType.Semicolon, ";"),
                 tok(TokenType.EOF, "EOF"),
@@ -33,7 +33,7 @@ class AssignmentValidatorTest {
         val id = assertInstanceOf(IdentifierNode::class.java, node.identifier) as IdentifierNode
         assertEquals("x", id.name)
         val expr = assertInstanceOf(BinaryOperationNode::class.java, node.expression) as BinaryOperationNode
-        assertEquals(TokenType.Plus, expr.operator.type)
+        assertEquals(TokenType.Operator.Plus, expr.operator.type)
         assertInstanceOf(LiteralNode::class.java, expr.left)
         assertInstanceOf(LiteralNode::class.java, expr.right)
     }

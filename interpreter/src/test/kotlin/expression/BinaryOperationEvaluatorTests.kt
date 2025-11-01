@@ -61,7 +61,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("NUMBER + NUMBER → PSNumber( suma )")
     fun addition_numbers() {
-        val node = BinaryOperationNode(num("2"), op(TokenType.Plus), num("3"))
+        val node = BinaryOperationNode(num("2"), op(TokenType.Operator.Plus), num("3"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSNumber
@@ -71,7 +71,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("STRING + NUMBER → PSString concatenado")
     fun addition_string_number_concatenation() {
-        val node = BinaryOperationNode(str("A"), op(TokenType.Plus), num("7"))
+        val node = BinaryOperationNode(str("A"), op(TokenType.Operator.Plus), num("7"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSString
@@ -81,7 +81,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("STRING + STRING → PSString concatenado")
     fun addition_string_string_concatenation() {
-        val node = BinaryOperationNode(str("Hello "), op(TokenType.Plus), str("World"))
+        val node = BinaryOperationNode(str("Hello "), op(TokenType.Operator.Plus), str("World"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSString
@@ -91,7 +91,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("BOOLEAN + NUMBER → TypeMismatchError (no concat ni suma)")
     fun addition_type_mismatch_boolean_number() {
-        val node = BinaryOperationNode(bool(true), op(TokenType.Plus), num("1"))
+        val node = BinaryOperationNode(bool(true), op(TokenType.Operator.Plus), num("1"))
         val res = eval(node)
         assertTrue(res.isFailure)
         assertTrue(res.errorOrNull() is TypeMismatchError)
@@ -102,7 +102,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("NUMBER - NUMBER → PSNumber")
     fun subtraction_numbers() {
-        val node = BinaryOperationNode(num("10"), op(TokenType.Minus), num("3"))
+        val node = BinaryOperationNode(num("10"), op(TokenType.Operator.Minus), num("3"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSNumber
@@ -112,7 +112,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("NUMBER * NUMBER → PSNumber")
     fun multiply_numbers() {
-        val node = BinaryOperationNode(num("3"), op(TokenType.Multiply), num("4"))
+        val node = BinaryOperationNode(num("3"), op(TokenType.Operator.Multiply), num("4"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSNumber
@@ -122,7 +122,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("NUMBER / NUMBER → PSNumber (double)")
     fun divide_numbers() {
-        val node = BinaryOperationNode(num("9"), op(TokenType.Divide), num("2"))
+        val node = BinaryOperationNode(num("9"), op(TokenType.Operator.Divide), num("2"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSNumber
@@ -132,7 +132,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("aritmética con STRING → TypeMismatchError")
     fun arithmetic_type_mismatch() {
-        val node = BinaryOperationNode(str("1"), op(TokenType.Minus), num("1"))
+        val node = BinaryOperationNode(str("1"), op(TokenType.Operator.Minus), num("1"))
         val res = eval(node)
         assertTrue(res.isFailure)
         assertTrue(res.errorOrNull() is TypeMismatchError)
@@ -143,7 +143,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("3 == 3 → true")
     fun equals_numbers_true() {
-        val node = BinaryOperationNode(num("3"), op(TokenType.Equals), num("3"))
+        val node = BinaryOperationNode(num("3"), op(TokenType.Operator.Equals), num("3"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSBoolean
@@ -153,7 +153,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("true != false → true")
     fun not_equals_booleans_true() {
-        val node = BinaryOperationNode(bool(true), op(TokenType.NotEquals), bool(false))
+        val node = BinaryOperationNode(bool(true), op(TokenType.Operator.NotEquals), bool(false))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSBoolean
@@ -163,7 +163,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("\"1\" == 1 (tipos distintos) → false")
     fun equals_cross_type_false() {
-        val node = BinaryOperationNode(str("1"), op(TokenType.Equals), num("1"))
+        val node = BinaryOperationNode(str("1"), op(TokenType.Operator.Equals), num("1"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSBoolean
@@ -175,7 +175,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("2 < 3 → true")
     fun less_than_true() {
-        val node = BinaryOperationNode(num("2"), op(TokenType.LessThan), num("3"))
+        val node = BinaryOperationNode(num("2"), op(TokenType.Operator.LessThan), num("3"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSBoolean
@@ -185,7 +185,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("3 <= 3 → true")
     fun less_than_equal_true() {
-        val node = BinaryOperationNode(num("3"), op(TokenType.LessThanOrEqual), num("3"))
+        val node = BinaryOperationNode(num("3"), op(TokenType.Operator.LessThanOrEqual), num("3"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSBoolean
@@ -195,7 +195,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("5 > 2 → true")
     fun greater_than_true() {
-        val node = BinaryOperationNode(num("5"), op(TokenType.GreaterThan), num("2"))
+        val node = BinaryOperationNode(num("5"), op(TokenType.Operator.GreaterThan), num("2"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSBoolean
@@ -205,7 +205,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("5 >= 5 → true")
     fun greater_equal_true() {
-        val node = BinaryOperationNode(num("5"), op(TokenType.GreaterThanOrEqual), num("5"))
+        val node = BinaryOperationNode(num("5"), op(TokenType.Operator.GreaterThanOrEqual), num("5"))
         val res = eval(node)
         assertTrue(res.isSuccess)
         val v = res.getOrNull() as PSBoolean
@@ -215,7 +215,7 @@ class BinaryOperationEvaluatorTests {
     @Test
     @DisplayName("comparación con STRING → TypeMismatchError")
     fun comparison_type_mismatch() {
-        val node = BinaryOperationNode(str("a"), op(TokenType.LessThan), num("1"))
+        val node = BinaryOperationNode(str("a"), op(TokenType.Operator.LessThan), num("1"))
         val res = eval(node)
         assertTrue(res.isFailure)
         assertTrue(res.errorOrNull() is TypeMismatchError)

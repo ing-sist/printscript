@@ -9,6 +9,79 @@ sealed interface TokenType {
         data object ConstDeclaration : Keyword
     }
 
+    sealed interface Operator : TokenType {
+        companion object {
+            private val operators = mutableListOf<TokenType>()
+            val all: List<TokenType> get() = operators
+
+            fun register(op: TokenType) {
+                operators += op
+            }
+        }
+
+        data object Plus : Operator {
+            init {
+                Operator.register(this)
+            }
+        }
+
+        data object Minus : Operator {
+            init {
+                Operator.register(this)
+            }
+        }
+
+        data object Multiply : Operator {
+            init {
+                Operator.register(this)
+            }
+        }
+
+        data object Divide : Operator {
+            init {
+                Operator.register(this)
+            }
+        }
+
+        data object Equals : Operator {
+            init {
+                Operator.register(this)
+            }
+        }
+
+        data object NotEquals : Operator {
+            init {
+                Operator.register(this)
+            }
+        }
+
+        data object LessThan : Operator {
+            init {
+                Operator.register(this)
+            }
+        }
+
+        data object LessThanOrEqual : Operator {
+            init {
+                Operator.register(this)
+            }
+        }
+
+        data object GreaterThan : Operator {
+            init {
+                Operator.register(this)
+            }
+        }
+
+        data object GreaterThanOrEqual : Operator {
+            init {
+                Operator.register(this)
+            }
+        }
+    }
+
+    data object Assignment : TokenType
+
     data object StringType : TokenType
 
     data object NumberType : TokenType
@@ -31,30 +104,6 @@ sealed interface TokenType {
     data object RightBrace : TokenType
 
     data object Comma : TokenType
-
-    // 3. Operators
-    data object Assignment : TokenType
-
-    data object Plus : TokenType
-
-    data object Minus : TokenType
-
-    data object Multiply : TokenType
-
-    data object Divide : TokenType
-
-    data object Equals : TokenType
-
-    // Missing comparison operators
-    data object NotEquals : TokenType
-
-    data object LessThan : TokenType
-
-    data object LessThanOrEqual : TokenType
-
-    data object GreaterThan : TokenType
-
-    data object GreaterThanOrEqual : TokenType
 
     // 4. Variables
     data object Identifier : TokenType

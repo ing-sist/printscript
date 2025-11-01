@@ -1,62 +1,25 @@
-// RuleRegistry.kt
 package config
 
-import parseEntries
-import rules.definitions.Rule
-import rules.implementations.RuleImplementation
-import java.io.File
-import java.util.LinkedHashMap
+import impl.interfaces.Rule
 
-// --- NUEVO: mapas mutables internos ---
-private val defsMutable = LinkedHashMap<String, Rule<*>>()
-private val implsMutable = LinkedHashMap<String, RuleImplementation>()
+object RuleRegistry {
+    private val defs = linkedSetOf<RuleDef<*>>()
+    private val defsById = linkedMapOf<String, RuleDef<*>>()
 
-// Exposición solo de lectura
-val RULE_DEFS_BY_ID: Map<String, Rule<*>> get() = defsMutable
-val RULE_TO_IMPL: Map<String, RuleImplementation> get() = implsMutable
+    private fun registerDef(def: RuleDef<*>) {
+        if (defs.add(def)) defsById[def.id] = def
+    }
 
-// --- NUEVO: APIs de autoregistro ---
-fun registerDef(def: Rule<*>) {
-    defsMutable[def.id] = def
+    fun allDefs(): List<RuleDef<*>> = defs.toList()
+
+    fun resolveDef(id: String): RuleDef<*>? = defsById[id]
+
+    private val rules = linkedSetOf<Rule>()
+
+    fun registerRule(rule: Rule) {
+        registerDef(rule.id)
+        rules += rule
+    }
+
+    fun allRules(): List<Rule> = rules.toList()
 }
-
-fun registerImpl(
-    id: String,
-    impl: RuleImplementation,
-) {
-    implsMutable[id] = impl
-}
-
-// --- Helpers públicos ---
-fun allRuleDefs(): List<Rule<*>> = RULE_DEFS_BY_ID.values.toList()
-
-fun selectImplementations(activeIds: Set<String>): List<RuleImplementation> = activeIds.mapNotNull { RULE_TO_IMPL[it] }
-
-// --- Activación SIN pasar defs ---
-fun activeImplementationsFromJson(json: String): List<RuleImplementation> {
-    val engineIds =
-        RULE_DEFS_BY_ID.values
-            .filter { it.owner == RuleOwner.ENGINE }
-            .map { it.id }
-            .toSet()
-
-    val inner =
-        json
-            .trim()
-            .removePrefix("{")
-            .removeSuffix("}")
-            .trim()
-    val userIds =
-        if (inner.isBlank()) {
-            emptySet()
-        } else {
-            parseEntries(inner).keys.toSet() // ya normaliza aliases
-        }
-
-    val active = engineIds + userIds
-    return selectImplementations(active).distinct()
-}
-
-fun activeImplementationsFromFile(file: File): List<RuleImplementation> = activeImplementationsFromJson(file.readText())
-
-fun activeImplementationsFromPath(path: String): List<RuleImplementation> = activeImplementationsFromFile(File(path))

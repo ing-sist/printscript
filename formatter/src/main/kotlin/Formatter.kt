@@ -1,122 +1,29 @@
 import config.FormatterStyleConfig
-import rules.implementations.AfterRule
-import rules.implementations.BeforeRule
-import rules.implementations.RuleImplementation
+import impl.interfaces.Rule
 
 class Formatter(
-    private val rules: List<RuleImplementation>,
+    private val rules: List<Rule>,
+    private val rulesEngine: RulesEngine = RulesEngine(rules),
 ) {
     fun format(
         tokenStream: TokenStream,
         style: FormatterStyleConfig,
         initial: DocBuilder,
     ): DocBuilder {
-        var out = initial
-        var level = 0
+        var state = FormatterState(initial, 0)
 
-        var prev = Token(TokenType.EOF, "", Location(-1, -1, -1))
         var curr = tokenStream.consume()
+        var prev = Token(TokenType.EOF, "", Location(-1, -1, -1))
 
         while (curr.type !is TokenType.EOF) {
-            val next: Token = tokenStream.peek(0)
-            val prevOut = out
-            out = applyBeforeRules(prev, curr, next, style, out)
-
-            out = indentIfAtLineStart(out, curr.type, level, style)
-
-            if (curr.type is TokenType.Newline) {
-                curr = tokenStream.consume()
-                continue
-            }
-            out = printTokenLexeme(out, prevOut, curr, prev)
-
-            out = applyAfterRules(prev, curr, next, style, out)
-
-            level = updatedLevelAfter(curr.type, level)
+            state = rulesEngine.applyBeforeWhiteSpaces(curr, style, state)
+            state = rulesEngine.adjustBeforeLevel(curr, state, style)
+            state = rulesEngine.writeToken(prev, curr, state, style, tokenStream)
+            state = rulesEngine.applyAfterWhiteSpaces(curr, style, state, tokenStream)
+            state = rulesEngine.adjustAfterLevel(curr, state)
             prev = curr
             curr = tokenStream.consume()
         }
-        return out
+        return state.out
     }
-
-    private fun applyBeforeRules(
-        prev: Token,
-        curr: Token,
-        next: Token,
-        style: FormatterStyleConfig,
-        out: DocBuilder,
-    ): DocBuilder {
-        val acc = out
-        for (rule in rules) {
-            if (rule is BeforeRule) {
-                val n = rule.before(prev, curr, next, style, acc)
-                if (n != acc) return n
-            }
-        }
-        return acc
-    }
-
-    fun printTokenLexeme(
-        out: DocBuilder,
-        prevOut: DocBuilder,
-        curr: Token,
-        prev: Token,
-    ): DocBuilder {
-        val beforeChanged = (out !== prevOut)
-
-        var newOut = out
-        if (!beforeChanged) {
-            if (curr.type is TokenType.Space) {
-                if (prev.type !is TokenType.Space) {
-                    newOut = newOut.write(curr.lexeme)
-                }
-            } else {
-                newOut = newOut.write(curr.lexeme)
-            }
-        } else {
-            if (curr.type !is TokenType.Space) {
-                newOut = newOut.write(curr.lexeme)
-            }
-        }
-        return newOut
-    }
-
-    private fun applyAfterRules(
-        prev: Token,
-        curr: Token,
-        next: Token,
-        style: FormatterStyleConfig,
-        out: DocBuilder,
-    ): DocBuilder {
-        val acc = out
-        for (rule in rules) {
-            if (rule is AfterRule) {
-                val n = rule.after(prev, curr, next, style, acc)
-                if (n != acc) return n
-            }
-        }
-        return acc
-    }
-
-    private fun indentIfAtLineStart(
-        out: DocBuilder,
-        currType: TokenType,
-        level: Int,
-        style: FormatterStyleConfig,
-    ): DocBuilder {
-        if (!out.isAtLineStart()) return out
-        val visibleLevel =
-            if (currType is TokenType.RightBrace) (level - 1).coerceAtLeast(0) else level
-        return out.indent(visibleLevel * style.indentation)
-    }
-
-    private fun updatedLevelAfter(
-        currType: TokenType,
-        level: Int,
-    ): Int =
-        when (currType) {
-            is TokenType.LeftBrace -> level + 1
-            is TokenType.RightBrace -> (level - 1).coerceAtLeast(0)
-            else -> level
-        }
 }

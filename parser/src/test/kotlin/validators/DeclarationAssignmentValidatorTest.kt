@@ -23,7 +23,7 @@ class DeclarationAssignmentValidatorTest {
                 tok(TokenType.NumberType, "number"),
                 tok(TokenType.Assignment, "="),
                 tok(TokenType.NumberLiteral, "3"),
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.NumberLiteral, "4"),
                 tok(TokenType.Semicolon, ";"),
                 tok(TokenType.EOF, "EOF"),

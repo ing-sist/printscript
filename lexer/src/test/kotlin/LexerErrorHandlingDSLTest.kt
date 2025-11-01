@@ -121,10 +121,10 @@ class LexerErrorHandlingDSLTest {
         lexCode10("let result: number = a + b - c * d / e;")
             .shouldTokenizeSuccessfully()
             .containingTypes(
-                TokenType.Plus,
-                TokenType.Minus,
-                TokenType.Multiply,
-                TokenType.Divide,
+                TokenType.Operator.Plus,
+                TokenType.Operator.Minus,
+                TokenType.Operator.Multiply,
+                TokenType.Operator.Divide,
             ).endsWithEOF()
     }
 

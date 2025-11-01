@@ -15,10 +15,10 @@ class TokenConsumerTest {
         val tokens =
             listOf(
                 tok(TokenType.Identifier, "a"),
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.LeftParen, "("),
                 tok(TokenType.NumberLiteral, "1"),
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.NumberLiteral, "2"),
                 tok(TokenType.RightParen, ")"),
                 tok(TokenType.Semicolon, ";"),
@@ -37,7 +37,7 @@ class TokenConsumerTest {
         val tokens =
             listOf(
                 tok(TokenType.Identifier, "a"),
-                tok(TokenType.Plus, "+"),
+                tok(TokenType.Operator.Plus, "+"),
                 tok(TokenType.NumberLiteral, "1"),
                 tok(TokenType.EOF, "EOF"),
             )

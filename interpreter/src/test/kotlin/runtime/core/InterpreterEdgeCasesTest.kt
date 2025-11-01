@@ -85,7 +85,7 @@ class InterpreterEdgeCasesTest {
         val addition =
             BinaryOperationNode(
                 LiteralNode(Token(TokenType.NumberLiteral, "5", Location(0, 0, 0))),
-                Token(TokenType.Plus, "+", Location(0, 0, 0)),
+                Token(TokenType.Operator.Plus, "+", Location(0, 0, 0)),
                 LiteralNode(Token(TokenType.NumberLiteral, "3", Location(0, 0, 0))),
             )
         val declaration = createDeclarationWithExpression("result", TokenType.NumberType, addition, true)
