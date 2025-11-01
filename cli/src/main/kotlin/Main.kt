@@ -6,7 +6,7 @@ fun main(args: Array<String>) {
         .subcommands(
             ValidateCommand(engine),
             ExecuteCommand(engine),
-            FormatCommand(),
+            FormatCommand(engine),
             AnalyzeCommand(engine),
         ).main(args)
 }

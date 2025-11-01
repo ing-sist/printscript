@@ -1,6 +1,10 @@
+import progress.ProgressReporter
+import java.io.File
+
 class PrintScriptEngine {
     private var version: String = "1.0"
     private var analyzerConfigPath: String? = null
+    private var formatterConfigPath: String? = null
 
     fun setVersion(v: String) {
         require(RuleGenerator.isVersionSupported(v)) { "Unsupported version: $v" }
@@ -11,115 +15,96 @@ class PrintScriptEngine {
         analyzerConfigPath = path
     }
 
-    fun countTokens(path: String): Int {
-        val lexer =
-            Lexer(
-                java.io.FileReader(
-                    java.io.File(path),
-                ),
-                RuleGenerator.createTokenRule(version),
-            )
-        val ts = LexerTokenProvider(lexer, readSpace = false, readNewline = false)
-        var i = 0
-        while (true) {
-            val t = ts.peek(i)
-            if (t.type is TokenType.EOF) break
-            i++
-        }
-        return i
+    fun setFormatterConfig(path: String?) {
+        formatterConfigPath = path
     }
 
-    fun validateSyntax(path: String) {
-        val lexer =
-            Lexer(
-                java.io.FileReader(
-                    java.io.File(path),
-                ),
-                RuleGenerator.createTokenRule(version),
-            )
-        val ts = LexerTokenProvider(lexer, readSpace = false, readNewline = false)
-        val parser = parser.Parser(validators.provider.DefaultValidatorsProvider())
+    private fun createParserLexer(file: File): Lexer =
+        Lexer(
+            file.reader(),
+            RuleGenerator.createTokenRule(version),
+        )
+
+    private fun createParserTokenProvider(lexer: Lexer): LexerTokenProvider =
+        LexerTokenProvider(lexer, readSpace = false, readNewline = false)
+
+    private inline fun <T> processStatements(
+        file: File,
+        progressReporter: ProgressReporter,
+        operationName: String,
+        initialState: T,
+        crossinline processStatement: (AstNode, T) -> Unit,
+    ): T {
+        val totalLines = file.readLines().size.coerceAtLeast(1)
+        val lexer = createParserLexer(file)
+        val tokenProvider = createParserTokenProvider(lexer)
+        val parser = parser.Parser(validators.provider.DefaultValidatorsProvider(version))
+
+        progressReporter.reportProgress("$operationName...", 0)
+
         while (true) {
-            val next = ts.peek(0)
+            val next = tokenProvider.peek(0)
             if (next.type is TokenType.EOF) break
-            when (val res = parser.parse(ts)) {
-                is Result.Success -> { /* continue to next statement */ }
+
+            val currentLine = next.location.line
+            val percentage = (currentLine * 100) / totalLines
+            progressReporter.reportProgress("$operationName line $currentLine...", percentage)
+
+            when (val res = parser.parse(tokenProvider)) {
+                is Result.Success -> processStatement(res.value, initialState)
                 is Result.Failure -> error("Parse error: ${res.error}")
             }
         }
+
+        progressReporter.reportSuccess("$operationName complete")
+        return initialState
     }
 
-    fun parseAst(path: String): AstNode {
-        val lexer =
-            Lexer(
-                java.io.FileReader(
-                    java.io.File(path),
-                ),
-                RuleGenerator.createTokenRule(version),
-            )
-        val ts = LexerTokenProvider(lexer, readSpace = false, readNewline = false)
-        val parser = parser.Parser(validators.provider.DefaultValidatorsProvider())
-        return when (val res = parser.parse(ts)) {
-            is Result.Success -> res.value
-            is Result.Failure -> error("Parse error: ${res.error}")
+    fun validateSyntax(
+        path: String,
+        progressReporter: ProgressReporter,
+    ) {
+        val file = File(path)
+        processStatements(file, progressReporter, "Validating", Unit) { _, _ ->
+            // Just parsing is enough for validation
         }
     }
 
     fun execute(
         path: String,
-        inputs: List<String> = emptyList(),
-        env: Map<String, String> = emptyMap(),
+        progressReporter: ProgressReporter,
     ): String {
-        // Build token stream and parser to iterate all statements
-        val lexer = Lexer(java.io.FileReader(java.io.File(path)), RuleGenerator.createTokenRule(version))
-        val ts = LexerTokenProvider(lexer, readSpace = false, readNewline = false)
-        val parser = parser.Parser(validators.provider.DefaultValidatorsProvider())
-
-        // Single runtime for the whole program
-        val inputProvider = runtime.providers.ProgrammaticInputProvider(inputs.toMutableList())
-        val envProvider = runtime.providers.MapEnvProvider(env)
+        val file = File(path)
         val outputSink = runtime.providers.BufferedOutputSink()
         val runtime =
             runtime.core
                 .InterpreterRuntimeFactory()
-                .createRuntime(inputProvider, envProvider, outputSink)
+                .createRuntime(outputSink = outputSink)
 
-        while (true) {
-            val next = ts.peek(0)
-            if (next.type is TokenType.EOF) break
-            when (val res = parser.parse(ts)) {
-                is Result.Success -> {
-                    when (val execRes = runtime.execute(res.value)) {
-                        is Result.Failure -> throw execRes.error
-                        is Result.Success -> {}
-                    }
-                }
-                is Result.Failure -> error("Parse error: ${res.error}")
+        processStatements(file, progressReporter, "Executing", runtime) { astNode, runtimeInstance ->
+            when (val execRes = runtimeInstance.execute(astNode)) {
+                is Result.Failure -> throw execRes.error
+                is Result.Success -> {}
             }
         }
+
         return outputSink.getJoinedOutput()
     }
 
-    fun analyzeAll(path: String): Report {
-        val lexer =
-            Lexer(
-                java.io.FileReader(
-                    java.io.File(path),
-                ),
-                RuleGenerator.createTokenRule(version),
-            )
-        val ts = LexerTokenProvider(lexer, readSpace = false, readNewline = false)
-        val parser = parser.Parser(validators.provider.DefaultValidatorsProvider())
+    fun analyze(
+        path: String,
+        progressReporter: ProgressReporter,
+    ): Report {
+        val file = File(path)
 
-        val cfg =
+        val config =
             analyzerConfigPath?.let {
                 AnalyzerConfig.fromPath(
                     it,
                     shared.AnalyzerRuleDefinitions.RULES,
                 )
-            } ?: AnalyzerConfig(
-                mapOf(),
-            )
+            } ?: AnalyzerConfig(mapOf())
+
         val rules =
             listOf(
                 naming.IdentifierNamingRule(naming.IdentifierNamingRuleDef),
@@ -129,16 +114,50 @@ class PrintScriptEngine {
         val analyzer = Analyzer(rules)
         val report = Report.inMemory()
 
-        while (true) {
-            val next = ts.peek(0)
-            if (next.type is TokenType.EOF) break
-            when (val res = parser.parse(ts)) {
-                is Result.Success -> analyzer.analyze(res.value, report, cfg)
-                is Result.Failure -> error("Parse error: ${res.error}")
-            }
+        data class AnalyzerState(
+            val analyzer: Analyzer,
+            val report: Report,
+            val config: AnalyzerConfig,
+        )
+
+        val state = AnalyzerState(analyzer, report, config)
+
+        processStatements(file, progressReporter, "Analyzing", state) { astNode, analyzerState ->
+            analyzerState.analyzer.analyze(astNode, analyzerState.report, analyzerState.config)
         }
+
         return report
     }
 
-    fun analyze(path: String): Report = analyzeAll(path)
+    fun format(
+        path: String,
+        progressReporter: ProgressReporter,
+    ): String {
+        progressReporter.reportProgress("Formatting...", 0)
+
+        val tokenRule = RuleGenerator.createDefaultTokenRule()
+        val file = File(path)
+        val reader = file.reader()
+        val lexer = Lexer(reader, tokenRule)
+        val tokenProvider = LexerTokenProvider(lexer, readSpace = true, readNewline = true)
+
+        val styleConfig =
+            formatterConfigPath?.let {
+                val configText = File(it).readText()
+                val adapter =
+                    config.RuleIdNameAdapter { name ->
+                        config.RuleRegistry.resolveDef(name)?.let { def -> config.RuleMapping(def) { it } }
+                    }
+                ConfigLoader(adapter).loadFromString(configText)
+            } ?: config.FormatterStyleConfig(emptyMap())
+
+        val formatter = Formatter(config.RuleRegistry.allRules())
+        val docBuilder = DocBuilder.inMemory()
+
+        val result = formatter.format(tokenProvider, styleConfig, docBuilder)
+        val formattedCode = result.build()
+
+        progressReporter.reportSuccess("Formatting complete")
+        return formattedCode
+    }
 }

@@ -29,7 +29,7 @@ tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.80 // 60% mínimo de cobertura
+                minimum = 0.80
             }
         }
         rule {

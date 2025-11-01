@@ -1,0 +1,8 @@
+{
+  "identifier_format": "camel_case",
+  "indent_size": 4,
+  "space_before_colon": 0,
+  "space_after_colon": 1,
+  "space_around_equals": 1,
+  "newline_after_semicolon": 1
+}

@@ -8,10 +8,9 @@ import TokenStream
 import TokenType
 import builders.ExpressionBuilder
 import parser.ParseError
-import validators.provider.ValidatorsProvider
 
 class IfValidator(
-    private val validatorsProvider: ValidatorsProvider,
+    private val statementValidators: List<AstValidator>,
 ) : AstValidator {
     override fun validateAndBuild(stream: TokenStream): Result<AstNode, ParseError?> {
         // Valida si el token actual es 'if'
@@ -74,14 +73,14 @@ class IfValidator(
         var result: Result<AstNode, ParseError?>
 
         // Parseo del bloque 'then'
-        when (val thenResult = parseBlock(stream, validatorsProvider)) {
+        when (val thenResult = parseBlock(stream)) {
             is Result.Success -> {
                 val thenBody = thenResult.value
                 // Parseo opcional del bloque 'else'
                 var elseBody: List<AstNode>? = null
                 if (stream.peek().type is TokenType.Keyword.Else) {
                     stream.consume() // Consume 'else'
-                    when (val elseResult = parseBlock(stream, validatorsProvider)) {
+                    when (val elseResult = parseBlock(stream)) {
                         is Result.Success -> {
                             elseBody = elseResult.value
                             val node = ConditionalNode(conditionNode, thenBody, elseBody)
@@ -121,28 +120,22 @@ class IfValidator(
     /**
      * Función auxiliar que parsea un bloque de código entre llaves.
      */
-    private fun parseBlock(
-        stream: TokenStream,
-        validatorsProvider: ValidatorsProvider,
-    ): Result<List<AstNode>, ParseError?> {
+    private fun parseBlock(stream: TokenStream): Result<List<AstNode>, ParseError?> {
         if (stream.peek().type !is TokenType.LeftBrace) {
             return Result.Failure(ParseError.InvalidSyntax(listOf(stream.peek()), "Expected '{'"))
         }
 
-        return parseBlockContent(stream, validatorsProvider)
+        return parseBlockContent(stream)
     }
 
-    private fun parseBlockContent(
-        stream: TokenStream,
-        validatorsProvider: ValidatorsProvider,
-    ): Result<List<AstNode>, ParseError?> {
+    private fun parseBlockContent(stream: TokenStream): Result<List<AstNode>, ParseError?> {
         stream.consume() // Consume '{'
 
         val statements = mutableListOf<AstNode>()
         while (stream.peek().type !is TokenType.RightBrace &&
             stream.peek().type !is TokenType.EOF
         ) {
-            when (val result = validatorsProvider.findValidatorAndBuild(stream)) {
+            when (val result = findValidatorAndBuild(stream, statementValidators)) {
                 is Result.Success -> statements.add(result.value)
                 is Result.Failure -> {
                     return Result.Failure(
@@ -153,6 +146,34 @@ class IfValidator(
         }
 
         return validateBlockClosure(stream, statements)
+    }
+
+    /**
+     * Replica la lógica del provider usando la lista de validadores inyectados.
+     */
+    private fun findValidatorAndBuild(
+        stream: TokenStream,
+        validators: List<AstValidator>,
+    ): Result<AstNode, ParseError?> {
+        var result: Result<AstNode, ParseError?> = Result.Failure(ParseError.NoValidParser(listOf(stream.peek())))
+
+        for (validator in validators) {
+            when (val validatorResult = validator.validateAndBuild(stream)) {
+                is Result.Success -> {
+                    result = validatorResult
+                    break
+                }
+                is Result.Failure -> {
+                    if (validatorResult.error != null) {
+                        result = validatorResult
+                        return result
+                    }
+                    // This validator didn't match, try the next one
+                }
+            }
+        }
+
+        return result
     }
 
     private fun validateBlockClosure(
