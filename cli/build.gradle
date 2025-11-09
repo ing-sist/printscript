@@ -20,6 +20,7 @@ dependencies {
     implementation project(':common')
     implementation project(':ast')
     implementation project(':token')
+    implementation project(':engine')
 
     // CLI library for argument parsing
     implementation 'com.github.ajalt.clikt:clikt:4.2.1'
