@@ -135,6 +135,9 @@ class PrintScriptEngine {
     ): String {
         progressReporter.reportProgress("Formatting...", 0)
 
+        // Initialize rules registry
+        config.ForceRulesInit.loadAll()
+
         val tokenRule = RuleGenerator.createDefaultTokenRule()
         val file = File(path)
         val reader = file.reader()
@@ -144,11 +147,8 @@ class PrintScriptEngine {
         val styleConfig =
             formatterConfigPath?.let {
                 val configText = File(it).readText()
-                val adapter =
-                    config.RuleIdNameAdapter { name ->
-                        config.RuleRegistry.resolveDef(name)?.let { def -> config.RuleMapping(def) { it } }
-                    }
-                ConfigLoader(adapter).loadFromString(configText)
+                // Use DefaultRuleAdapter instead of custom lambda
+                ConfigLoader(config.DefaultRuleAdapter).loadFromString(configText)
             } ?: config.FormatterStyleConfig(emptyMap())
 
         val formatter = Formatter(config.RuleRegistry.allRules())
