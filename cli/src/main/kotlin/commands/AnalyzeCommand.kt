@@ -18,6 +18,7 @@ class AnalyzeCommand(
     ).file(mustExist = true, canBeDir = false)
 
     override fun executeLogic() {
+        engine.setVersion(version)
         engine.setAnalyzerConfig(rulesFile?.absolutePath)
         val report = engine.analyze(source.absolutePath, reporter)
 

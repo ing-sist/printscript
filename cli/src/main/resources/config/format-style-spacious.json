@@ -1,6 +1,6 @@
 {
-  "space-before-colon": true,
-  "space-after-colon": true,
-  "space-around-equals": true,
-  "newline-before-println": 2
+  "SpaceBeforeColon": true,
+  "SpaceAfterColon": true,
+  "SpaceAroundAssignment": true,
+  "LineBreakBeforePrintln": 2
 }

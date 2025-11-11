@@ -16,8 +16,5 @@ class ValidateCommand(
         engine.setVersion(version)
         // validateSyntax will use the 'reporter' from the base class
         engine.validateSyntax(source.absolutePath, reporter)
-
-        // 'reportSuccess' comes from the reporter and clears the progress line
-        reporter.reportSuccess("Validation complete")
     }
 }
