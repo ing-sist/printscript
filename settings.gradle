@@ -2,7 +2,7 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 rootProject.name = 'printscript'
-include ('lexer',
+include('lexer',
         'formatter',
         'token',
         'parser',
@@ -10,4 +10,6 @@ include ('lexer',
         'ast',
         'cli',
         'common',
-        'analyzer')
+        'analyzer',
+        'engine'
+)
