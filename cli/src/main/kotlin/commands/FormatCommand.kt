@@ -22,6 +22,7 @@ class FormatCommand(
     ).file()
 
     override fun executeLogic() {
+        engine.setVersion(version) // 'version' comes from BaseCliCommand
         // Set the formatter config in the engine
         engine.setFormatterConfig(styleFile?.absolutePath)
 

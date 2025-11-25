@@ -138,7 +138,7 @@ class PrintScriptEngine {
         // Initialize rules registry
         config.ForceRulesInit.loadAll()
 
-        val tokenRule = RuleGenerator.createDefaultTokenRule()
+        val tokenRule = RuleGenerator.createTokenRule(version)
         val file = File(path)
         val reader = file.reader()
         val lexer = Lexer(reader, tokenRule)
